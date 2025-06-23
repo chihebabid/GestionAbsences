@@ -38,6 +38,13 @@ Rectangle {
                 textRole: "name"
                 width: root.width * 0.3
                 model: sectionModel
+                onCurrentIndexChanged:
+                    if (currentIndex>=0) {
+                        let sectionIndex = wLSections.currentIndex
+                        let sectionId = sectionModel.getSectionId(sectionIndex)
+                        let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
+                        moduleModel.loadModulesForSection(sectionId, semestre)
+                    }
             }
             Item {
                    width: 40
