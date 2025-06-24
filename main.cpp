@@ -1,3 +1,10 @@
+#include "misc.h"
+#include "absencedatabasemanager.h"
+#include "manageslectedsectionmodule.h"
+#include "sectionmodel.h"
+#include "modulemodel.h"
+#include "etudiantsmodel.h"
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -5,11 +12,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QFile>
-#include "misc.h"
-#include "absencedatabasemanager.h"
-#include "manageslectedsectionmodule.h"
-#include "sectionmodel.h"
-#include "modulemodel.h"
+
 
 QString init() {
     QDate currentDate = QDate::currentDate();
@@ -34,12 +37,14 @@ int main(int argc, char *argv[])
     SectionModel sectionModel;
     ModuleModel moduleModel;
     SectionModel wSectionModel;
+    EtudiantsModel etudiantsModel;
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
     engine.rootContext()->setContextProperty("sectionModel", &sectionModel);
     engine.rootContext()->setContextProperty("yearMonthString", init());
     engine.rootContext()->setContextProperty("manageSection", &sectionManager);
     engine.rootContext()->setContextProperty("moduleModel", &moduleModel);
+    engine.rootContext()->setContextProperty("etudiantsModel", &etudiantsModel);
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,

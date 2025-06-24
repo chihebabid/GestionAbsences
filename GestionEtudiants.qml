@@ -5,7 +5,9 @@ import Qt.labs.qmlmodels
 
 Rectangle {
     id: gestionEtudiants
+
     property int columnCount: 3
+    property var columnWidths: [150, 100, 200] // Largeurs synchronisées
     Column {
         id: myColumn
         spacing: 20
@@ -30,64 +32,55 @@ Rectangle {
                     if (sectionCombo.currentIndex >= 0) {
                         let sectionIndex = sectionCombo.currentIndex
                         let sectionId = sectionModel.getSectionId(sectionIndex)
-                        let semestre = semestreCombo.model[semestreCombo.currentIndex]
-                        moduleModel.loadModulesForSection(sectionId, semestre)
+                        tableEtudiants.model.loadEtudiantsForSection(sectionId)
                     }
                 }
             }
         }
     }
-
-    // Entêtes
-    // Row {
-
-    // Modèle de données (ListModel)
-    TableModel {
-            id: tableModel
-            TableModelColumn { display: "name" }
-            TableModelColumn { display: "color" }
-            TableModelColumn { display: "Ok" }
-
-            rows: [
-                {
-                    "name": "cat",
-                    "color": "black",
-                    "Ok": "1"
-                },
-                {
-                    "name": "dog",
-                    "color": "brown",
-                    "Ok": "1"
-                },
-                {
-                    "name": "bird",
-                    "color": "white",
-                    "Ok": "1"
-                }
-            ]
-        }
-
-
-
-    TableView {
-
-        //anchors.fill: parent
+    // En-tête personnalisée
+    Row {
+        id: header
+        anchors.topMargin: 30
         anchors.top: myColumn.bottom
-        anchors.topMargin: 20
+
+        z: 2
+        Repeater {
+            model: ["Nom", "Âge", "Ville"]
+            Rectangle {
+                width: gestionEtudiants.columnWidths[index]
+                height: 30
+                color: "#f0f0f0"
+                border.color: "#ccc"
+                border.width: 1
+
+                Text {
+                    anchors.centerIn: parent
+                    text: modelData
+                    font.bold: true
+                    font.pixelSize: 14
+                }
+            }
+        }
+    }
+    TableView {
+        id: tableEtudiants
+        interactive: false
+        //anchors.fill: parent
+        anchors.top: header.bottom
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 10
+
         // Définir les colonnes
         columnSpacing: 1
         rowSpacing: 1
         clip: true
 
-        model: tableModel
+        model: etudiantsModel
 
-        columnWidthProvider: function(column) {
-                      return 150 // Largeur fixe pour chaque colonne
-                  }
+       columnWidthProvider: function(col) { return columnWidths[col] }
 
         // Définir les en-têtes de colonnes
 
@@ -100,39 +93,24 @@ Rectangle {
 
             Text {
                 anchors.centerIn: parent
-                text: display
+                text: {
+                    switch (column) {
+                      case 0: return model.nom
+                      case 1: return model.prenom
+                      case 2: return model.mail
+                      default: return ""
+                  }
+                }
                 font.pixelSize: 14
             }
         }
 
 
 
-        // En-tête personnalisée
-        Row {
-            id: header
-            y: -parent.contentY - 30
-            z: 2
-            Repeater {
-                model: ["Nom", "Âge", "Ville"]
-                Rectangle {
-                    width: 150
-                    height: 30
-                    color: "#f0f0f0"
-                    border.color: "#ccc"
-                    border.width: 1
 
-                    Text {
-                        anchors.centerIn: parent
-                        text: modelData
-                        font.bold: true
-                        font.pixelSize: 14
-                    }
-                }
-            }
-        }
 
         // Synchroniser le défilement avec l'en-tête
-        onContentXChanged: header.x = -contentX
+        //onContentXChanged: header.x = -contentX
     }
 
     // }
