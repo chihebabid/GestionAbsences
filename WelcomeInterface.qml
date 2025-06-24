@@ -38,13 +38,16 @@ Rectangle {
                 textRole: "name"
                 width: root.width * 0.3
                 model: sectionModel
-                onCurrentIndexChanged:
-                    if (currentIndex>=0) {
+                onCurrentIndexChanged: {
+
+                    if (wLSections.currentIndex>=0) {
                         let sectionIndex = wLSections.currentIndex
-                        let sectionId = sectionModel.getSectionId(sectionIndex)
+                        let sectionId = wLSections.model.getSectionId(sectionIndex)
                         let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
-                        moduleModel.loadModulesForSection(sectionId, semestre)
+                        wModules.model.loadModulesForSection(sectionId, semestre)
                     }
+                }
+
             }
             Item {
                    width: 40
@@ -60,11 +63,11 @@ Rectangle {
                 id: wSemestreCombo
                 model: [1, 2]
                 onCurrentIndexChanged: {
-                    if (currentIndex >= 0) {
+                    if (wSemestreCombo.currentIndex >= 0) {
                         let sectionIndex = wLSections.currentIndex
-                        let sectionId = sectionModel.getSectionId(sectionIndex)
+                        let sectionId = wLSections.model.getSectionId(sectionIndex)
                         let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
-                        moduleModel.loadModulesForSection(sectionId, semestre)
+                        wModules.model.loadModulesForSection(sectionId, semestre)
                     }
                 }
             }
@@ -79,7 +82,7 @@ Rectangle {
             }
 
             ComboBox {
-                id: lModules
+                id: wModules
                 textRole: "name"
                 width: root.width * 0.4
                 model: moduleModel

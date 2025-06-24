@@ -155,9 +155,9 @@ void SectionModel::clearSelection() {
 
 
 int SectionModel::getSectionId(int indexModel) const {
-    if (indexModel < 0 || indexModel >= m_sections.size())
-        return -1;
     qDebug()<<"IndexModel: "<<indexModel;
+    if (indexModel < 0 || indexModel >= m_sections.size())
+        return -1;    
     qDebug()<<"Id: "<<m_sections[indexModel].id;
     return m_sections[indexModel].id;
 }

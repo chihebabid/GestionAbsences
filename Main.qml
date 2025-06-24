@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import QtQuick.Controls.Fusion
+
 import "."
 
 ApplicationWindow {
@@ -26,6 +27,7 @@ ApplicationWindow {
             TabButton { text: "Accueil" }
             TabButton { text: "Gestion des Sections" }
             TabButton { text: "Gestion des Modules" }
+            TabButton { text: "Gestion des Étudiants" }
         }
 
         StackLayout {
@@ -48,6 +50,11 @@ ApplicationWindow {
             // Onglet 2
             Loader {
                 source: isDatabaseReady ? "GestionModules.qml" : ""
+            }
+
+            // Onglet 2
+            Loader {
+                source: isDatabaseReady ? "GestionEtudiants.qml" : ""
             }
         }
     }

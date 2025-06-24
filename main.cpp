@@ -33,7 +33,9 @@ int main(int argc, char *argv[])
     ManageSlectedSectionModule sectionManager;
     SectionModel sectionModel;
     ModuleModel moduleModel;
+    SectionModel wSectionModel;
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
+    engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
     engine.rootContext()->setContextProperty("sectionModel", &sectionModel);
     engine.rootContext()->setContextProperty("yearMonthString", init());
     engine.rootContext()->setContextProperty("manageSection", &sectionManager);

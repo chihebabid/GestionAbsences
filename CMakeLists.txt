@@ -30,6 +30,7 @@ qt_add_qml_module(appGestionAbsences
     QML_FILES WelcomeInterface.qml
     QML_FILES GestionModules.qml
     SOURCES modulemodel.h modulemodel.cpp
+    QML_FILES GestionEtudiants.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
