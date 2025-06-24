@@ -5,6 +5,8 @@
 
 #include <QObject>
 struct Etudiant {
+    int id;
+    QString inscri;
     QString nom;
     QString prenom;
     QString mail;
@@ -12,8 +14,8 @@ struct Etudiant {
 class EtudiantsModel : public QAbstractTableModel
 {
     Q_OBJECT
-    enum Roles { NomRole = Qt::UserRole + 1, PrenomRole,MailRole };
-    static constexpr int c_columncount {3};
+    enum Roles { InscriRole = Qt::UserRole + 1,NomRole, PrenomRole,MailRole };
+    static constexpr int c_columncount {4};
 public:
     explicit EtudiantsModel(QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -24,6 +26,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     Q_INVOKABLE void loadEtudiantsForSection(const int sectionId);
+    Q_INVOKABLE void importCSV(const QString &);
 private:
     QList<Etudiant> m_data;
 };

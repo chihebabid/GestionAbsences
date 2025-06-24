@@ -1,13 +1,12 @@
 #include "etudiantsmodel.h"
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QFile>
 
 EtudiantsModel::EtudiantsModel(QObject *parent)
     : QAbstractTableModel{parent}
 {
-    m_data.push_back({"ok", "ok", "kjslksj"});
-    m_data.push_back({"ok", "ok", "kjslksj"});
-    m_data.push_back({"ok", "ok", "kjslksj"});
+
 
 }
 
@@ -27,14 +26,16 @@ QVariant EtudiantsModel::data(const QModelIndex &index, int role) const {
 
     const Etudiant &etud = m_data[index.row()];
     switch (role) {
+    case InscriRole: return etud.inscri;
     case NomRole: return etud.nom;
     case PrenomRole: return etud.prenom;
     case MailRole: return etud.mail;
     case Qt::DisplayRole:
         switch (index.column()) {
-        case 0: return etud.nom;
-        case 1: return etud.prenom;
-        case 2: return etud.mail;
+        case 0: return etud.inscri;
+        case 1: return etud.nom;
+        case 2: return etud.prenom;
+        case 3: return etud.mail;
         }
     }
     return {};
@@ -43,16 +44,17 @@ QVariant EtudiantsModel::data(const QModelIndex &index, int role) const {
 QVariant EtudiantsModel::headerData(int section, Qt::Orientation orientation, int role) const {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-        case 0: return "Nom";
-        case 1: return "Prénom";
-        case 2: return "Mail";
+        case 0: return "Inscription";
+        case 1: return "Nom";
+        case 2: return "Prénom";
+        case 3: return "Mail";
         }
     }
     return {};
 }
 QHash<int, QByteArray> EtudiantsModel::roleNames() const {
     return {
-        {NomRole, "nom"},
+        {InscriRole, "inscri"},{NomRole, "nom"},
         {PrenomRole, "prenom"},
         {MailRole, "mail"}
     };
@@ -68,7 +70,7 @@ void EtudiantsModel::loadEtudiantsForSection(const int sectionId) {
     m_data.clear();
     QSqlQuery query;
     query.prepare(R"(
-        SELECT nom, prenom
+        SELECT id,inscri,nom, prenom,mail
         FROM etudiant
         WHERE section_id = ? )");
 
@@ -82,8 +84,11 @@ void EtudiantsModel::loadEtudiantsForSection(const int sectionId) {
 
     while (query.next()) {
         Etudiant e;
-        e.nom = query.value(0).toString();
-        e.prenom = query.value(1).toString();
+        e.id = query.value(0).toInt();
+        e.inscri = query.value(1).toString();
+        e.nom = query.value(2).toString();
+        e.prenom = query.value(3).toString();
+        e.mail = query.value(4).toString();
         m_data.push_back(e);
         qDebug()<<"Itération";
     }
@@ -107,4 +112,40 @@ bool EtudiantsModel::setData(const QModelIndex &index, const QVariant &value, in
     default:
         return false;
     }
+}
+
+void EtudiantsModel::importCSV(const QString &cheminFichier) {
+    QFile fichier(cheminFichier);
+
+    if (!fichier.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Impossible d’ouvrir le fichier :" << cheminFichier;
+        return ;
+    }
+    QTextStream flux(&fichier);
+    bool premiereLigne = true;
+
+    while (!flux.atEnd()) {
+        QString ligne = flux.readLine().trimmed();
+        if (ligne.isEmpty())
+            continue;
+
+        if (premiereLigne) {
+            premiereLigne = false; // ignorer l'entête
+            continue;
+        }
+
+        QStringList champs = ligne.split(',', Qt::SkipEmptyParts);
+        if (champs.size() < 4)
+            continue;
+
+        Etudiant e;
+        e.inscri = champs[0].trimmed();
+        e.nom = champs[1].trimmed();
+        e.prenom = champs[2].trimmed();
+        e.mail = champs[3].trimmed();
+        // Exécution requête SQL
+
+    }
+
+    fichier.close();
 }
