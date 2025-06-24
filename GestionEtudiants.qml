@@ -143,7 +143,10 @@ Rectangle {
             title: "Choisir un fichier"
             nameFilters: ["Fichiers csv (*.csv)", "Tous les fichiers (*)"]
             onAccepted: {
-                console.log("Fichier sélectionné :", fileDialog.file)
+                console.log("Fichier sélectionné :", selectedFile)
+                let sectionIndex = sectionCombo.currentIndex
+                let sectionId = sectionModel.getSectionId(sectionIndex)
+                tableEtudiants.model.importCSV(selectedFile,sectionId)
             }
             onRejected: {
                 console.log("Sélection annulée")

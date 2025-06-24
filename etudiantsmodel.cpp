@@ -2,6 +2,7 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QFile>
+#include <QUrl>
 
 EtudiantsModel::EtudiantsModel(QObject *parent)
     : QAbstractTableModel{parent}
@@ -114,7 +115,8 @@ bool EtudiantsModel::setData(const QModelIndex &index, const QVariant &value, in
     }
 }
 
-void EtudiantsModel::importCSV(const QString &cheminFichier,const int sectionId) {
+void EtudiantsModel::importCSV(const QUrl &url,const int sectionId) {
+    QString cheminFichier {QUrl(url).toLocalFile()};
     QFile fichier(cheminFichier);
 
     if (!fichier.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -135,6 +137,7 @@ void EtudiantsModel::importCSV(const QString &cheminFichier,const int sectionId)
         }
 
         QStringList champs = ligne.split(',', Qt::SkipEmptyParts);
+        qDebug()<<"Nombre de champs:"<<champs.size();
         if (champs.size() < 4)
             continue;
 
