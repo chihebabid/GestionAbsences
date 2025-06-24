@@ -114,7 +114,7 @@ bool EtudiantsModel::setData(const QModelIndex &index, const QVariant &value, in
     }
 }
 
-void EtudiantsModel::importCSV(const QString &cheminFichier) {
+void EtudiantsModel::importCSV(const QString &cheminFichier,const int sectionId) {
     QFile fichier(cheminFichier);
 
     if (!fichier.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -144,8 +144,20 @@ void EtudiantsModel::importCSV(const QString &cheminFichier) {
         e.prenom = champs[2].trimmed();
         e.mail = champs[3].trimmed();
         // Exécution requête SQL
+        QSqlQuery query;
+        query.prepare("INSERT INTO etudiant (inscri,nom,prenom,mail,section_id) VALUES (?,?,?,?,?)");
+        query.addBindValue(e.inscri);
+        query.addBindValue(e.nom);
+        query.addBindValue(e.prenom);
+        query.addBindValue(e.mail);
+        query.addBindValue(sectionId);
+        if (!query.exec()) {
+            qWarning() << "Erreur insert from CSV:" << query.lastError();
+            return;
+        }
 
     }
 
     fichier.close();
+    loadEtudiantsForSection(sectionId);
 }

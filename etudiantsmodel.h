@@ -26,7 +26,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     Q_INVOKABLE void loadEtudiantsForSection(const int sectionId);
-    Q_INVOKABLE void importCSV(const QString &);
+    Q_INVOKABLE void importCSV(const QString &,const int sectionId);
 private:
     QList<Etudiant> m_data;
 };
