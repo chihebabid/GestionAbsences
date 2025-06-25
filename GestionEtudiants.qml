@@ -30,6 +30,7 @@ Rectangle {
                 model: sectionModel
                 onCurrentIndexChanged: {
                     if (sectionCombo.currentIndex >= 0) {
+                        bImporter.enabled=true
                         let sectionIndex = sectionCombo.currentIndex
                         let sectionId = sectionModel.getSectionId(sectionIndex)
                         tableEtudiants.model.loadEtudiantsForSection(sectionId)
@@ -130,10 +131,12 @@ Rectangle {
         }
     }
     Button {
+        id: bImporter
         text: "Importer"
         anchors.margins: 10
         anchors.left: header.right
         anchors.top: bSupprimer.bottom
+        enabled: false
         onClicked: {
             fileDialog.open()
         }

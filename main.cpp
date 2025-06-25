@@ -12,6 +12,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QFile>
+#include <QtQuickControls2/QQuickStyle>
 
 
 QString init() {
@@ -29,7 +30,7 @@ QString init() {
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-
+    QQuickStyle::setStyle("Fusion");
     QQmlApplicationEngine engine;
 
     AbsenceDatabaseManager dbManager;

@@ -2,7 +2,7 @@ import QtQuick
 
 import QtQuick.Layouts
 import QtQuick.Dialogs
-import QtQuick.Controls.Fusion
+import QtQuick.Controls.Material
 
 import "."
 

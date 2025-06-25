@@ -4,11 +4,9 @@ project(GestionAbsences VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Sql)
+find_package(Qt6 REQUIRED COMPONENTS Quick Sql QuickControls2)
 find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Core)
+
 
 
 qt_standard_project_setup(REQUIRES 6.5)
@@ -47,12 +45,10 @@ set_target_properties(appGestionAbsences PROPERTIES
 )
 
 target_link_libraries(appGestionAbsences
-    PRIVATE Qt6::Quick Qt6::Sql
+    PRIVATE Qt6::Quick Qt6::Sql Qt6::QuickControls2
 )
-target_link_libraries(appGestionAbsences PRIVATE Qt6::Core)
-target_link_libraries(appGestionAbsences PRIVATE Qt6::Core)
-target_link_libraries(appGestionAbsences PRIVATE Qt6::Core)
-target_link_libraries(appGestionAbsences PRIVATE Qt6::Core)
+target_link_libraries(appGestionAbsences PRIVATE Qt6::Core Qt6::QuickControls2)
+
 
 
 include(GNUInstallDirs)
