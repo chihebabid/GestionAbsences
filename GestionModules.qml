@@ -3,6 +3,7 @@ import QtQuick.Controls
 
 Rectangle {
     id: moduleInterface
+    color: "transparent"
     Column {
         spacing: 20
         anchors.top: parent.top

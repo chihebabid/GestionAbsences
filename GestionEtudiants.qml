@@ -5,8 +5,7 @@ import QtQuick.Dialogs
 
 Rectangle {
     id: gestionEtudiants
-
-    //property int columnCount: 4
+    color: "transparent"
     property var columnWidths: [100,150, 150, 200] // Largeurs synchronisées
     Column {
         id: myColumn

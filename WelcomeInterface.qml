@@ -6,8 +6,6 @@ Rectangle {
     id: welcomeInterface
     color: "transparent"
 
-    // Layout.fillWidth: true
-    // Layout.fillHeight: true
     Text {
         text: "Année universitaire : " + yearMonthString
         font.pixelSize: 18
@@ -52,9 +50,8 @@ Rectangle {
                     }
                 }
             }
-            Item {
-                width: 40
-                height: 1
+            Espacement {
+
             }
             Text {
                 text: "Semestre :"
@@ -91,6 +88,23 @@ Rectangle {
                 width: root.width * 0.4
                 model: moduleModel
             }
+            Espacement {}
+            Text {
+                text: "Type :"
+                font.pixelSize: 16
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            ComboBox {
+                id: typeCoursCombo
+                width: root.width * 0.1
+                model: ["Cours", "CI", "TD", "TP"]
+                currentIndex: 0  // Valeur par défaut
+
+                onCurrentIndexChanged: {
+                    console.log("Type de cours sélectionné :", typeCoursCombo.currentText)
+                }
+            }
         }
         Row {
             property date selectedDate: new Date()
@@ -113,127 +127,83 @@ Rectangle {
                     }
                 }
             }
-            Popup {
+            PopupDate {
                 id: calendarPopup
-                width: 320
-                height: 360
-                modal: true
-                focus: true
-                anchors.centerIn: Overlay.overlay
-
-                property date selectedDate: new Date()
-                property int currentMonth: selectedDate.getMonth()
-                property int currentYear: selectedDate.getFullYear()
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    spacing: 10
-
-
-                    // Barre de navigation
-                    RowLayout {
-                        Layout.alignment: Qt.AlignHCenter
-                        spacing: 10
-
-                        Button {
-                            text: "<"
-                            onClicked: {
-                                if (calendarPopup.currentMonth === 0) {
-                                    calendarPopup.currentMonth = 11
-                                    calendarPopup.currentYear--
-                                } else {
-                                    calendarPopup.currentMonth--
-                                }
-                            }
-                        }
-
-                        Label {
-                            text: Qt.formatDate(new Date(currentYear, currentMonth, 1), "MMMM yyyy")
-                            font.bold: true
-                            Layout.alignment: Qt.AlignHCenter
-                        }
-
-                        Button {
-                            text: ">"
-                            onClicked: {
-                                if (calendarPopup.currentMonth === 11) {
-                                    calendarPopup.currentMonth = 0
-                                    calendarPopup.currentYear++
-                                } else {
-                                    calendarPopup.currentMonth++
-                                }
-                            }
-                        }
-                    }
-
-                    // En-tête jours + grille
-                    GridLayout {
-                        columns: 2
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        DayOfWeekRow {
-                            Layout.column: 1
-                            Layout.fillWidth: true
-                            locale: Qt.locale()
-                        }
-
-                        WeekNumberColumn {
-                            Layout.fillHeight: true
-                            month: calendarPopup.currentMonth
-                            year: calendarPopup.currentYear
-                            locale: Qt.locale()
-                        }
-
-                        MonthGrid {
-                            id: grid
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-
-                            month: calendarPopup.currentMonth
-                            year: calendarPopup.currentYear
-                            locale: Qt.locale()
-
-                            onClicked: (date) => {
-                                calendarPopup.selectedDate = date
-                                calendarPopup.close()
-                            }
-
-                            delegate: Rectangle {
-                                width: 40
-                                height: 40
-                                color: model.date.getDate() === calendarPopup.selectedDate.getDate()
-                                       && model.date.getMonth() === calendarPopup.selectedDate.getMonth()
-                                       && model.date.getFullYear() === calendarPopup.selectedDate.getFullYear()
-                                       ? "#87ceeb" : "transparent"
-                                border.color: "#ccc"
-                                border.width: 1
-
-                                Text {
-                                    anchors.centerIn: parent
-                                    text: model.day
-                                }
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: grid.clicked(model.date)
-                                }
-                            }
-                        }
-                    }
-                }
             }
-
+            Espacement {}
             Text {
                 text: "Heure début :"
                 font.pixelSize: 16
                 verticalAlignment: Text.AlignVCenter
             }
+            SpinBox {
+                id: timeSpin
+                from: 8 * 60         // 08:00 en minutes
+                to: 18 * 60          // 18:00 en minutes
+                stepSize: 15         // Pas de 15 minutes
+                value: from          // Initialiser à 08:00
+                // Affichage formaté
+                textFromValue: function(value, locale) {
+                    let h = Math.floor(value / 60)
+                    let m = value % 60
+                    return Qt.formatTime(new Date(0, 0, 0, h, m), "hh:mm")
+                }
 
+                valueFromText: function(text, locale) {
+                    let parts = text.split(":")
+                    return parseInt(parts[0]) * 60 + parseInt(parts[1])
+                }
+
+                onValueChanged: {
+                    console.log("Heure sélectionnée :", textFromValue(value))
+                }
+                Component.onCompleted: {
+                      // Heure courante
+                      let now = new Date()
+                      let currentMinutes = now.getHours() * 60 + now.getMinutes()
+
+                      // Arrondi au multiple de 15 le plus proche
+                      let rounded = Math.round(currentMinutes / 15) * 15
+
+                      // Limiter dans l’intervalle autorisé
+                      if (rounded < from)
+                          value = from
+                      else if (rounded > to)
+                          value = to
+                      else
+                          value = rounded
+                  }
+            }
             Text {
                 text: "Durée :"
                 font.pixelSize: 16
                 verticalAlignment: Text.AlignVCenter
+            }
+
+            SpinBox {
+                id: dureeSpin
+                from: 0         // 08:00 en minutes
+                to: 3 * 60          // 18:00 en minutes
+                stepSize: 15         // Pas de 15 minutes
+                value: from          // Initialiser à 08:00
+                // Affichage formaté
+                textFromValue: function(value, locale) {
+                    let h = Math.floor(value / 60)
+                    let m = value % 60
+                    return Qt.formatTime(new Date(0, 0, 0, h, m), "hh:mm")
+                }
+
+                valueFromText: function(text, locale) {
+                    let parts = text.split(":")
+                    return parseInt(parts[0]) * 60 + parseInt(parts[1])
+                }
+
+                onValueChanged: {
+                    console.log("Heure sélectionnée :", textFromValue(value))
+                }
+                Component.onCompleted: {
+                    value = 90
+                  }
             }
         }
     }

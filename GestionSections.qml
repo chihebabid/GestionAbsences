@@ -3,6 +3,7 @@ import QtQuick.Controls.Fusion
 
 Rectangle {
     visible: true
+    color: "transparent"
     Column {
         spacing: 20
         anchors.top: parent.top
