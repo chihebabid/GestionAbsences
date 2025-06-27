@@ -6,7 +6,8 @@ import QtQuick.Dialogs
 Rectangle {
     id: gestionEtudiants
     color: "transparent"
-    property var columnWidths: [100,150, 150, 200] // Largeurs synchronisées
+    property real tableWidth: root.width*.8
+    property var columnWidths: [tableWidth*.2,tableWidth*.3,tableWidth*.3,tableWidth*.2] // Largeurs synchronisées
     Column {
         id: myColumn
         spacing: 20
@@ -119,10 +120,11 @@ Rectangle {
             }
         }
     }
+
     Button {
         id: bSupprimer
         text: "Supprimer"
-        anchors.margins: 10
+        anchors.margins: 15
         anchors.left: header.right
         anchors.top: header.top
         onClicked: {
@@ -132,7 +134,7 @@ Rectangle {
     Button {
         id: bImporter
         text: "Importer"
-        anchors.margins: 10
+        anchors.margins: 15
         anchors.left: header.right
         anchors.top: bSupprimer.bottom
         enabled: false
