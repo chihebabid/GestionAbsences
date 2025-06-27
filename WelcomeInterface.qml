@@ -19,6 +19,7 @@ Rectangle {
     // Section + Semestre
     GroupBox {
         id: groupSemestre
+        width: groupSeance.width
         anchors.top: parent.top
         anchors.topMargin: 80
         anchors.left: parent.left
@@ -35,7 +36,7 @@ Rectangle {
             ComboBox {
                 id: wLSections
                 textRole: "name"
-                width: root.width * 0.3
+                width: groupSemestre.width * 0.5
                 model: sectionModel
                 onCurrentIndexChanged: {
 
@@ -49,7 +50,9 @@ Rectangle {
                     }
                 }
             }
-            Espacement {}
+            Espacement {
+                width: groupSemestre.width * 0.15
+            }
             Text {
                 text: "Semestre :"
                 font.pixelSize: 16
@@ -58,6 +61,7 @@ Rectangle {
 
             ComboBox {
                 id: wSemestreCombo
+                width: groupSemestre.width * 0.18
                 model: [1, 2]
                 onCurrentIndexChanged: {
                     if (wSemestreCombo.currentIndex >= 0) {
@@ -105,8 +109,9 @@ Rectangle {
 
                 ComboBox {
                     id: typeCoursCombo
+                    textRole: "nom"
                     width: root.width * 0.1
-                    model: ["Cours", "CI", "TD", "TP"]
+                    model: typeCoursModel
                     currentIndex: 0 // Valeur par défaut
 
                     onCurrentIndexChanged: {
@@ -227,7 +232,7 @@ Rectangle {
                     text: "Planifier"
                     width: root.width * 0.1
                     anchors.right: parent.right
-                    anchors.rightMargin: 20
+                   // anchors.rightMargin: 15
                     onClicked: {
                         console.log("Planification en cours...")
                     }

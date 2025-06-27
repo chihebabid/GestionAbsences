@@ -4,6 +4,7 @@
 #include "sectionmodel.h"
 #include "modulemodel.h"
 #include "etudiantsmodel.h"
+#include "typecoursmodel.h"
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -39,6 +40,7 @@ int main(int argc, char *argv[])
     ModuleModel moduleModel;
     SectionModel wSectionModel;
     EtudiantsModel etudiantsModel;
+    TypeCoursModel typeCoursModel;
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
     engine.rootContext()->setContextProperty("sectionModel", &sectionModel);
@@ -46,6 +48,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("manageSection", &sectionManager);
     engine.rootContext()->setContextProperty("moduleModel", &moduleModel);
     engine.rootContext()->setContextProperty("etudiantsModel", &etudiantsModel);
+    engine.rootContext()->setContextProperty("typeCoursModel", &typeCoursModel);
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
@@ -54,6 +57,7 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
     engine.loadFromModule("GestionAbsences", "Main");
     QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&sectionModel,&SectionModel::loadSections);
+    QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&typeCoursModel,&TypeCoursModel::load);
     dbManager.initialize();
 
     return app.exec();

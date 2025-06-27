@@ -1,0 +1,33 @@
+#ifndef TYPECOURSMODEL_H
+#define TYPECOURSMODEL_H
+
+#include <QAbstractListModel>
+#include <QObject>
+
+struct TypeCours {
+    int id;
+    QString nom;
+};
+
+class TypeCoursModel : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    explicit TypeCoursModel(QObject *parent = nullptr);
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QHash<int, QByteArray> roleNames() const override;
+
+    Q_INVOKABLE int getId(int index) const;
+    Q_INVOKABLE QString getNom(int index) const;
+
+    Q_INVOKABLE void load();
+private:
+    QList<TypeCours> m_data;
+    enum Roles {
+        IdRole = Qt::UserRole + 1,
+        NomRole
+    };
+};
+
+#endif // TYPECOURSMODEL_H

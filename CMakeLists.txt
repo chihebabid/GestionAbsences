@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick Sql QuickControls2)
 find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
 
 
@@ -33,6 +35,9 @@ qt_add_qml_module(appGestionAbsences
     SOURCES etudiantsmodel.h etudiantsmodel.cpp
     QML_FILES PopupDate.qml
     QML_FILES Espacement.qml
+    SOURCES
+    SOURCES planifierseance.h planifierseance.cpp
+    SOURCES typecoursmodel.h typecoursmodel.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -50,6 +55,8 @@ target_link_libraries(appGestionAbsences
     PRIVATE Qt6::Quick Qt6::Sql Qt6::QuickControls2
 )
 target_link_libraries(appGestionAbsences PRIVATE Qt6::Core Qt6::QuickControls2)
+target_link_libraries(appGestionAbsences PRIVATE Qt6::Core)
+target_link_libraries(appGestionAbsences PRIVATE Qt6::Core)
 
 
 
