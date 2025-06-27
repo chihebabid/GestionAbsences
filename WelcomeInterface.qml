@@ -16,66 +16,72 @@ Rectangle {
         anchors.topMargin: 20
     }
 
-    // Section + ComboBox, centrés sous le texte
+    // Section + Semestre
     GroupBox {
-        id: groupSeance
+        id: groupSemestre
         anchors.top: parent.top
         anchors.topMargin: 80
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        title: qsTr("Sélectionner la section")
+        Row {
+            spacing: 10
+            Text {
+                text: "Section :"
+                font.pixelSize: 16
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            ComboBox {
+                id: wLSections
+                textRole: "name"
+                width: root.width * 0.3
+                model: sectionModel
+                onCurrentIndexChanged: {
+
+                    if (wLSections.currentIndex >= 0) {
+                        let sectionIndex = wLSections.currentIndex
+                        let sectionId = wLSections.model.getSectionId(
+                                sectionIndex)
+                        let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
+                        wModules.model.loadModulesForSection(sectionId,
+                                                             semestre)
+                    }
+                }
+            }
+            Espacement {}
+            Text {
+                text: "Semestre :"
+                font.pixelSize: 16
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            ComboBox {
+                id: wSemestreCombo
+                model: [1, 2]
+                onCurrentIndexChanged: {
+                    if (wSemestreCombo.currentIndex >= 0) {
+                        let sectionIndex = wLSections.currentIndex
+                        let sectionId = wLSections.model.getSectionId(
+                                sectionIndex)
+                        let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
+                        wModules.model.loadModulesForSection(sectionId,
+                                                             semestre)
+                    }
+                }
+            }
+        }
+    }
+    GroupBox {
+        id: groupSeance
+        anchors.top: groupSemestre.bottom
+        anchors.topMargin: 30
         anchors.left: parent.left
         anchors.leftMargin: 20
         title: qsTr("Planifier une séance")
         Column {
             spacing: 20
 
-
-            Row {
-                spacing: 10
-
-                Text {
-                    text: "Section :"
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
-                }
-
-                ComboBox {
-                    id: wLSections
-                    textRole: "name"
-                    width: root.width * 0.3
-                    model: sectionModel
-                    onCurrentIndexChanged: {
-
-                        if (wLSections.currentIndex >= 0) {
-                            let sectionIndex = wLSections.currentIndex
-                            let sectionId = wLSections.model.getSectionId(
-                                    sectionIndex)
-                            let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
-                            wModules.model.loadModulesForSection(sectionId,
-                                                                 semestre)
-                        }
-                    }
-                }
-                Espacement {}
-                Text {
-                    text: "Semestre :"
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
-                }
-
-                ComboBox {
-                    id: wSemestreCombo
-                    model: [1, 2]
-                    onCurrentIndexChanged: {
-                        if (wSemestreCombo.currentIndex >= 0) {
-                            let sectionIndex = wLSections.currentIndex
-                            let sectionId = wLSections.model.getSectionId(
-                                    sectionIndex)
-                            let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
-                            wModules.model.loadModulesForSection(sectionId,
-                                                                 semestre)
-                        }
-                    }
-                }
-            }
             Row {
                 spacing: 10
                 Text {
