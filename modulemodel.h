@@ -32,6 +32,7 @@ public:
     Q_INVOKABLE void addModuleForSection(const QString &nom,const int sectionId,const int semestre);
     Q_INVOKABLE void deleteSelected();
     Q_INVOKABLE void updateModule(int index, const QString &nouveauNom);
+    Q_INVOKABLE int getId(const int index);
 private:
     QList<Module> m_modules;
     QSqlDatabase db;

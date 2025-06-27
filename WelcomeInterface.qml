@@ -99,6 +99,12 @@ Rectangle {
                     textRole: "name"
                     width: root.width * 0.4
                     model: moduleModel
+                    onCurrentIndexChanged: {
+                        if (currentIndex!==-1)
+                            btnPlanifier.enabled=true
+                        else
+                            btnPlanifier.enabled=false
+                    }
                 }
                 Espacement {}
                 Text {
@@ -232,9 +238,22 @@ Rectangle {
                     text: "Planifier"
                     width: root.width * 0.1
                     anchors.right: parent.right
-                   // anchors.rightMargin: 15
+                    enabled: false
                     onClicked: {
-                        console.log("Planification en cours...")
+                        if (wModules.currentIndex!==-1) {
+                            let idModule = wModules.model.getId(wModules.currentIndex)
+                            let idTypeCours = typeCoursCombo.model.getId(typeCoursCombo.currentIndex)
+
+                            let date = dateField.text  // format: "dd/MM/yyyy"
+
+                            let h = Math.floor(timeSpin.value / 60)
+                            let m = timeSpin.value % 60
+                            let heureDebut = Qt.formatTime(new Date(0, 0, 0, h, m), "hh:mm")
+
+                            let duree = dureeSpin.value
+                            planifierSeance.ajouterSeance(idModule,idTypeCours,date, heureDebut,duree)
+                            console.log("Planification réussie...")
+                        }
                     }
                 }
             }

@@ -172,3 +172,7 @@ void ModuleModel::updateModule(int index, const QString &nouveauNom) {
         qWarning() << "Erreur updateModule:" << query.lastError();
     }
 }
+
+int ModuleModel::getId(const int index) {
+    return m_modules[index].id;
+}

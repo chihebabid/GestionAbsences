@@ -1,4 +1,5 @@
 #include "misc.h"
+#include "planifierseance.h"
 #include "absencedatabasemanager.h"
 #include "manageslectedsectionmodule.h"
 #include "sectionmodel.h"
@@ -41,6 +42,7 @@ int main(int argc, char *argv[])
     SectionModel wSectionModel;
     EtudiantsModel etudiantsModel;
     TypeCoursModel typeCoursModel;
+    PlanifierSeance planifierSeance;
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
     engine.rootContext()->setContextProperty("sectionModel", &sectionModel);
@@ -49,6 +51,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("moduleModel", &moduleModel);
     engine.rootContext()->setContextProperty("etudiantsModel", &etudiantsModel);
     engine.rootContext()->setContextProperty("typeCoursModel", &typeCoursModel);
+    engine.rootContext()->setContextProperty("planifierSeance", &planifierSeance);
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
