@@ -100,10 +100,10 @@ Rectangle {
                     width: root.width * 0.4
                     model: moduleModel
                     onCurrentIndexChanged: {
-                        if (currentIndex!==-1)
-                            btnPlanifier.enabled=true
+                        if (currentIndex !== -1)
+                            btnPlanifier.enabled = true
                         else
-                            btnPlanifier.enabled=false
+                            btnPlanifier.enabled = false
                     }
                 }
                 Espacement {}
@@ -240,18 +240,24 @@ Rectangle {
                     anchors.right: parent.right
                     enabled: false
                     onClicked: {
-                        if (wModules.currentIndex!==-1) {
-                            let idModule = wModules.model.getId(wModules.currentIndex)
-                            let idTypeCours = typeCoursCombo.model.getId(typeCoursCombo.currentIndex)
+                        if (wModules.currentIndex !== -1) {
+                            let idModule = wModules.model.getId(
+                                    wModules.currentIndex)
+                            let idTypeCours = typeCoursCombo.model.getId(
+                                    typeCoursCombo.currentIndex)
 
-                            let date = dateField.text  // format: "dd/MM/yyyy"
+                            let date = dateField.text // format: "dd/MM/yyyy"
 
                             let h = Math.floor(timeSpin.value / 60)
                             let m = timeSpin.value % 60
-                            let heureDebut = Qt.formatTime(new Date(0, 0, 0, h, m), "hh:mm")
+                            let heureDebut = Qt.formatTime(new Date(0, 0, 0, h,
+                                                                    m), "hh:mm")
 
                             let duree = dureeSpin.value
-                            planifierSeance.ajouterSeance(idModule,idTypeCours,date, heureDebut,duree)
+                            planifierSeance.ajouterSeance(idModule,
+                                                          idTypeCours, date,
+                                                          heureDebut, duree)
+                            listeSeances.model.loadSeances()
                             console.log("Planification réussie...")
                         }
                     }
@@ -268,24 +274,53 @@ Rectangle {
         width: groupSeance.width
         title: qsTr("Marquer les absences")
         Row {
+            id: selectionSeance
             spacing: 10
-        Text {
-            text: "Séance :"
-            font.pixelSize: 16
-            verticalAlignment: Text.AlignVCenter
-        }
+            Text {
+                text: "Séance :"
+                font.pixelSize: 16
+                verticalAlignment: Text.AlignVCenter
+            }
 
-        ComboBox {
-            id: listeSeances
-            width: root.width * 0.3
+            ComboBox {
+                id: listeSeances
+                width: root.width * 0.3
+                model: seanceModel
+                currentIndex: 0 // Valeur par défaut
 
-            currentIndex: 0 // Valeur par défaut
-
-            onCurrentIndexChanged: {
-                console.log("Type de cours sélectionné :",
-                            typeCoursCombo.currentText)
+                onCurrentIndexChanged: {
+                    console.log("Type de cours sélectionné :",
+                                typeCoursCombo.currentText)
+                }
             }
         }
+        Row {
+            id: header
+            anchors.topMargin: 30
+            spacing: 1
+            anchors.top: selectionSeance.bottom
+            Rectangle {
+                    width: 19
+                    height: 30
+                    color: "transparent"
+            }
+            Repeater {
+                model: ["N˚ inscription","Nom", "Prénom", "Présence"]
+                Rectangle {
+                    width: 100
+                    height: 30
+                    color: "#f0f0f0"
+                    border.color: "#ccc"
+                    border.width: 1
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: modelData
+                        font.bold: true
+                        font.pixelSize: 14
+                    }
+                }
+            }
         }
     }
 }

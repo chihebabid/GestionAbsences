@@ -1,13 +1,33 @@
 #ifndef SEANCEMODEL_H
 #define SEANCEMODEL_H
-
+#include <QAbstractListModel>
 #include <QObject>
+#include <QList>
 
-class SeanceModel
-{
+struct Seance {
+    int id;
+    QString section;
+    QString module;
+    QString type;
+    QString debut;
+    QString duree;
+    QString date;
+};
+
+class SeanceModel : public QAbstractListModel {
     Q_OBJECT
+    enum Roles {
+        ValeurRole = Qt::UserRole + 1
+    };
 public:
-    SeanceModel();
+    explicit SeanceModel(QObject *parent = nullptr);
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QHash<int, QByteArray> roleNames() const override;
+public slots:
+    void loadSeances();
+private:
+    QList<Seance> m_data;
 };
 
 #endif // SEANCEMODEL_H

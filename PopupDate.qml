@@ -79,6 +79,7 @@ Popup {
 
             onClicked: (date) => {
                 calendarPopup.selectedDate = date
+                dateField.text=Qt.formatDate(date, "dd/MM/yyyy")
                 calendarPopup.close()
             }
 
