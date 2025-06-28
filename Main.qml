@@ -10,8 +10,8 @@ ApplicationWindow {
     id: root
     //Material.theme: Material.Dark
     visible: true
-    width: 640
-    height: 480
+    width: 800
+    height: 600
     title: "Gestion des absences"
     property bool isDatabaseReady: false
     property int currentTab: 0

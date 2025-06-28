@@ -267,56 +267,113 @@ Rectangle {
     }
     GroupBox {
         id: groupListe
+        property var tableWidth: width*.8
+        property var columnWidths: [tableWidth * .2, tableWidth * .3, tableWidth
+            * .3, tableWidth * .2]
         anchors.top: groupSeance.bottom
         anchors.topMargin: 30
         anchors.left: parent.left
         anchors.leftMargin: 20
         width: groupSeance.width
         title: qsTr("Marquer les absences")
-        Row {
-            id: selectionSeance
+        function columnWidth(col) {
+                return columnWidths[col]
+
+        }
+        ColumnLayout {
             spacing: 10
-            Text {
-                text: "Séance :"
-                font.pixelSize: 16
-                verticalAlignment: Text.AlignVCenter
-            }
+            anchors.fill: parent
+            anchors.margins: 10
+            RowLayout {
+                id: selectionSeance
+                spacing: 10
+                Text {
+                    text: "Séance :"
+                    font.pixelSize: 16
+                    verticalAlignment: Text.AlignVCenter
+                }
 
-            ComboBox {
-                id: listeSeances
-                width: root.width * 0.3
-                model: seanceModel
-                currentIndex: 0 // Valeur par défaut
+                ComboBox {
+                    id: listeSeances
+                    width: root.width * 0.4
+                    model: seanceModel
+                    currentIndex: 0 // Valeur par défaut
 
-                onCurrentIndexChanged: {
-                    console.log("Type de cours sélectionné :",
-                                typeCoursCombo.currentText)
+                    onCurrentIndexChanged: {
+                        console.log("Type de cours sélectionné :",
+                                    typeCoursCombo.currentText)
+                    }
                 }
             }
-        }
-        Row {
-            id: header
-            anchors.topMargin: 30
-            spacing: 1
-            anchors.top: selectionSeance.bottom
-            Rectangle {
-                    width: 19
-                    height: 30
-                    color: "transparent"
-            }
-            Repeater {
-                model: ["N˚ inscription","Nom", "Prénom", "Présence"]
+            RowLayout {
+                id: header
+                spacing: 1
                 Rectangle {
-                    width: 100
-                    height: 30
-                    color: "#f0f0f0"
+                    width: 19
+                    height: 60
+                    color: "transparent"
+                }
+                Repeater {
+                    model: ["N˚ inscription", "Nom", "Prénom", "Présence"]
+                    Rectangle {
+                        Layout.preferredWidth: groupListe.columnWidth(index)
+                        height: 30
+                        color: "#f0f0f0"
+                        border.color: "#ccc"
+                        border.width: 2
+
+                        Text {
+                            anchors.fill: parent
+                            anchors.centerIn: parent
+                            horizontalAlignment: Text.AlignHCenter
+                            text: modelData
+                            font.bold: true
+                            font.pixelSize: 14
+                        }
+                    }
+                }
+            }
+
+            TableView {
+                id: tableAbsences
+
+                columnSpacing: 1
+                rowSpacing: 1
+                clip: true
+
+                height: 20
+                ScrollBar.vertical: ScrollBar {
+                    policy: ScrollBar.AsNeeded
+                }
+                columnWidthProvider: function(col) { return groupListe.columnWidths[col] }
+
+                delegate: Rectangle {
+                    implicitWidth: 150
+                    implicitHeight: 30
                     border.color: "#ccc"
                     border.width: 1
 
                     Text {
                         anchors.centerIn: parent
-                        text: modelData
-                        font.bold: true
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        horizontalAlignment: Text.AlignLeft
+                        width: parent.width - 12
+                        elide: Text.ElideLeft
+                        text: {
+                            switch (column) {
+                            case 0:
+                                return "model.inscri"
+                            case 1:
+                                return "model.nom"
+                            case 2:
+                                return "model.prenom"
+                            case 3:
+                                return "model.mail"
+                            default:
+                                return ""
+                            }
+                        }
                         font.pixelSize: 14
                     }
                 }
