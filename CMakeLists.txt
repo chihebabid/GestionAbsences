@@ -9,6 +9,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
 
 
@@ -40,6 +41,7 @@ qt_add_qml_module(appGestionAbsences
     SOURCES planifierseance.h planifierseance.cpp
     SOURCES typecoursmodel.h typecoursmodel.cpp
     SOURCES seancemodel.h seancemodel.cpp
+    SOURCES absencemodel.h absencemodel.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -57,6 +59,7 @@ target_link_libraries(appGestionAbsences
     PRIVATE Qt6::Quick Qt6::Sql Qt6::QuickControls2
 )
 target_link_libraries(appGestionAbsences PRIVATE Qt6::Core Qt6::QuickControls2)
+target_link_libraries(appGestionAbsences PRIVATE Qt6::Core)
 target_link_libraries(appGestionAbsences PRIVATE Qt6::Core)
 target_link_libraries(appGestionAbsences PRIVATE Qt6::Core)
 target_link_libraries(appGestionAbsences PRIVATE Qt6::Core)

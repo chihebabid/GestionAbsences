@@ -2,8 +2,8 @@
 #define ETUDIANTSMODEL_H
 
 #include <QAbstractTableModel>
-
 #include <QObject>
+
 struct Etudiant {
     int id;
     QString inscri;
