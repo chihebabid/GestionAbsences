@@ -80,3 +80,7 @@ int SeanceModel::getId(const int index) const {
     qDebug()<<"index "<<index<<", data: "<<m_data[index].id;
     return m_data[index].id;
 }
+
+Seance SeanceModel::getSeance(const int index) {
+    return Seance{};
+}

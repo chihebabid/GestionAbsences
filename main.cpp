@@ -9,6 +9,7 @@
 #include "seancemodel.h"
 #include "absencemodel.h"
 #include "presencemodel.h"
+#include "printermanage.h"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -17,6 +18,7 @@
 #include <QSqlError>
 #include <QFile>
 #include <QtQuickControls2/QQuickStyle>
+#include <QApplication>
 
 
 QString init() {
@@ -33,7 +35,7 @@ QString init() {
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     QQuickStyle::setStyle("Fusion");
     QQmlApplicationEngine engine;
 
@@ -48,6 +50,7 @@ int main(int argc, char *argv[])
     SeanceModel seanceModel;
     AbsenceModel absenceModel;
     PresenceModel presenceModel;
+    PrinterManage printerManage;
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
     engine.rootContext()->setContextProperty("sectionModel", &sectionModel);
@@ -60,6 +63,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("seanceModel", &seanceModel);
     engine.rootContext()->setContextProperty("absenceModel", &absenceModel);
     engine.rootContext()->setContextProperty("presenceModel", &presenceModel);
+    engine.rootContext()->setContextProperty("printerManage", &printerManage);
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,

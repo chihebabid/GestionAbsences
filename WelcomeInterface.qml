@@ -298,7 +298,7 @@ Rectangle {
                     id: listeSeances
                     width: root.width * 0.4
                     model: seanceModel
-                    currentIndex: 0 // Valeur par défaut
+                    //currentIndex: 0 // Valeur par défaut
 
                     onCurrentIndexChanged: {
                         absenceModel.loadEtudiantsForSeance(seanceModel.getId(currentIndex));
@@ -316,7 +316,7 @@ Rectangle {
                 Rectangle {
                     width: 19
                     height: 30
-                    color: "transparent"
+                    color: "red"
                 }
                 Repeater {
                     model: ["N˚ inscription", "Nom", "Prénom", "Présence"]
@@ -400,7 +400,6 @@ Rectangle {
 
                                 currentIndex:  presenceModel.getIndexById(presenceId)
                                 onCurrentIndexChanged: {
-                                    //if (presenc)
                                     const newId = presenceModel.getId(currentIndex)
                                     absenceModel.setPresence(row, newId)
                                 }
@@ -409,6 +408,17 @@ Rectangle {
                     }
                 }
             }
+            Button {
+                text: "Imprimer"
+                anchors.margins: 20
+                //anchors.left: header.right
+                //anchors.top: header.top
+                onClicked: {
+                    printerManage.imprimerAbsenceSeance()
+                }
+            }
+
         }
+
     }
 }
