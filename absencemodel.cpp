@@ -73,7 +73,6 @@ void AbsenceModel::loadEtudiantsForSeance(const int seanceId) {
 SELECT absence.id,absence.presence_id,etudiant.inscri, etudiant.nom, etudiant.prenom
 FROM absence
 JOIN etudiant ON absence.etudiant_id = etudiant.id
-JOIN presence ON absence.presence_id=presence.id
 WHERE absence.seance_id = ? )");
 
     query.addBindValue(seanceId);
@@ -87,10 +86,10 @@ WHERE absence.seance_id = ? )");
     while (query.next()) {
         Etudiant e;
         e.id = query.value("absence.id").toInt();
+        e.presence=query.value("absence.presence_id").toInt();
         e.nom = query.value("etudiant.nom").toString();
         e.prenom = query.value("etudiant.prenom").toString();
-        e.inscri= query.value("etudiant.inscri").toString();
-        e.presence=query.value("absence.presence_id").toInt();
+        e.inscri= query.value("etudiant.inscri").toString();        
         m_data.push_back(e);        
     }
 

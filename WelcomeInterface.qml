@@ -281,9 +281,10 @@ Rectangle {
 
         }
         ColumnLayout {
-            spacing: 10
+            //spacing: 10
             anchors.fill: parent
             anchors.margins: 10
+            spacing: 0
             RowLayout {
                 id: selectionSeance
                 spacing: 10
@@ -303,13 +304,18 @@ Rectangle {
                         absenceModel.loadEtudiantsForSeance(seanceModel.getId(currentIndex));
                     }
                 }
+                Rectangle {
+                    width: 19
+                    height: 60
+                    color: "transparent"
+                }
             }
             RowLayout {
                 id: header
                 spacing: 1
                 Rectangle {
                     width: 19
-                    height: 60
+                    height: 30
                     color: "transparent"
                 }
                 Repeater {
@@ -319,7 +325,7 @@ Rectangle {
                         height: 30
                         color: "#f0f0f0"
                         border.color: "#ccc"
-                        border.width: 2
+                        border.width: 1
 
                         Text {
                             anchors.fill: parent
@@ -338,11 +344,11 @@ Rectangle {
                 interactive: false
                 leftMargin: 20
                 Layout.fillWidth: true
-                       Layout.fillHeight: true
+                Layout.fillHeight: true
 
                 columnSpacing: 1
                 rowSpacing: 1
-                clip: true
+                //clip: true
                 model: absenceModel
                 height: 200
                 z: 2
@@ -392,10 +398,10 @@ Rectangle {
                                 textRole: "label"
                                 // index de l'élément actuel dans presenceModel (à partir de model.presenceId)
 
-
-
+                                currentIndex:  presenceModel.getIndexById(presenceId)
                                 onCurrentIndexChanged: {
-                                    const newId = presenceModel.getIndexById(currentIndex)
+                                    //if (presenc)
+                                    const newId = presenceModel.getId(currentIndex)
                                     absenceModel.setPresence(row, newId)
                                 }
                             }
