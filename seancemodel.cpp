@@ -44,6 +44,7 @@ void SeanceModel::loadSeances() {
     seance.date,
     seance.heure_debut,
     seance.duree,
+    seance.id,
     type_cours.libelle
     FROM seance
     JOIN type_cours ON seance.type_id = type_cours.id
@@ -69,7 +70,13 @@ void SeanceModel::loadSeances() {
         QDate _date {QDate::fromString(s.date, "yyyy-MM-dd")};
         s.date= _date.toString("dd/MM/yyyy");
         s.type =  query.value("type_cours.libelle").toString();
+        s.id= query.value("seance.id").toInt();
         m_data.push_back(s);
     }
     endResetModel();
+}
+
+int SeanceModel::getId(const int index) const {
+    qDebug()<<"index "<<index<<", data: "<<m_data[index].id;
+    return m_data[index].id;
 }

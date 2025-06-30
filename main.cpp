@@ -7,6 +7,8 @@
 #include "etudiantsmodel.h"
 #include "typecoursmodel.h"
 #include "seancemodel.h"
+#include "absencemodel.h"
+#include "presencemodel.h"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -44,6 +46,8 @@ int main(int argc, char *argv[])
     TypeCoursModel typeCoursModel;
     PlanifierSeance planifierSeance;
     SeanceModel seanceModel;
+    AbsenceModel absenceModel;
+    PresenceModel presenceModel;
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
     engine.rootContext()->setContextProperty("sectionModel", &sectionModel);
@@ -54,6 +58,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("typeCoursModel", &typeCoursModel);
     engine.rootContext()->setContextProperty("planifierSeance", &planifierSeance);
     engine.rootContext()->setContextProperty("seanceModel", &seanceModel);
+    engine.rootContext()->setContextProperty("absenceModel", &absenceModel);
+    engine.rootContext()->setContextProperty("presenceModel", &presenceModel);
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
@@ -64,6 +70,7 @@ int main(int argc, char *argv[])
     QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&sectionModel,&SectionModel::loadSections);
     QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&typeCoursModel,&TypeCoursModel::load);
     QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&seanceModel,&SeanceModel::loadSeances);
+    QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&presenceModel,&PresenceModel::loadFromDatabase);
     dbManager.initialize();
 
     return app.exec();

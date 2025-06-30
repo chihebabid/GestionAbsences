@@ -300,8 +300,7 @@ Rectangle {
                     currentIndex: 0 // Valeur par défaut
 
                     onCurrentIndexChanged: {
-                        console.log("Type de cours sélectionné :",
-                                    typeCoursCombo.currentText)
+                        absenceModel.loadEtudiantsForSeance(seanceModel.getId(currentIndex));
                     }
                 }
             }
@@ -336,12 +335,17 @@ Rectangle {
 
             TableView {
                 id: tableAbsences
+                interactive: false
+                leftMargin: 20
+                Layout.fillWidth: true
+                       Layout.fillHeight: true
 
                 columnSpacing: 1
                 rowSpacing: 1
                 clip: true
-
-                height: 20
+                model: absenceModel
+                height: 200
+                z: 2
                 ScrollBar.vertical: ScrollBar {
                     policy: ScrollBar.AsNeeded
                 }
@@ -352,29 +356,50 @@ Rectangle {
                     implicitHeight: 30
                     border.color: "#ccc"
                     border.width: 1
+                    required property int row
+                    property int presenceId: model.presence
+                    Item {
+                        anchors.fill: parent
+                        // Colonne 0 à 2 → simple texte
+                        // Colonne 3 → ComboBox
+                        Loader {
+                            anchors.fill: parent
+                            sourceComponent: column === 3 ? componentPresence : textItem
+                        }
 
-                    Text {
-                        anchors.centerIn: parent
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.left: parent.left
-                        horizontalAlignment: Text.AlignLeft
-                        width: parent.width - 12
-                        elide: Text.ElideLeft
-                        text: {
-                            switch (column) {
-                            case 0:
-                                return "model.inscri"
-                            case 1:
-                                return "model.nom"
-                            case 2:
-                                return "model.prenom"
-                            case 3:
-                                return "model.mail"
-                            default:
-                                return ""
+                        Component {
+                            id: textItem
+                            Text {
+                                anchors.centerIn: parent
+                                font.pixelSize: 14
+                                text: {
+                                    switch (column) {
+                                    case 0: return model.inscri
+                                    case 1: return model.nom
+                                    case 2: return model.prenom
+                                    default: return ""
+                                    }
+                                }
                             }
                         }
-                        font.pixelSize: 14
+
+                        Component {
+                            id: componentPresence
+                            ComboBox {
+                                id: comboPresence
+                                anchors.fill: parent
+                                model: presenceModel
+                                textRole: "label"
+                                // index de l'élément actuel dans presenceModel (à partir de model.presenceId)
+
+
+
+                                onCurrentIndexChanged: {
+                                    const newId = presenceModel.getIndexById(currentIndex)
+                                    absenceModel.setPresence(row, newId)
+                                }
+                            }
+                        }
                     }
                 }
             }

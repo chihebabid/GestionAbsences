@@ -6,10 +6,7 @@
 
 EtudiantsModel::EtudiantsModel(QObject *parent)
     : QAbstractTableModel{parent}
-{
-
-
-}
+{}
 
 int EtudiantsModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
@@ -62,8 +59,6 @@ QHash<int, QByteArray> EtudiantsModel::roleNames() const {
 }
 
 void EtudiantsModel::loadEtudiantsForSection(const int sectionId) {
-
-    qDebug()<<__PRETTY_FUNCTION__<<", section id : "<<sectionId;
     if (!QSqlDatabase::database().isOpen()) {
         qWarning() << "Base de données non ouverte !";
     }
@@ -93,9 +88,7 @@ void EtudiantsModel::loadEtudiantsForSection(const int sectionId) {
         m_data.push_back(e);
         qDebug()<<"Itération";
     }
-
-    endResetModel();
-    qDebug()<<"Nombre etudiants : "<<m_data.count();
+    endResetModel();    
 }
 
 
