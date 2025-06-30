@@ -267,7 +267,7 @@ Rectangle {
     }
     GroupBox {
         id: groupListe
-        property var tableWidth: width*.8
+        property var tableWidth: width * .8
         property var columnWidths: [tableWidth * .2, tableWidth * .3, tableWidth
             * .3, tableWidth * .2]
 
@@ -278,133 +278,147 @@ Rectangle {
         width: groupSeance.width
         title: qsTr("Marquer les absences")
         function columnWidth(col) {
-                return columnWidths[col]
-
+            return columnWidths[col]
         }
-        ColumnLayout {
-            //spacing: 10
+        RowLayout {
             anchors.fill: parent
-            anchors.margins: 10
+            //anchors.margins: 10
             spacing: 0
-            RowLayout {
-                id: selectionSeance
-                spacing: 10
-                Text {
-                    text: "Séance :"
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
-                }
+            ColumnLayout {
+                //spacing: 10
+                //anchors.fill: parent
+                //anchors.margins: 10
+                spacing: 0
+                RowLayout {
+                    id: selectionSeance
+                    spacing: 10
+                    Text {
+                        text: "Séance :"
+                        font.pixelSize: 16
+                        verticalAlignment: Text.AlignVCenter
+                    }
 
-                ComboBox {
-                    id: listeSeances
-                    //Layout.fillWidth: true
-                    Layout.preferredWidth: root.width*.4
-                    model: seanceModel
-                    //currentIndex: 0 // Valeur par défaut
+                    ComboBox {
+                        id: listeSeances
+                        //Layout.fillWidth: true
+                        Layout.preferredWidth: root.width * .4
+                        model: seanceModel
 
-                    onCurrentIndexChanged: {
-                        absenceModel ? absenceModel.loadEtudiantsForSeance(seanceModel.getId(currentIndex)) : -1
+                        //currentIndex: 0 // Valeur par défaut
+                        onCurrentIndexChanged: {
+                            absenceModel ? absenceModel.loadEtudiantsForSeance(
+                                               seanceModel.getId(
+                                                   currentIndex)) : -1
+                        }
+                    }
+                    Rectangle {
+                        width: 19
+                        height: 60
+                        color: "transparent"
                     }
                 }
-                Rectangle {
-                    width: 19
-                    height: 60
-                    color: "transparent"
-                }
-            }
-            RowLayout {
-                id: header
-                spacing: 1
-                Rectangle {
-                    width: 19
-                    height: 30
-                    color: "red"
-                }
-                Repeater {
-                    model: ["N˚ inscription", "Nom", "Prénom", "Présence"]
+                RowLayout {
+                    id: header
+                    spacing: 1
                     Rectangle {
-                        Layout.preferredWidth: groupListe.columnWidth(index)
+                        width: 19
                         height: 30
-                        color: "#f0f0f0"
+                        color: "red"
+                    }
+                    Repeater {
+                        model: ["N˚ inscription", "Nom", "Prénom", "Présence"]
+                        Rectangle {
+                            Layout.preferredWidth: groupListe.columnWidth(index)
+                            height: 30
+                            color: "#f0f0f0"
+                            border.color: "#ccc"
+                            border.width: 1
+
+                            Text {
+                                anchors.fill: parent
+                                anchors.centerIn: parent
+                                horizontalAlignment: Text.AlignHCenter
+                                text: modelData
+                                font.bold: true
+                                font.pixelSize: 14
+                            }
+                        }
+                    }
+                }
+
+                TableView {
+                    id: tableAbsences
+                    interactive: false
+                    leftMargin: 20
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    columnSpacing: 1
+                    rowSpacing: 1
+                    //clip: true
+                    model: absenceModel
+                    height: 200
+                    z: 2
+                    ScrollBar.vertical: ScrollBar {
+                        policy: ScrollBar.AsNeeded
+                    }
+                    columnWidthProvider: function (col) {
+                        return groupListe.columnWidths[col]
+                    }
+
+                    delegate: Rectangle {
+                        implicitWidth: 150
+                        implicitHeight: 30
                         border.color: "#ccc"
                         border.width: 1
-
-                        Text {
+                        required property int row
+                        property int presenceId: model.presence
+                        Item {
                             anchors.fill: parent
-                            anchors.centerIn: parent
-                            horizontalAlignment: Text.AlignHCenter
-                            text: modelData
-                            font.bold: true
-                            font.pixelSize: 14
-                        }
-                    }
-                }
-            }
-
-            TableView {
-                id: tableAbsences
-                interactive: false
-                leftMargin: 20
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                columnSpacing: 1
-                rowSpacing: 1
-                //clip: true
-                model: absenceModel
-                height: 200
-                z: 2
-                ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AsNeeded
-                }
-                columnWidthProvider: function(col) { return groupListe.columnWidths[col] }
-
-                delegate: Rectangle {
-                    implicitWidth: 150
-                    implicitHeight: 30
-                    border.color: "#ccc"
-                    border.width: 1
-                    required property int row
-                    property int presenceId: model.presence
-                    Item {
-                        anchors.fill: parent
-                        // Colonne 0 à 2 → simple texte
-                        // Colonne 3 → ComboBox
-                        Loader {
-                            anchors.fill: parent
-                            sourceComponent: column === 3 ? componentPresence : textItem
-                        }
-
-                        Component {
-                            id: textItem
-                            Text {
-                                anchors.centerIn: parent
-                                font.pixelSize: 14
-                                text: {
-                                    switch (column) {
-                                    case 0: return model.inscri
-                                    case 1: return model.nom
-                                    case 2: return model.prenom
-                                    default: return ""
-                                    }
-                                }
-                            }
-                        }
-
-                        Component {
-                            id: componentPresence
-                            ComboBox {
-                                id: comboPresence
+                            // Colonne 0 à 2 → simple texte
+                            // Colonne 3 → ComboBox
+                            Loader {
                                 anchors.fill: parent
-                                model: presenceModel
-                                textRole: "label"
-                                // index de l'élément actuel dans presenceModel (à partir de model.presenceId)
+                                sourceComponent: column === 3 ? componentPresence : textItem
+                            }
 
-                                currentIndex:  presenceModel ? presenceModel.getIndexById(presenceId) : -1
-                                onCurrentIndexChanged: {
-                                    if (presenceModel) {
-                                        const newId = presenceModel.getId(currentIndex)
-                                        absenceModel.setPresence(row, newId)
+                            Component {
+                                id: textItem
+                                Text {
+                                    anchors.centerIn: parent
+                                    font.pixelSize: 14
+                                    text: {
+                                        switch (column) {
+                                        case 0:
+                                            return model.inscri
+                                        case 1:
+                                            return model.nom
+                                        case 2:
+                                            return model.prenom
+                                        default:
+                                            return ""
+                                        }
+                                    }
+                                }
+                            }
+
+                            Component {
+                                id: componentPresence
+                                ComboBox {
+                                    id: comboPresence
+                                    anchors.fill: parent
+                                    model: presenceModel
+                                    textRole: "label"
+
+                                    // index de l'élément actuel dans presenceModel (à partir de model.presenceId)
+                                    currentIndex: presenceModel ? presenceModel.getIndexById(
+                                                                      presenceId) : -1
+                                    onCurrentIndexChanged: {
+                                        if (presenceModel) {
+                                            const newId = presenceModel.getId(
+                                                            currentIndex)
+                                            absenceModel.setPresence(row, newId)
+                                        }
                                     }
                                 }
                             }
@@ -412,17 +426,27 @@ Rectangle {
                     }
                 }
             }
+            ColumnLayout {
+                spacing: 15
             Button {
                 text: "Imprimer"
-                anchors.margins: 20
-                //anchors.left: header.right
-                //anchors.top: header.top
+                //anchors.margins: 20
+                Layout.alignment: Qt.AlignRight
+                //Layout.margins: 20
                 onClicked: {
                     printerManage.imprimerAbsenceSeance()
                 }
             }
-
+            Button {
+                text: "Supprimer"
+                //anchors.margins: 20
+                Layout.alignment: Qt.AlignRight
+                //Layout.margins: 20
+                onClicked: {
+                    printerManage.imprimerAbsenceSeance()
+                }
+            }
+            }
         }
-
     }
 }
