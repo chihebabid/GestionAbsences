@@ -270,6 +270,7 @@ Rectangle {
         property var tableWidth: width*.8
         property var columnWidths: [tableWidth * .2, tableWidth * .3, tableWidth
             * .3, tableWidth * .2]
+
         anchors.top: groupSeance.bottom
         anchors.topMargin: 30
         anchors.left: parent.left
@@ -296,12 +297,13 @@ Rectangle {
 
                 ComboBox {
                     id: listeSeances
-                    width: root.width * 0.4
+                    //Layout.fillWidth: true
+                    Layout.preferredWidth: root.width*.4
                     model: seanceModel
                     //currentIndex: 0 // Valeur par défaut
 
                     onCurrentIndexChanged: {
-                        absenceModel.loadEtudiantsForSeance(seanceModel.getId(currentIndex));
+                        absenceModel ? absenceModel.loadEtudiantsForSeance(seanceModel.getId(currentIndex)) : -1
                     }
                 }
                 Rectangle {
@@ -398,10 +400,12 @@ Rectangle {
                                 textRole: "label"
                                 // index de l'élément actuel dans presenceModel (à partir de model.presenceId)
 
-                                currentIndex:  presenceModel.getIndexById(presenceId)
+                                currentIndex:  presenceModel ? presenceModel.getIndexById(presenceId) : -1
                                 onCurrentIndexChanged: {
-                                    const newId = presenceModel.getId(currentIndex)
-                                    absenceModel.setPresence(row, newId)
+                                    if (presenceModel) {
+                                        const newId = presenceModel.getId(currentIndex)
+                                        absenceModel.setPresence(row, newId)
+                                    }
                                 }
                             }
                         }
