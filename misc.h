@@ -9,5 +9,13 @@ namespace am {
         QString dbName;
     };
     extern struct DBInfo dbInfo;
+
+    struct Etudiant {
+        int id;
+        QString inscri;
+        QString nom;
+        QString prenom;
+        int presence;
+    };
 }
 #endif // MISC_H

@@ -1,7 +1,7 @@
 #include "absencemodel.h"
 #include <QSqlQuery>
 #include <QSqlError>
-
+using am::Etudiant;
 AbsenceModel::AbsenceModel(QObject *parent)
     : QAbstractTableModel{parent}
 {
@@ -22,7 +22,7 @@ int AbsenceModel::columnCount(const QModelIndex &parent) const {
 QVariant AbsenceModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid())
         return {};
-    const Etudiant &etud = m_data[index.row()];
+    const am::Etudiant &etud = m_data[index.row()];
     switch (role) {
     case InscriRole: return etud.inscri;
     case NomRole: return etud.nom;
@@ -51,7 +51,7 @@ bool AbsenceModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (!index.isValid() || index.row() >= m_data.size())
         return false;
 
-    Etudiant &e = m_data[index.row()];
+    am::Etudiant &e = m_data[index.row()];
     switch (role) {
     case NomRole:
         e.nom = value.toString();
@@ -118,5 +118,9 @@ bool AbsenceModel::setPresence(int row, int presenceId) {
     }
 
     return true;
+}
+
+const QList<Etudiant> &AbsenceModel::getListeEtudiants() const {
+    return m_data;
 }
 

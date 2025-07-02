@@ -82,5 +82,5 @@ int SeanceModel::getId(const int index) const {
 }
 
 Seance SeanceModel::getSeance(const int index) {
-    return Seance{};
+    return m_data[index];
 }

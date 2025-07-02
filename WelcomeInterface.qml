@@ -28,32 +28,6 @@ Rectangle {
         Row {
             spacing: 10
             Text {
-                text: "Section :"
-                font.pixelSize: 16
-                verticalAlignment: Text.AlignVCenter
-            }
-
-            ComboBox {
-                id: wLSections
-                textRole: "name"
-                width: groupSemestre.width * 0.5
-                model: sectionModel
-                onCurrentIndexChanged: {
-
-                    if (wLSections.currentIndex >= 0) {
-                        let sectionIndex = wLSections.currentIndex
-                        let sectionId = wLSections.model.getSectionId(
-                                sectionIndex)
-                        let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
-                        wModules.model.loadModulesForSection(sectionId,
-                                                             semestre)
-                    }
-                }
-            }
-            Espacement {
-                width: groupSemestre.width * 0.15
-            }
-            Text {
                 text: "Semestre :"
                 font.pixelSize: 16
                 verticalAlignment: Text.AlignVCenter
@@ -74,6 +48,38 @@ Rectangle {
                     }
                 }
             }
+
+            Espacement {
+                width: groupSemestre.width * 0.15
+            }
+
+            Text {
+                text: "Section :"
+                font.pixelSize: 16
+                verticalAlignment: Text.AlignVCenter
+            }
+
+
+
+            ComboBox {
+                id: wLSections
+                textRole: "name"
+                width: groupSemestre.width * 0.5
+                model: sectionModel
+                onCurrentIndexChanged: {
+
+                    if (wLSections.currentIndex >= 0) {
+                        let sectionIndex = wLSections.currentIndex
+                        let sectionId = wLSections.model.getSectionId(
+                                sectionIndex)
+                        let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
+                        wModules.model.loadModulesForSection(sectionId,
+                                                             semestre)
+                    }
+                }
+            }
+
+
         }
     }
     GroupBox {
@@ -304,17 +310,29 @@ Rectangle {
                         Layout.preferredWidth: root.width * .4
                         model: seanceModel
 
-                        //currentIndex: 0 // Valeur par défaut
                         onCurrentIndexChanged: {
+                            btnSupprimer.enabled = currentIndex === -1 ? false : true
+                            btnImprimer.enabled = btnSupprimer.enabled
                             absenceModel ? absenceModel.loadEtudiantsForSeance(
                                                seanceModel.getId(
                                                    currentIndex)) : -1
                         }
                     }
+                    Button {
+                        id: btnSupprimer
+                        text: "Supprimer"
+                        enabled: false
+                        //anchors.margins: 20
+                        Layout.alignment: Qt.AlignRight
+                        //Layout.margins: 20
+                        onClicked: {
+
+                        }
+                    }
                     Rectangle {
                         width: 19
                         height: 60
-                        color: "transparent"
+                        color: "red"
                     }
                 }
                 RowLayout {
@@ -428,24 +446,15 @@ Rectangle {
             }
             ColumnLayout {
                 spacing: 15
-            Button {
-                text: "Imprimer"
-                //anchors.margins: 20
-                Layout.alignment: Qt.AlignRight
-                //Layout.margins: 20
-                onClicked: {
-                    printerManage.imprimerAbsenceSeance()
+                Button {
+                    id: btnImprimer
+                    text: "Imprimer"                    
+                    Layout.alignment: Qt.AlignRight
+                    enabled: false
+                    onClicked: {
+                        printerManage.startPrinting("absence")
+                    }
                 }
-            }
-            Button {
-                text: "Supprimer"
-                //anchors.margins: 20
-                Layout.alignment: Qt.AlignRight
-                //Layout.margins: 20
-                onClicked: {
-                    printerManage.imprimerAbsenceSeance()
-                }
-            }
             }
         }
     }

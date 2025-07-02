@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("absenceModel", &absenceModel);
     engine.rootContext()->setContextProperty("presenceModel", &presenceModel);
     engine.rootContext()->setContextProperty("printerManage", &printerManage);
+
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
@@ -76,6 +77,9 @@ int main(int argc, char *argv[])
     QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&seanceModel,&SeanceModel::loadSeances);
     QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&presenceModel,&PresenceModel::loadFromDatabase);
     dbManager.initialize();
-
+    QObject::connect(&printerManage,&PrinterManage::s_printAbsence, [&absenceModel,&printerManage]() {
+        printerManage.setAbsenceModel(&absenceModel);
+        printerManage.imprimerAbsenceSeance();
+    });
     return app.exec();
 }
