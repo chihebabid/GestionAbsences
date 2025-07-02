@@ -1,12 +1,11 @@
 #include "presencemodel.h"
 #include <QSqlQuery>
 
-PresenceModel::PresenceModel(QObject *parent)
-    : QAbstractListModel{parent}
-{
+
+
+PresenceModel::PresenceModel(QObject *parent): QAbstractListModel{parent} {
 
 }
-
 
 void PresenceModel::loadFromDatabase() {
     QSqlQuery query("SELECT id, nom FROM presence");

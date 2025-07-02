@@ -81,6 +81,12 @@ int SeanceModel::getId(const int index) const {
     return m_data[index].id;
 }
 
-Seance SeanceModel::getSeance(const int index) {
-    return m_data[index];
+const Seance& SeanceModel::getSelectedSeance() const {
+    if (m_current_index==-1) qDebug()<<__PRETTY_FUNCTION__;
+    return m_data[m_current_index];
+}
+
+
+void SeanceModel::setSelectedIndex(const int index) {
+    m_current_index=index;
 }

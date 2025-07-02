@@ -25,11 +25,13 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
     Q_INVOKABLE int getId(const int index) const;
-    Q_INVOKABLE Seance getSeance(const int index);
+    Q_INVOKABLE const Seance& getSelectedSeance() const;
+    Q_INVOKABLE void setSelectedIndex(const int index);
 public slots:
     void loadSeances();
 private:
     QList<Seance> m_data;
+    int m_current_index {-1};
 };
 
 #endif // SEANCEMODEL_H

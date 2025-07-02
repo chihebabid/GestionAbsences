@@ -1,6 +1,7 @@
 #ifndef ABSENCEMODEL_H
 #define ABSENCEMODEL_H
 #include "misc.h"
+#include "seancemodel.h"
 #include <QAbstractTableModel>
 #include <QObject>
 
@@ -11,7 +12,7 @@ class AbsenceModel : public QAbstractTableModel {
     static constexpr int c_columncount {4};
 public:
 
-    explicit AbsenceModel(QObject *parent = nullptr);
+    explicit AbsenceModel(QObject *parent = nullptr,SeanceModel *s=nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
@@ -21,8 +22,11 @@ public:
     Q_INVOKABLE bool setPresence(int row, int presenceId);
     Q_INVOKABLE void loadEtudiantsForSeance(const int seanceId);
     const QList<am::Etudiant> &getListeEtudiants() const;
+    SeanceModel *getSeance() const;
+
 private:
     QList<am::Etudiant> m_data;
+    SeanceModel* m_seance;
 };
 
 #endif // ABSENCEMODEL_H

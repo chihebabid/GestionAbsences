@@ -39,6 +39,7 @@ qt_add_qml_module(appGestionAbsences
     SOURCES absencemodel.h absencemodel.cpp
     SOURCES presencemodel.h presencemodel.cpp
     SOURCES printermanage.h printermanage.cpp
+    QML_FILES Synthese.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

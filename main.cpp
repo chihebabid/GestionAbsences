@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     TypeCoursModel typeCoursModel;
     PlanifierSeance planifierSeance;
     SeanceModel seanceModel;
-    AbsenceModel absenceModel;
+    AbsenceModel absenceModel{nullptr,&seanceModel};
     PresenceModel presenceModel;
     PrinterManage printerManage;
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);

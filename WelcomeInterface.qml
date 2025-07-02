@@ -313,6 +313,9 @@ Rectangle {
                         onCurrentIndexChanged: {
                             btnSupprimer.enabled = currentIndex === -1 ? false : true
                             btnImprimer.enabled = btnSupprimer.enabled
+                            if (model) {
+                                model.setSelectedIndex(currentIndex)
+                            }
                             absenceModel ? absenceModel.loadEtudiantsForSeance(
                                                seanceModel.getId(
                                                    currentIndex)) : -1

@@ -1,6 +1,6 @@
 #ifndef PRESENCEMODEL_H
 #define PRESENCEMODEL_H
-
+#include "seancemodel.h"
 #include <QAbstractListModel>
 #include <QObject>
 
@@ -16,8 +16,8 @@ public:
         IdRole = Qt::UserRole + 1,
         LabelRole
     };
-    explicit PresenceModel(QObject* parent = nullptr);
 
+    explicit PresenceModel(QObject* parent = nullptr);
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
@@ -31,6 +31,7 @@ public slots:
     void loadFromDatabase();
 private:
     QVector<Presence> m_data;
+
 
 };
 

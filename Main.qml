@@ -25,6 +25,7 @@ ApplicationWindow {
             onCurrentIndexChanged: currentTab = currentIndex
 
             TabButton { text: "Accueil" }
+            TabButton { text: "Synthèse" }
             TabButton { text: "Gestion des Sections" }
             TabButton { text: "Gestion des Modules" }
             TabButton { text: "Gestion des Étudiants" }
@@ -39,6 +40,10 @@ ApplicationWindow {
             // Onglet 0
             Loader {
                 source: isDatabaseReady ? "WelcomeInterface.qml" : ""
+            }
+
+            Loader {
+                source: isDatabaseReady ? "Synthese.qml" : ""
             }
 
 
