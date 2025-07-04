@@ -7,6 +7,7 @@
 struct TypeCours {
     int id;
     QString nom;
+    bool hasSeances = false;
 };
 
 class TypeCoursModel : public QAbstractListModel
@@ -22,11 +23,13 @@ public:
     Q_INVOKABLE QString getNom(int index) const;
 
     Q_INVOKABLE void load();
+    Q_INVOKABLE void loadTypesCoursForModule(const int idModule);
 private:
     QList<TypeCours> m_data;
     enum Roles {
         IdRole = Qt::UserRole + 1,
-        NomRole
+        NomRole,
+        HasSeancesRole
     };
 };
 

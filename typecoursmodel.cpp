@@ -21,6 +21,7 @@ QVariant TypeCoursModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case IdRole: return tc.id;
     case NomRole: return tc.nom;
+    case HasSeancesRole: return tc.hasSeances;
     default: return QVariant();
     }
 }
@@ -29,7 +30,8 @@ QHash<int, QByteArray> TypeCoursModel::roleNames() const
 {
     return {
         { IdRole, "id" },
-        { NomRole, "nom" }
+        { NomRole, "nom" },
+        { HasSeancesRole, "hasSeances" }
     };
 }
 
@@ -48,7 +50,7 @@ void TypeCoursModel::load()
     beginResetModel();
     m_data.clear();
 
-    QSqlQuery query("SELECT id, libelle FROM type_cours ORDER BY libelle ASC");
+    QSqlQuery query("SELECT id, libelle FROM type_cours");
     while (query.next()) {
         m_data.append(TypeCours {
             query.value(0).toInt(),
@@ -60,5 +62,31 @@ void TypeCoursModel::load()
         qWarning() << "Erreur de lecture type_cours:" << query.lastError();
     }
 
+    endResetModel();
+}
+
+void TypeCoursModel::loadTypesCoursForModule(const int idModule) {
+    beginResetModel();
+    m_data.clear();
+
+    // Charger tous les types
+    QSqlQuery query("SELECT id, libelle FROM type_cours");
+    while (query.next()) {
+        TypeCours t;
+        t.id = query.value(0).toInt();
+        t.nom = query.value(1).toString();
+
+        // Vérifie s'il y a des séances planifiées pour ce type dans le module donné
+        QSqlQuery q;
+        q.prepare("SELECT COUNT(*) FROM seance WHERE module_id = :mid AND type_id = :tid");
+        q.bindValue(":mid", idModule);
+        q.bindValue(":tid", t.id);
+        q.exec();
+        if (q.next()) {
+            t.hasSeances = q.value(0).toInt() > 0;
+        }
+
+        m_data.append(t);
+    }
     endResetModel();
 }
