@@ -10,6 +10,7 @@
 #include "absencemodel.h"
 #include "presencemodel.h"
 #include "printermanage.h"
+#include "synthesetablemodel.h"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -51,6 +52,7 @@ int main(int argc, char *argv[])
     AbsenceModel absenceModel{nullptr,&seanceModel};
     PresenceModel presenceModel;
     PrinterManage printerManage;
+    SyntheseTableModel syntheseTableModel;
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
     engine.rootContext()->setContextProperty("sectionModel", &sectionModel);
@@ -65,6 +67,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("absenceModel", &absenceModel);
     engine.rootContext()->setContextProperty("presenceModel", &presenceModel);
     engine.rootContext()->setContextProperty("printerManage", &printerManage);
+    engine.rootContext()->setContextProperty("syntheseTableModel", &syntheseTableModel);
 
     QObject::connect(
         &engine,

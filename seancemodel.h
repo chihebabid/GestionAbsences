@@ -18,7 +18,7 @@ class SeanceModel : public QAbstractListModel {
     Q_OBJECT
     enum Roles {
         ValeurRole = Qt::UserRole + 1
-    };
+    };    
 public:
     explicit SeanceModel(QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -27,11 +27,13 @@ public:
     Q_INVOKABLE int getId(const int index) const;
     Q_INVOKABLE const Seance& getSelectedSeance() const;
     Q_INVOKABLE void setSelectedIndex(const int index);
+
 public slots:
     void loadSeances();
 private:
     QList<Seance> m_data;
     int m_current_index {-1};
+
 };
 
 #endif // SEANCEMODEL_H

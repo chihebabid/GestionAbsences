@@ -96,6 +96,7 @@ Rectangle {
                         if (currentIndex !== -1) {
                             let moduleId = model.getId(currentIndex)
                             typeCoursModel.loadTypesCoursForModule(moduleId)
+                            syntheseTableModel.loadAbsencesListForModule(moduleId)
                         }
                     }
                 }
@@ -127,6 +128,7 @@ Rectangle {
                         text: model.nom
                         property int typeId: model.id
                         enabled: model.hasSeances
+                        checked: model.hasSeances
                         onCheckedChanged: {
                             console.log("Type sélectionné:", text, "ID:",
                                         typeId, "État:", checked)
@@ -153,9 +155,15 @@ Rectangle {
             return columnWidths[col]
         }
         ColumnLayout {
+            Text {
+                id: textNbSeances
+                text: qsTr("Nombre de séances : ")+syntheseTableModel.nbSeances
+            }
             RowLayout {
                 id: headerSynthese
                 spacing: 1
+
+
                 Rectangle {
                     width: 19
                     height: 30
@@ -163,7 +171,7 @@ Rectangle {
                 }
 
                 Repeater {
-                    model: ["N˚ inscription", "Nom", "Prénom", "Nombre de séances", "Nombre d'absences"]
+                    model: ["N˚ inscription", "Nom", "Prénom", "Nombre d'absences", "Pourcentage"]
                     Rectangle {
                         Layout.preferredWidth: groupSynthese.columnWidth(index)
                         height: 30

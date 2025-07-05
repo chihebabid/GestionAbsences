@@ -8,6 +8,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Quick Sql QuickControls2 PrintSupport)
 
 
 
+
 qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(appGestionAbsences
@@ -40,6 +41,7 @@ qt_add_qml_module(appGestionAbsences
     SOURCES presencemodel.h presencemodel.cpp
     SOURCES printermanage.h printermanage.cpp
     QML_FILES Synthese.qml
+    SOURCES synthesetablemodel.h synthesetablemodel.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -57,6 +59,7 @@ target_link_libraries(appGestionAbsences
     PRIVATE Qt6::Quick Qt6::Sql Qt6::QuickControls2
 )
 target_link_libraries(appGestionAbsences PRIVATE Qt6::Core Qt6::QuickControls2 Qt6::PrintSupport)
+
 
 include(GNUInstallDirs)
 install(TARGETS appGestionAbsences
