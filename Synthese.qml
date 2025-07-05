@@ -38,14 +38,31 @@ Rectangle {
             }
         }
 
+        function sendTypesCours(moduleId) {
+            Qt.callLater(() => {
+                             const selectedTypeIds = []
+                             for (var i = 0; i < layoutCheckBoxes.children.length; ++i) {
+                                 let cb = layoutCheckBoxes.children[i]
+                                 if (cb.enabled && cb.checked) {
+                                     selectedTypeIds.push(cb.typeId)
+                                 }
+                             }
+                             syntheseTableModel.loadAbsencesListForModule(
+                                 moduleId, selectedTypeIds)
+                         })
+        }
+
         function updateListeSeance() {
-            if (lModulesSynthese.currentIndex !== -1
+            if (lModulesSynthese.currentIndex >= 0
                     && semestreComboSynthese.currentIndex >= 0
                     && lSectionsSynthese.currentIndex >= 0) {
+                console.log("Semestre " + semestreComboSynthese.currentIndex
+                            + " section: " + lSectionsSynthese.currentIndex
+                            + " module: " + lModulesSynthese.currentIndex)
                 let moduleId = lModulesSynthese.model.getId(
                         lModulesSynthese.currentIndex)
                 typeCoursModel.loadTypesCoursForModule(moduleId)
-                syntheseTableModel.loadAbsencesListForModule(moduleId)
+                sendTypesCours(moduleId)
             }
         }
 
@@ -87,10 +104,16 @@ Rectangle {
                     model: sectionModel
                     onCurrentIndexChanged: {
                         groupSemestreSynthese.updateListeModule()
-                        groupSemestreSynthese.updateListeSeance()
+                        Qt.callLater(() => {
+                                         if (lModulesSynthese.count > 0) {
+                                             lModulesSynthese.currentIndex = 0 // facultatif
+                                             groupSemestreSynthese.updateListeSeance()
+                                         }
+                                     })
                     }
                 }
             }
+
             Row {
                 spacing: 10
                 Text {
@@ -140,7 +163,9 @@ Rectangle {
                         onCheckedChanged: {
                             console.log("Type sélectionné:", text, "ID:",
                                         typeId, "État:", checked)
-                            // Vous pouvez appeler une méthode C++ ici si nécessaire
+                            let moduleId = lModulesSynthese.model.getId(
+                                    lModulesSynthese.currentIndex)
+                            groupSemestreSynthese.sendTypesCours(moduleId)
                         }
                     }
                 }
@@ -168,10 +193,10 @@ Rectangle {
                 Text {
                     id: textNbSeances
                     font.pixelSize: 16
-                    text: qsTr("Nombre de séances : ") + syntheseTableModel.nbSeances + " / " + syntheseTableModel.nbTotalSeances
+                    text: syntheseTableModel ? qsTr("Nombre de séances : ")
+                                               + syntheseTableModel.nbSeances + " / "
+                                               + syntheseTableModel.nbTotalSeances : ""
                 }
-
-
             }
             Rectangle {
                 width: 19
@@ -219,7 +244,7 @@ Rectangle {
                 columnSpacing: 1
                 rowSpacing: 1
                 //clip: true
-                model: absenceModel
+                model: syntheseTableModel
                 height: 200
                 z: 2
                 ScrollBar.vertical: ScrollBar {
@@ -238,11 +263,10 @@ Rectangle {
                     property int presenceId: model.presence
                     Item {
                         anchors.fill: parent
-                        // Colonne 0 à 2 → simple texte
-                        // Colonne 3 → ComboBox
+
                         Loader {
                             anchors.fill: parent
-                            sourceComponent: column === 3 ? componentPresence : textItem
+                            sourceComponent: textItem
                         }
 
                         Component {
@@ -258,29 +282,10 @@ Rectangle {
                                         return model.nom
                                     case 2:
                                         return model.prenom
+                                    case 3:
+                                        return model.presence
                                     default:
                                         return ""
-                                    }
-                                }
-                            }
-                        }
-
-                        Component {
-                            id: componentPresence
-                            ComboBox {
-                                id: comboPresence
-                                anchors.fill: parent
-                                model: presenceModel
-                                textRole: "label"
-
-                                // index de l'élément actuel dans presenceModel (à partir de model.presenceId)
-                                currentIndex: presenceModel ? presenceModel.getIndexById(
-                                                                  presenceId) : -1
-                                onCurrentIndexChanged: {
-                                    if (presenceModel) {
-                                        const newId = presenceModel.getId(
-                                                        currentIndex)
-                                        absenceModel.setPresence(row, newId)
                                     }
                                 }
                             }

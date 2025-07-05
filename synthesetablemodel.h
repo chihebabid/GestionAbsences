@@ -25,7 +25,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
     //bool setData(const QModelIndex &index, const QVariant &value, int role) override;
-    Q_INVOKABLE void loadAbsencesListForModule(const int idModule);
+    Q_INVOKABLE void loadAbsencesListForModule(const int idModule,const QVariantList &typeIds);
     void setNbSeances(const int);
     int nbSeances() const;
     void setNbTotalSeances(const int);
