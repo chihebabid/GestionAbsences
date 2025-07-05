@@ -64,6 +64,17 @@ WHERE module_id = ? AND date <= DATE('now');
     if (query.next()) {
        setNbSeances(query.value(0).toInt());
     }
+    query.clear();
+    query.prepare("SELECT COUNT(*) FROM seance WHERE module_id = ? ;");
+    query.addBindValue(idModule);
+    if (!query.exec()) {
+        qWarning() << "Erreur requête séances :" << query.lastError();
+        return;
+    }
+
+    if (query.next()) {
+        setNbTotalSeances(query.value(0).toInt());
+    }
     endResetModel();
 
 }
@@ -73,4 +84,11 @@ void SyntheseTableModel::setNbSeances(const int nb) {
 }
 int SyntheseTableModel::nbSeances() const {
     return m_nb_seances;
+}
+
+void SyntheseTableModel::setNbTotalSeances(const int nb) {
+    m_nb_total_seances=nb;
+}
+int SyntheseTableModel::nbTotalSeances() const {
+    return m_nb_total_seances;
 }

@@ -17,6 +17,7 @@ class SyntheseTableModel : public QAbstractTableModel
         int nbAbsences;
     };
     Q_PROPERTY(int nbSeances READ nbSeances WRITE setNbSeances NOTIFY nbSeancesChanged)
+    Q_PROPERTY(int nbTotalSeances READ nbTotalSeances WRITE setNbTotalSeances NOTIFY nbSeancesChanged)
 public:
     explicit SyntheseTableModel(QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -27,11 +28,14 @@ public:
     Q_INVOKABLE void loadAbsencesListForModule(const int idModule);
     void setNbSeances(const int);
     int nbSeances() const;
+    void setNbTotalSeances(const int);
+    int nbTotalSeances() const;
 signals:
     void nbSeancesChanged();
 private:
     QList<EtudiantAbsence> m_data;
     Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(SyntheseTableModel,int,m_nb_seances,0,&SyntheseTableModel::nbSeancesChanged)
+    Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(SyntheseTableModel,int,m_nb_total_seances,0,&SyntheseTableModel::nbSeancesChanged)
 
 };
 

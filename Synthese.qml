@@ -25,6 +25,30 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 20
         title: qsTr("Sélectionner le module")
+
+        function updateListeModule() {
+            if (semestreComboSynthese.currentIndex >= 0
+                    && lSectionsSynthese.currentIndex >= 0) {
+                let sectionIndex = lSectionsSynthese.currentIndex
+                let sectionId = lSectionsSynthese.model.getSectionId(
+                        sectionIndex)
+                let semestre = semestreComboSynthese.model[semestreComboSynthese.currentIndex]
+                lModulesSynthese.model.loadModulesForSection(sectionId,
+                                                             semestre)
+            }
+        }
+
+        function updateListeSeance() {
+            if (lModulesSynthese.currentIndex !== -1
+                    && semestreComboSynthese.currentIndex >= 0
+                    && lSectionsSynthese.currentIndex >= 0) {
+                let moduleId = lModulesSynthese.model.getId(
+                        lModulesSynthese.currentIndex)
+                typeCoursModel.loadTypesCoursForModule(moduleId)
+                syntheseTableModel.loadAbsencesListForModule(moduleId)
+            }
+        }
+
         Column {
             spacing: 10
 
@@ -41,14 +65,8 @@ Rectangle {
                     width: groupSemestreSynthese.width * 0.18
                     model: [1, 2]
                     onCurrentIndexChanged: {
-                        if (currentIndex >= 0) {
-                            let sectionIndex = lSectionsSynthese.currentIndex
-                            let sectionId = lSectionsSynthese.model.getSectionId(
-                                    sectionIndex)
-                            let semestre = model[currentIndex]
-                            lModulesSynthese.model.loadModulesForSection(
-                                        sectionId, semestre)
-                        }
+                        groupSemestreSynthese.updateListeModule()
+                        groupSemestreSynthese.updateListeSeance()
                     }
                 }
 
@@ -68,14 +86,8 @@ Rectangle {
                     width: groupSemestreSynthese.width * 0.5
                     model: sectionModel
                     onCurrentIndexChanged: {
-
-                        if (currentIndex >= 0) {
-                            let sectionIndex = currentIndex
-                            let sectionId = model.getSectionId(sectionIndex)
-                            let semestre = semestreComboSynthese.model[semestreComboSynthese.currentIndex]
-                            lModulesSynthese.model.loadModulesForSection(
-                                        sectionId, semestre)
-                        }
+                        groupSemestreSynthese.updateListeModule()
+                        groupSemestreSynthese.updateListeSeance()
                     }
                 }
             }
@@ -93,11 +105,7 @@ Rectangle {
                     width: root.width * 0.4
                     model: moduleModelSynthese
                     onCurrentIndexChanged: {
-                        if (currentIndex !== -1) {
-                            let moduleId = model.getId(currentIndex)
-                            typeCoursModel.loadTypesCoursForModule(moduleId)
-                            syntheseTableModel.loadAbsencesListForModule(moduleId)
-                        }
+                        groupSemestreSynthese.updateListeSeance()
                     }
                 }
             }
@@ -155,14 +163,24 @@ Rectangle {
             return columnWidths[col]
         }
         ColumnLayout {
-            Text {
-                id: textNbSeances
-                text: qsTr("Nombre de séances : ")+syntheseTableModel.nbSeances
+            RowLayout {
+                spacing: 10
+                Text {
+                    id: textNbSeances
+                    font.pixelSize: 16
+                    text: qsTr("Nombre de séances : ") + syntheseTableModel.nbSeances + " / " + syntheseTableModel.nbTotalSeances
+                }
+
+
+            }
+            Rectangle {
+                width: 19
+                height: 30
+                color: "transparent"
             }
             RowLayout {
                 id: headerSynthese
                 spacing: 1
-
 
                 Rectangle {
                     width: 19
