@@ -335,7 +335,7 @@ Rectangle {
                     Rectangle {
                         width: 19
                         height: 60
-                        color: "red"
+                        color: "transparent"
                     }
                 }
                 RowLayout {
@@ -344,7 +344,7 @@ Rectangle {
                     Rectangle {
                         width: 19
                         height: 30
-                        color: "red"
+                        color: "transparent"
                     }
                     Repeater {
                         model: ["N˚ inscription", "Nom", "Prénom", "Présence"]

@@ -187,119 +187,152 @@ Rectangle {
         function columnWidth(col) {
             return columnWidths[col]
         }
-        ColumnLayout {
-            RowLayout {
-                spacing: 10
-                Text {
-                    id: textNbSeances
-                    font.pixelSize: 16
-                    text: syntheseTableModel ? qsTr("Nombre de séances : ")
-                                               + syntheseTableModel.nbSeances + " / "
-                                               + syntheseTableModel.nbTotalSeances : ""
+        RowLayout {
+            spacing: 20
+            ColumnLayout {
+                RowLayout {
+                    spacing: 10
+                    Text {
+                        id: textNbSeances
+                        font.pixelSize: 16
+                        text: syntheseTableModel ? qsTr("Nombre de séances : ")
+                                                   + syntheseTableModel.nbSeances + " / "
+                                                   + syntheseTableModel.nbTotalSeances : ""
+                    }
                 }
-            }
-            Rectangle {
-                width: 19
-                height: 30
-                color: "transparent"
-            }
-            RowLayout {
-                id: headerSynthese
-                spacing: 1
-
                 Rectangle {
                     width: 19
                     height: 30
                     color: "transparent"
                 }
 
-                Repeater {
-                    model: ["N˚ inscription", "Nom", "Prénom", "Nombre d'absences", "Pourcentage"]
-                    Rectangle {
-                        Layout.preferredWidth: groupSynthese.columnWidth(index)
-                        height: 30
-                        color: "#f0f0f0"
-                        border.color: "#ccc"
-                        border.width: 1
+                RowLayout {
+                    id: headerSynthese
+                    spacing: 1
 
-                        Text {
-                            anchors.fill: parent
-                            anchors.centerIn: parent
-                            horizontalAlignment: Text.AlignHCenter
-                            text: modelData
-                            font.bold: true
-                            font.pixelSize: 14
+                    Rectangle {
+                        width: 19
+                        height: 30
+                        color: "transparent"
+                    }
+
+                    Repeater {
+                        model: ["N˚ inscription", "Nom", "Prénom", "Nombre d'absences", "Pourcentage"]
+                        Rectangle {
+                            Layout.preferredWidth: groupSynthese.columnWidth(
+                                                       index)
+                            height: 30
+                            color: "#f0f0f0"
+                            border.color: "#ccc"
+                            border.width: 1
+
+                            Text {
+                                anchors.fill: parent
+                                anchors.centerIn: parent
+                                horizontalAlignment: Text.AlignHCenter
+                                text: modelData
+                                font.bold: true
+                                font.pixelSize: 14
+                            }
                         }
                     }
                 }
-            }
-            // Tableau
-            TableView {
-                id: tableAbsencesSynthese
-                interactive: false
-                leftMargin: 20
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+                // Tableau
+                TableView {
+                    id: tableAbsencesSynthese
+                    interactive: false
+                    leftMargin: 20
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
 
-                columnSpacing: 2
-                rowSpacing: 1
-                //clip: true
-                model: syntheseTableModel
-                height: 300
-                z: 2
-                ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AsNeeded
-                }
-                columnWidthProvider: function (col) {
-                    return groupSynthese.columnWidths[col]
-                }
+                    columnSpacing: 2
+                    rowSpacing: 1
+                    //clip: true
+                    model: syntheseTableModel
+                    height: 300
+                    z: 2
+                    ScrollBar.vertical: ScrollBar {
+                        policy: ScrollBar.AsNeeded
+                    }
+                    columnWidthProvider: function (col) {
+                        return groupSynthese.columnWidths[col]
+                    }
 
-                delegate: Rectangle {
-                    implicitWidth: 150
-                    implicitHeight: 30
-                    border.color: "#ccc"
-                    border.width: 1
-                    required property int row
-                    property int presenceId: model.presence
-                    color: {
+                    delegate: Rectangle {
+                        implicitWidth: 150
+                        implicitHeight: 30
+                        border.color: "#ccc"
+                        border.width: 1
+                        required property int row
+                        property int presenceId: model.presence
+                        color: {
                             let p = Number(model.pourcentage)
-                            if (p <= 15) return "#d0f5d0"       // Vert clair
-                            else if (p <= 30) return "#ffe5b4"   // Orange clair
-                            else return "#f8e0e0"               // Rouge clair
+                            if (p <= 15)
+                                return "#d0f5d0" // Vert clair
+                            else if (p <= 30)
+                                return "#ffe5b4" // Orange clair
+                            else
+                                return "#f8e0e0" // Rouge clair
                         }
-                    Item {
-                        anchors.fill: parent
-
-                        Loader {
+                        Item {
                             anchors.fill: parent
-                            sourceComponent: textItem
-                        }
 
-                        Component {
-                            id: textItem
-                            Text {
-                                anchors.centerIn: parent
-                                font.pixelSize: 14
-                                text: {
-                                    switch (column) {
-                                    case 0:
-                                        return model.inscri
-                                    case 1:
-                                        return model.nom
-                                    case 2:
-                                        return model.prenom
-                                    case 3:
-                                        return model.presence
-                                    case 4:
-                                        return Number(model.pourcentage).toFixed(2) + " %"
-                                    default:
-                                        return ""
+                            Loader {
+                                anchors.fill: parent
+                                sourceComponent: textItem
+                            }
+
+                            Component {
+                                id: textItem
+                                Text {
+                                    anchors.centerIn: parent
+                                    font.pixelSize: 14
+                                    text: {
+                                        switch (column) {
+                                        case 0:
+                                            return model.inscri
+                                        case 1:
+                                            return model.nom
+                                        case 2:
+                                            return model.prenom
+                                        case 3:
+                                            return model.presence
+                                        case 4:
+                                            return Number(
+                                                        model.pourcentage).toFixed(
+                                                        2) + " %"
+                                        default:
+                                            return ""
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+            }
+            ColumnLayout {
+                spacing: 10
+                Rectangle {
+                    color: "transparent"
+                    height: 60
+                }
+
+                Button {
+                    id: btnImprimerSynthese
+                    text: "Imprimer"
+                    Layout.alignment: Qt.AlignTop
+                    enabled: false
+                    onClicked: {
+
+                        // printerManage.startPrinting("absence")
+                    }
+                }
+                Rectangle {
+                    color: "transparent"
+                    Layout.fillHeight: true
+                }
+
             }
         }
     }
