@@ -1,3 +1,4 @@
+#include "misc.h"
 #include "seancemodel.h"
 #include <QSqlQuery>
 #include <QSqlError>
@@ -18,8 +19,8 @@ QVariant SeanceModel::data(const QModelIndex &index, int role) const {
     const Seance &s = m_data[index.row()];
 
     switch (role) {
-    case ValeurRole:
-        return QString("%1 - %2 (%3) - %4 de %5 à ").arg(s.section,s.module,s.type,s.date,s.debut);
+    case ValeurRole:        
+        return QString("%1 - %2 (%3) - %4 de %5 à %6").arg(s.section,s.module,s.type,s.date,s.debut,am::calculateEndTime(s.debut,s.duree.toInt()));
     default:
         return {};
     }
@@ -76,13 +77,11 @@ void SeanceModel::loadSeances() {
     endResetModel();
 }
 
-int SeanceModel::getId(const int index) const {
-    qDebug()<<"index "<<index<<", data: "<<m_data[index].id;
+int SeanceModel::getId(const int index) const {    
     return m_data[index].id;
 }
 
-const Seance& SeanceModel::getSelectedSeance() const {
-    if (m_current_index==-1) qDebug()<<__PRETTY_FUNCTION__;
+const Seance& SeanceModel::getSelectedSeance() const {    
     return m_data[m_current_index];
 }
 

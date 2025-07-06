@@ -51,22 +51,13 @@ void AbsenceDatabaseManager::createSchema() {
         // Année universitaire
         R"(CREATE TABLE IF NOT EXISTS annee_universitaire (
             id INTEGER PRIMARY KEY,
-            annee TEXT UNIQUE NOT NULL
+            annee TEXT NOT NULL UNIQUE
         ))",
 
         // Section
         R"(CREATE TABLE IF NOT EXISTS section (
             id INTEGER PRIMARY KEY,
-            nom TEXT UNIQUE NOT NULL
-        ))",
-
-        // Étudiant
-        R"(CREATE TABLE IF NOT EXISTS etudiant (
-            id INTEGER PRIMARY KEY,
-            nom TEXT NOT NULL,
-            prenom TEXT,
-            section_id INTEGER NOT NULL,
-            FOREIGN KEY (section_id) REFERENCES section(id)
+            nom TEXT NOT NULL UNIQUE
         ))",
 
         // Enseignant
@@ -82,41 +73,91 @@ void AbsenceDatabaseManager::createSchema() {
             nom TEXT NOT NULL
         ))",
 
-        // Association section-module pour une année/un semestre
+        // Section_Module
         R"(CREATE TABLE IF NOT EXISTS section_module (
             id INTEGER PRIMARY KEY,
             section_id INTEGER NOT NULL,
             module_id INTEGER NOT NULL,
             annee_id INTEGER NOT NULL,
-            semestre INTEGER NOT NULL CHECK (semestre IN (1, 2)),
-            FOREIGN KEY (section_id) REFERENCES section(id),
-            FOREIGN KEY (module_id) REFERENCES module(id),
-            FOREIGN KEY (annee_id) REFERENCES annee_universitaire(id),
-            UNIQUE (section_id, module_id, annee_id, semestre)
+            semestre INTEGER NOT NULL CHECK(semestre IN (1, 2)),
+            FOREIGN KEY(section_id) REFERENCES section(id),
+            FOREIGN KEY(module_id) REFERENCES module(id),
+            FOREIGN KEY(annee_id) REFERENCES annee_universitaire(id),
+            UNIQUE(section_id, module_id, annee_id, semestre)
         ))",
 
-        // Enseignant associé à un module dans une section donnée
+        // Enseignant_Module
         R"(CREATE TABLE IF NOT EXISTS enseignant_module (
             id INTEGER PRIMARY KEY,
             enseignant_id INTEGER NOT NULL,
             section_module_id INTEGER NOT NULL,
-            FOREIGN KEY (enseignant_id) REFERENCES enseignant(id),
-            FOREIGN KEY (section_module_id) REFERENCES section_module(id),
-            UNIQUE (enseignant_id, section_module_id)
+            FOREIGN KEY(enseignant_id) REFERENCES enseignant(id),
+            FOREIGN KEY(section_module_id) REFERENCES section_module(id),
+            UNIQUE(enseignant_id, section_module_id)
         ))",
 
-        // Absence liée à un étudiant + module enseigné par un enseignant
+        // Étudiant
+        R"(CREATE TABLE IF NOT EXISTS etudiant (
+            id INTEGER PRIMARY KEY,
+            inscri TEXT NOT NULL UNIQUE,
+            nom TEXT NOT NULL,
+            prenom TEXT,
+            mail TEXT NOT NULL,
+            section_id INTEGER NOT NULL,
+            FOREIGN KEY(section_id) REFERENCES section(id)
+        ))",
+
+        // Type de cours
+        R"(CREATE TABLE IF NOT EXISTS type_cours (
+            id INTEGER PRIMARY KEY,
+            libelle TEXT UNIQUE
+        ))",
+
+        // Séance
+        R"(CREATE TABLE IF NOT EXISTS seance (
+            id INTEGER PRIMARY KEY,
+            module_id INTEGER NOT NULL,
+            type_id INTEGER NOT NULL,
+            date TEXT NOT NULL,
+            heure_debut TEXT NOT NULL,
+            duree INTEGER NOT NULL,
+            FOREIGN KEY(module_id) REFERENCES module(id),
+            FOREIGN KEY(type_id) REFERENCES type_cours(id)
+        ))",
+
+        // Présence
+        R"(CREATE TABLE IF NOT EXISTS presence (
+            id INTEGER PRIMARY KEY,
+            nom TEXT NOT NULL
+        ))",
+
+        // Absence
         R"(CREATE TABLE IF NOT EXISTS absence (
             id INTEGER PRIMARY KEY,
+            seance_id INTEGER NOT NULL,
             etudiant_id INTEGER NOT NULL,
-            enseignant_module_id INTEGER NOT NULL,
-            date_absence TEXT NOT NULL,
-            heure_debut TEXT NOT NULL,
-            heure_fin TEXT NOT NULL,
-            motif TEXT,
-            FOREIGN KEY (etudiant_id) REFERENCES etudiant(id),
-            FOREIGN KEY (enseignant_module_id) REFERENCES enseignant_module(id)
-        ))"
+            presence_id INTEGER NOT NULL,
+            date TEXT NOT NULL,
+            FOREIGN KEY(seance_id) REFERENCES seance(id),
+            FOREIGN KEY(etudiant_id) REFERENCES etudiant(id),
+            FOREIGN KEY(presence_id) REFERENCES presence(id)
+        ))",
+
+        // INSERTS pour type_cours
+        R"(INSERT OR IGNORE INTO type_cours (id, libelle) VALUES
+            (1, 'Cours'),
+            (2, 'TD'),
+            (3, 'TP'),
+            (4, 'CI')
+        )",
+
+        // INSERTS pour presence
+        R"(INSERT OR IGNORE INTO presence (id, nom) VALUES
+            (1, ''),
+            (2, 'Présent'),
+            (3, 'Absent'),
+            (4, 'Retard')
+        )"
     };
 
     for (const QString &stmt : stmts) {
@@ -125,4 +166,5 @@ void AbsenceDatabaseManager::createSchema() {
         }
     }
 }
+
 

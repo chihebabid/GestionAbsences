@@ -25,14 +25,14 @@ QVariant SyntheseTableModel::data(const QModelIndex &index, int role) const {
     case NomRole: return etud.nom;
     case PrenomRole: return etud.prenom;
     case NbAbsenceRole: return etud.nbAbsences;
-    case PourcentageRole: return (etud.nbAbsences/100.0f)*100;
+    case PourcentageRole: return (etud.nbAbsences*100.0f)/nbSeances();
     case Qt::DisplayRole:
         switch (index.column()) {
         case 0: return etud.inscri;
         case 1: return etud.nom;
         case 2: return etud.prenom;
         case 3: return etud.nbAbsences;
-        case 4: return (etud.nbAbsences/100.0f)*100;
+        case 4: return (etud.nbAbsences*100.0f)/nbSeances();
         }
     }
     return {};
@@ -127,6 +127,7 @@ where  ab.etudiant_id=? and (presence.nom!="Présent" and presence.nom!="Retard"
         }
         if (qAbs.next()) {
             e.nbAbsences=qAbs.value(0).toInt();
+
         }
         m_data.push_back(e);
     }

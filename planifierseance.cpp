@@ -26,6 +26,7 @@ bool PlanifierSeance::ajouterSeance(const int moduleId, const int typeCours, con
 
     if (!query.exec()) {
         qWarning() << "Erreur lors de l'ajout de la séance:" << query.lastError();
+        qWarning()<<"module_id: "<<moduleId<<" type_id:"<<typeCours<<" date: "<<_date_convertie<<" duree: "<<duree;
         return false;
     }
 

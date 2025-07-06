@@ -181,7 +181,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 20
         title: qsTr("Synthèse")
-        property var tableWidth: width * .9
+        property var tableWidth: width * .85
         property var columnWidths: [tableWidth * .15, tableWidth
             * .2, tableWidth * .2, tableWidth * .225, tableWidth * .225]
         function columnWidth(col) {
@@ -210,7 +210,7 @@ Rectangle {
                 Rectangle {
                     width: 19
                     height: 30
-                    color: "red"
+                    color: "transparent"
                 }
 
                 Repeater {
@@ -241,17 +241,17 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                columnSpacing: 1
+                columnSpacing: 2
                 rowSpacing: 1
                 //clip: true
                 model: syntheseTableModel
-                height: 200
+                height: 300
                 z: 2
                 ScrollBar.vertical: ScrollBar {
                     policy: ScrollBar.AsNeeded
                 }
                 columnWidthProvider: function (col) {
-                    return groupListe.columnWidths[col]
+                    return groupSynthese.columnWidths[col]
                 }
 
                 delegate: Rectangle {
@@ -261,6 +261,12 @@ Rectangle {
                     border.width: 1
                     required property int row
                     property int presenceId: model.presence
+                    color: {
+                            let p = Number(model.pourcentage)
+                            if (p <= 15) return "#d0f5d0"       // Vert clair
+                            else if (p <= 30) return "#ffe5b4"   // Orange clair
+                            else return "#f8e0e0"               // Rouge clair
+                        }
                     Item {
                         anchors.fill: parent
 
@@ -284,6 +290,8 @@ Rectangle {
                                         return model.prenom
                                     case 3:
                                         return model.presence
+                                    case 4:
+                                        return Number(model.pourcentage).toFixed(2) + " %"
                                     default:
                                         return ""
                                     }

@@ -6,56 +6,7 @@
 
 PrinterManage::PrinterManage() {}
 
-/*
-void PrinterManage::imprimerAbsenceSeance() {
-    AbsenceModel* model {dynamic_cast<AbsenceModel*>(m_model)};
-    if (!model) {
-        qDebug()<<"Erreur de conversion dynamique...";
-    }
-    const Seance & seance {model->getSeance()->getSelectedSeance()};
-    QTime debut = QTime::fromString(seance.debut, "hh:mm");
-    QTime delta = QTime::fromString(seance.duree, "hh:mm");
 
-
-
-    int minutes = seance.duree.toInt();
-    QTime resultat = debut.addSecs(minutes * 60);
-
-    QString heure_fin {resultat.toString("hh:mm")};
-    m_html.clear();
-    // En-tête HTML
-    m_html += "<html><head><meta charset='utf-8'></head><body>";
-    m_html += "<center><h2>Liste des absences</h2></center><br><br>";
-    m_html+= "<b>Section : </b>"+seance.section;
-    m_html+= "<br><b>Module : </b>"+seance.module+ " ("+seance.type+")";
-    m_html+= "<br><b>Date : </b>"+seance.date+" de "+seance.debut+" à "+heure_fin;
-    // Début du tableau
-    m_html += "<br><table border='1' cellspacing='0' cellpadding='5'>";
-    m_html += "<thead><tr style='background-color:#f0f0f0'>";
-    m_html += "<th>N° Inscription</th>";
-    m_html += "<th>Nom</th>";
-    m_html += "<th>Prénom</th>";
-    m_html += "<th>Présence</th>";
-    m_html += "</tr></thead><tbody>";
-
-    // Lignes des étudiants
-    const auto& liste = model->getListeEtudiants();
-    for (const auto& e : liste) {
-        m_html += "<tr>";
-        m_html += "<td>" + e.inscri + "</td>";
-        m_html += "<td>" + e.nom + "</td>";
-        m_html += "<td>" + e.prenom + "</td>";
-
-        PresenceModel presence; // Interprétation de l'ID présence
-        presence.loadFromDatabase();
-        m_html += "<td>" + presence.getLabel(e.presence) + "</td>";
-        m_html += "</tr>";
-    }
-
-    m_html += "</tbody></table>";
-    m_html += "</body></html>";
-    print();
-}*/
 
 void PrinterManage::imprimerAbsenceSeance() {
     AbsenceModel* model = qobject_cast<AbsenceModel*>(m_model);
@@ -65,10 +16,8 @@ void PrinterManage::imprimerAbsenceSeance() {
     }
 
     const Seance& seance = model->getSeance()->getSelectedSeance();
-    QTime debut = QTime::fromString(seance.debut, "hh:mm");
-    int minutes = seance.duree.toInt();
-    QTime fin = debut.addSecs(minutes * 60);
-    QString heureFin = fin.toString("hh:mm");
+    QString heureFin {am::calculateEndTime(seance.debut,seance.duree.toInt())};
+
 
     PresenceModel presence;
     presence.loadFromDatabase();

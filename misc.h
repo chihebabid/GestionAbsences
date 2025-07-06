@@ -17,5 +17,8 @@ namespace am {
         QString prenom;
         int presence;
     };
+
+    QString calculateEndTime(const QString &start, const int minutes);
+
 }
 #endif // MISC_H
