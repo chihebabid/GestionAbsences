@@ -48,7 +48,7 @@ int PresenceModel::indexOfLabel(const QString& label) const {
 
 
 int PresenceModel::getIndexById(int id) const {
-    qDebug()<<"Indice: "<<id;
+
     for (int i {}; i < m_data.size(); ++i)
         if (m_data[i].id == id)
             return i;

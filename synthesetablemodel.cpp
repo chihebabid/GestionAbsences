@@ -25,14 +25,14 @@ QVariant SyntheseTableModel::data(const QModelIndex &index, int role) const {
     case NomRole: return etud.nom;
     case PrenomRole: return etud.prenom;
     case NbAbsenceRole: return etud.nbAbsences;
-    case PourcentageRole: return (etud.nbAbsences*100.0f)/nbSeances();
+    case PourcentageRole: return nbSeances() ? (etud.nbAbsences*100.0f)/nbSeances() : 0;
     case Qt::DisplayRole:
         switch (index.column()) {
         case 0: return etud.inscri;
         case 1: return etud.nom;
         case 2: return etud.prenom;
         case 3: return etud.nbAbsences;
-        case 4: return (etud.nbAbsences*100.0f)/nbSeances();
+        case 4: return nbSeances() ? (etud.nbAbsences*100.0f)/nbSeances() : 0;
         }
     }
     return {};
@@ -112,6 +112,7 @@ WHERE module_id = ? AND date <= DATE('now')
         e.inscri = query.value("inscri").toString();
         e.nom = query.value("nom").toString();
         e.prenom = query.value("prenom").toString();
+        if (m_nb_seances) {
         QSqlQuery qAbs;
         qAbs.prepare(R"(
 select count(*) from absence ab
@@ -129,6 +130,8 @@ where  ab.etudiant_id=? and (presence.nom!="Présent" and presence.nom!="Retard"
             e.nbAbsences=qAbs.value(0).toInt();
 
         }
+        }
+
         m_data.push_back(e);
     }
     endResetModel();
