@@ -288,7 +288,7 @@ Rectangle {
             return columnWidths[col]
         }
         RowLayout {
-            anchors.fill: parent
+            //anchors.fill: parent
             //anchors.margins: 10
             spacing: 0
             ColumnLayout {
@@ -325,10 +325,8 @@ Rectangle {
                     Button {
                         id: btnSupprimer
                         text: "Supprimer"
-                        enabled: false
-                        //anchors.margins: 20
-                        Layout.alignment: Qt.AlignRight
-                        //Layout.margins: 20
+                        enabled: false                        
+                        Layout.alignment: Qt.AlignRight                       
                         onClicked: {
 
                         }
@@ -370,19 +368,24 @@ Rectangle {
 
                 TableView {
                     id: tableAbsences
-                    interactive: false
+                    interactive: true
+                    boundsBehavior: Flickable.StopAtBounds
+                    flickableDirection: Flickable.AutoFlickIfNeeded
+                    pressDelay: 999999
                     leftMargin: 20
+                    rightMargin: 0
+
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
                     columnSpacing: 1
                     rowSpacing: 1
-                    //clip: true
+                    clip: true
                     model: absenceModel
                     height: 200
                     z: 2
                     ScrollBar.vertical: ScrollBar {
-                        policy: ScrollBar.AsNeeded
+                        policy: ScrollBar.AlwaysOn
                     }
                     columnWidthProvider: function (col) {
                         return groupListe.columnWidths[col]
@@ -397,8 +400,7 @@ Rectangle {
                         property int presenceId: model.presence
                         Item {
                             anchors.fill: parent
-                            // Colonne 0 à 2 → simple texte
-                            // Colonne 3 → ComboBox
+
                             Loader {
                                 anchors.fill: parent
                                 sourceComponent: column === 3 ? componentPresence : textItem

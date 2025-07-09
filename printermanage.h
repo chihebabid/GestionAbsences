@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QTextDocument>
 #include <QtPrintSupport/QPrinter>
+#include <QPainter>
 
 class PrinterManage : public QObject
 {
@@ -13,14 +14,15 @@ public:
     PrinterManage();
     Q_INVOKABLE void startPrinting(const QString &);
     void imprimerAbsenceSeance();
-    void setAbsenceModel(QObject *);
+    void imprimerSynthese();
+    void setModel(QObject *);
 signals:
     void s_printAbsence();
+    void s_printSynthese();
 private:
-    void print();
+    bool preprint(const QString &);
     QPrinter m_printer;
-    QTextDocument m_doc;
-    QString m_html;
+    QPainter m_painter;
     QObject* m_model = nullptr;
 };
 

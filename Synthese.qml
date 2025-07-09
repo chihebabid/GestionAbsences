@@ -218,6 +218,7 @@ Rectangle {
 
                     Repeater {
                         model: ["N˚ inscription", "Nom", "Prénom", "Nombre d'absences", "Pourcentage"]
+
                         Rectangle {
                             Layout.preferredWidth: groupSynthese.columnWidth(
                                                        index)
@@ -240,20 +241,24 @@ Rectangle {
                 // Tableau
                 TableView {
                     id: tableAbsencesSynthese
-                    interactive: false
+                    interactive: true
+                    boundsBehavior: Flickable.StopAtBounds
+                    flickableDirection: Flickable.AutoFlickIfNeeded
+                    pressDelay: 999999
                     leftMargin: 20
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
                     columnSpacing: 2
                     rowSpacing: 1
-                    //clip: true
+                    clip: true
                     model: syntheseTableModel
                     height: 300
                     z: 2
                     ScrollBar.vertical: ScrollBar {
                         policy: ScrollBar.AsNeeded
                     }
+
                     columnWidthProvider: function (col) {
                         return groupSynthese.columnWidths[col]
                     }
@@ -309,6 +314,10 @@ Rectangle {
                             }
                         }
                     }
+                }
+                Rectangle {
+                    height: 20
+                    color: "transparent"
                 }
             }
             ColumnLayout {

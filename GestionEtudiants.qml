@@ -6,8 +6,9 @@ import QtQuick.Dialogs
 Rectangle {
     id: gestionEtudiants
     color: "transparent"
-    property real tableWidth: root.width*.8
-    property var columnWidths: [tableWidth*.2,tableWidth*.3,tableWidth*.3,tableWidth*.2] // Largeurs synchronisées
+    property real tableWidth: root.width * .8
+    property var columnWidths: [tableWidth * .2, tableWidth * .3, tableWidth
+        * .3, tableWidth * .2] // Largeurs synchronisées
     Column {
         id: myColumn
         spacing: 20
@@ -30,7 +31,7 @@ Rectangle {
                 model: sectionModel
                 onCurrentIndexChanged: {
                     if (sectionCombo.currentIndex >= 0) {
-                        bImporter.enabled=true
+                        bImporter.enabled = true
                         let sectionIndex = sectionCombo.currentIndex
                         let sectionId = sectionModel.getSectionId(sectionIndex)
                         tableEtudiants.model.loadEtudiantsForSection(sectionId)
@@ -47,12 +48,12 @@ Rectangle {
         anchors.top: myColumn.bottom
         z: 2
         Rectangle {
-                width: 19
-                height: 30
-                color: "transparent"
-            }
+            width: 19
+            height: 30
+            color: "transparent"
+        }
         Repeater {
-            model: ["N˚ inscription","Nom", "Prénom", "E-mail"]
+            model: ["N˚ inscription", "Nom", "Prénom", "E-mail"]
             Rectangle {
                 width: gestionEtudiants.columnWidths[index]
                 height: 30
@@ -71,12 +72,16 @@ Rectangle {
     }
     TableView {
         id: tableEtudiants
-        interactive: false
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
+        flickableDirection: Flickable.AutoFlickIfNeeded
+        pressDelay: 999999
         leftMargin: 20
         anchors.top: header.bottom
-
+        height: 300
         anchors.left: parent.left
-        anchors.right: parent.right
+        //anchors.right: parent.right
+        width: header.width
         anchors.bottom: parent.bottom
 
         // Définir les colonnes
@@ -85,16 +90,16 @@ Rectangle {
         clip: true
 
         model: etudiantsModel
-        height: 20
+
         ScrollBar.vertical: ScrollBar {
-               policy: ScrollBar.AsNeeded
+            policy: ScrollBar.AsNeeded
         }
-       columnWidthProvider: function(col) { return columnWidths[col] }
+        columnWidthProvider: function (col) {
+            return columnWidths[col]
+        }
 
         // Définir les en-têtes de colonnes
-
-        delegate:
-            Rectangle {
+        delegate: Rectangle {
             implicitWidth: 150
             implicitHeight: 30
             border.color: "#ccc"
@@ -102,19 +107,24 @@ Rectangle {
 
             Text {
                 anchors.centerIn: parent
-                 anchors.verticalCenter: parent.verticalCenter
-                 anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
                 horizontalAlignment: Text.AlignLeft
-                   width: parent.width - 12
+                width: parent.width - 12
                 elide: Text.ElideLeft
                 text: {
                     switch (column) {
-                      case 0: return model.inscri
-                      case 1: return model.nom
-                      case 2: return model.prenom
-                      case 3: return model.mail
-                      default: return ""
-                  }
+                    case 0:
+                        return model.inscri
+                    case 1:
+                        return model.nom
+                    case 2:
+                        return model.prenom
+                    case 3:
+                        return model.mail
+                    default:
+                        return ""
+                    }
                 }
                 font.pixelSize: 14
             }
@@ -128,6 +138,7 @@ Rectangle {
         anchors.left: header.right
         anchors.top: header.top
         onClicked: {
+
             // moduleModel.deleteSelected()
         }
     }
@@ -143,17 +154,17 @@ Rectangle {
         }
     }
     FileDialog {
-            id: fileDialog
-            title: "Choisir un fichier"
-            nameFilters: ["Fichiers csv (*.csv)", "Tous les fichiers (*)"]
-            onAccepted: {
-                console.log("Fichier sélectionné :", selectedFile)
-                let sectionIndex = sectionCombo.currentIndex
-                let sectionId = sectionModel.getSectionId(sectionIndex)
-                tableEtudiants.model.importCSV(selectedFile,sectionId)
-            }
-            onRejected: {
-                console.log("Sélection annulée")
-            }
+        id: fileDialog
+        title: "Choisir un fichier"
+        nameFilters: ["Fichiers csv (*.csv)", "Tous les fichiers (*)"]
+        onAccepted: {
+            console.log("Fichier sélectionné :", selectedFile)
+            let sectionIndex = sectionCombo.currentIndex
+            let sectionId = sectionModel.getSectionId(sectionIndex)
+            tableEtudiants.model.importCSV(selectedFile, sectionId)
+        }
+        onRejected: {
+            console.log("Sélection annulée")
+        }
     }
 }

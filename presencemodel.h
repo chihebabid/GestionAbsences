@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE QString getLabel(int index) const;
     Q_INVOKABLE int indexOfLabel(const QString& label) const;
     Q_INVOKABLE int getIndexById(int id) const;
+    QString getLabelById(const int);
 public slots:
     void loadFromDatabase();
 private:

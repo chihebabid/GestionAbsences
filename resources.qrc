@@ -4,5 +4,6 @@
         <file>icons/no2.png</file>
         <file>icons/help-about.svg</file>
         <file>icons/enhance.png</file>
+        <file>icons/blue-fileopen.svg</file>
     </qresource>
 </RCC>

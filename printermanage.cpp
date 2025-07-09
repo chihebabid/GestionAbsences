@@ -22,24 +22,9 @@ void PrinterManage::imprimerAbsenceSeance() {
     PresenceModel presence;
     presence.loadFromDatabase();
 
-    QString filePath = QFileDialog::getSaveFileName(nullptr, "Exporter en PDF", "Absences.pdf", "Fichiers PDF (*.pdf)");
-    if (filePath.isEmpty())
+    if (!preprint("Absences.pdf")) {
         return;
-    if (!filePath.endsWith(".pdf", Qt::CaseInsensitive))
-        filePath += ".pdf";
-
-    // Configuration de l'imprimante
-    m_printer.setOutputFormat(QPrinter::PdfFormat);
-    m_printer.setOutputFileName(filePath);
-    m_printer.setPageSize(QPageSize::A4);
-    m_printer.setPageOrientation(QPageLayout::Portrait);
-    m_printer.setFullPage(false); // Important pour respecter les marges
-
-    // Définition des marges (en millimètres)
-    QPageLayout layout = m_printer.pageLayout();
-    layout.setUnits(QPageLayout::Millimeter);
-    layout.setMargins(QMarginsF(15, 15, 15, 15)); // 1.5 cm de marge sur tous les côtés
-    m_printer.setPageLayout(layout);
+    }
 
     // Polices
     const QFont normalFont("Times", 10);
@@ -68,11 +53,11 @@ void PrinterManage::imprimerAbsenceSeance() {
     const int headerHeight = titleHeight + (4 * lineHeight); // Titre + 4 lignes d'info
     const int footerHeight = lineHeight;
     const int usableHeight = pageHeight - headerHeight - footerHeight;
-    const int linesPerPage = usableHeight / lineHeight;
+    const int linesPerPage = (usableHeight / lineHeight) - 4;
     const int totalPages = std::ceil(static_cast<double>(liste.size()) / linesPerPage);
 
-    QPainter painter;
-    if (!painter.begin(&m_printer)) {
+
+    if (!m_painter.begin(&m_printer)) {
         qDebug() << "Erreur lors de l'ouverture de l'imprimante";
         return;
     }
@@ -84,42 +69,42 @@ void PrinterManage::imprimerAbsenceSeance() {
         y = marginTop;
 
         // Titre centré
-        painter.setFont(titleFont);
+        m_painter.setFont(titleFont);
         QString titre = "Liste des absences";
         int titreWidth = titleMetrics.horizontalAdvance(titre);
-        painter.drawText((pageWidth - titreWidth)/2, y + titleMetrics.ascent(), titre);
+        m_painter.drawText((pageWidth - titreWidth)/2, y + titleMetrics.ascent(), titre);
         y += titleHeight;
 
         // Infos séance
-        painter.setFont(boldFont);
-        painter.drawText(marginLeft, y + normalMetrics.ascent(), "Section : ");
-        painter.setFont(normalFont);
-        painter.drawText(marginLeft + 70, y + normalMetrics.ascent(), seance.section);
+        m_painter.setFont(boldFont);
+        m_painter.drawText(marginLeft, y + normalMetrics.ascent(), "Section : ");
+        m_painter.setFont(normalFont);
+        m_painter.drawText(marginLeft + 70, y + normalMetrics.ascent(), seance.section);
         y += lineHeight;
 
-        painter.setFont(boldFont);
-        painter.drawText(marginLeft, y + normalMetrics.ascent(), "Module : ");
-        painter.setFont(normalFont);
-        painter.drawText(marginLeft + 70, y + normalMetrics.ascent(), seance.module + " (" + seance.type + ")");
+        m_painter.setFont(boldFont);
+        m_painter.drawText(marginLeft, y + normalMetrics.ascent(), "Module : ");
+        m_painter.setFont(normalFont);
+        m_painter.drawText(marginLeft + 70, y + normalMetrics.ascent(), seance.module + " (" + seance.type + ")");
         y += lineHeight;
 
-        painter.setFont(boldFont);
-        painter.drawText(marginLeft, y + normalMetrics.ascent(), "Date : ");
-        painter.setFont(normalFont);
-        painter.drawText(marginLeft + 70, y + normalMetrics.ascent(), seance.date + " de " + seance.debut + " à " + heureFin);
+        m_painter.setFont(boldFont);
+        m_painter.drawText(marginLeft, y + normalMetrics.ascent(), "Date : ");
+        m_painter.setFont(normalFont);
+        m_painter.drawText(marginLeft + 70, y + normalMetrics.ascent(), seance.date + " de " + seance.debut + " à " + heureFin);
         y += 2 * lineHeight;
 
         // En-tête tableau avec alignement gauche pour les 3 premières colonnes
-        painter.setFont(boldFont);
+        m_painter.setFont(boldFont);
         int x = marginLeft;
         for (int i = 0; i < headers.size(); ++i) {
             QRect cellRect(x, y, colWidths[i], lineHeight);
-            painter.fillRect(cellRect, QColor("#f0f0f0"));
-            painter.drawRect(cellRect);
+            m_painter.fillRect(cellRect, QColor("#f0f0f0"));
+            m_painter.drawRect(cellRect);
 
             // Alignement différent selon la colonne
             Qt::Alignment align = (i < 3) ? Qt::AlignLeft | Qt::AlignVCenter : Qt::AlignCenter;
-            painter.drawText(cellRect.adjusted(5, 0, -5, 0), align, headers[i]);
+            m_painter.drawText(cellRect.adjusted(5, 0, -5, 0), align, headers[i]);
             x += colWidths[i];
         }
         y += lineHeight;
@@ -131,7 +116,7 @@ void PrinterManage::imprimerAbsenceSeance() {
         if (i > 0 && i % linesPerPage == 0) {
             // Pied de page
             QString footer = QString("Page %1 / %2").arg(page).arg(totalPages);
-            painter.drawText((pageWidth - normalMetrics.horizontalAdvance(footer))/2,
+            m_painter.drawText((pageWidth - normalMetrics.horizontalAdvance(footer))/2,
                              pageHeight - 10,
                              footer);
 
@@ -142,17 +127,17 @@ void PrinterManage::imprimerAbsenceSeance() {
         }
 
         const auto& e = liste[i];
-        QStringList values = {e.inscri, e.nom, e.prenom, presence.getLabel(e.presence)};
+        QStringList values = {e.inscri, e.nom, e.prenom, presence.getLabelById(e.presence)};
         int x = marginLeft;
         for (int j = 0; j < values.size(); ++j) {
             QRect cellRect(x, y, colWidths[j], lineHeight);
-            painter.drawRect(cellRect);
+            m_painter.drawRect(cellRect);
 
             Qt::Alignment align = Qt::AlignCenter;
             if (j == 1 || j == 2)
                 align = Qt::AlignVCenter | Qt::AlignLeft;
 
-            painter.drawText(cellRect.adjusted(5, 0, -5, 0), align, values[j]);
+            m_painter.drawText(cellRect.adjusted(5, 0, -5, 0), align, values[j]);
             x += colWidths[j];
         }
         y += lineHeight;
@@ -160,37 +145,40 @@ void PrinterManage::imprimerAbsenceSeance() {
 
     // Dernier pied de page
     QString footer = QString("Page %1 / %2").arg(page).arg(totalPages);
-    painter.drawText((pageWidth - normalMetrics.horizontalAdvance(footer))/2,
+    m_painter.drawText((pageWidth - normalMetrics.horizontalAdvance(footer))/2,
                      pageHeight - 10,
                      footer);
 
-    painter.end();
+    m_painter.end();
 }
 
 
 
 
-void PrinterManage::print() {    
-    QString filePath = QFileDialog::getSaveFileName(nullptr, "Exporter en PDF", "Absences.pdf", "Fichiers PDF (*.pdf)");
+bool PrinterManage::preprint(const QString &file_name) {
+    QString filePath = QFileDialog::getSaveFileName(nullptr, "Exporter en PDF",file_name, "Fichiers PDF (*.pdf)");
     if (filePath.isEmpty())
-        return;
-
+        return false;
     if (!filePath.endsWith(".pdf", Qt::CaseInsensitive))
         filePath += ".pdf";
 
-    // Configurer le QPrinter pour PDF
-    //QPrinter printer(QPrinter::HighResolution);
+    // Configuration de l'imprimante
     m_printer.setOutputFormat(QPrinter::PdfFormat);
     m_printer.setOutputFileName(filePath);
+    m_printer.setPageSize(QPageSize::A4);
+    m_printer.setPageOrientation(QPageLayout::Portrait);
+    m_printer.setFullPage(false); // Important pour respecter les marges
 
-   // QPrintDialog printDialog(&m_printer);
-    //if (printDialog.exec() == QDialog::Accepted) {
-        m_doc.setHtml(m_html);
-        m_doc.print(&m_printer);
-    //}
+    // Définition des marges (en millimètres)
+    QPageLayout layout = m_printer.pageLayout();
+    layout.setUnits(QPageLayout::Millimeter);
+    layout.setMargins(QMarginsF(15, 15, 15, 15)); // 1.5 cm de marge sur tous les côtés
+    m_printer.setPageLayout(layout);
+    return true;
+
 }
 
-void PrinterManage::setAbsenceModel(QObject *m) {
+void PrinterManage::setModel(QObject *m) {
     m_model=m;
 }
 
@@ -199,4 +187,10 @@ void PrinterManage::setAbsenceModel(QObject *m) {
 void PrinterManage::startPrinting(const QString &s) {
     if (s=="absence")
         emit s_printAbsence();
+    else if (s=="synthese")
+        emit s_printSynthese();
+}
+
+void PrinterManage::imprimerSynthese() {
+
 }

@@ -54,3 +54,10 @@ int PresenceModel::getIndexById(int id) const {
             return i;
     return -1;
 }
+
+QString PresenceModel::getLabelById(const int id) {
+    for (int i {}; i < m_data.size(); ++i)
+        if (m_data[i].id == id)
+            return m_data[i].label;
+    return {};
+}
