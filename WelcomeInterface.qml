@@ -6,6 +6,7 @@ Rectangle {
     id: welcomeInterface
     color: "transparent"
 
+
     Text {
         text: "Année universitaire : " + yearMonthString
         font.pixelSize: 18

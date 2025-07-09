@@ -4,16 +4,18 @@ project(GestionAbsences VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Quick Sql QuickControls2 PrintSupport)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Sql QuickControls2 PrintSupport Svg)
 
 
+set(CMAKE_AUTORCC ON)
 
-
-qt_standard_project_setup(REQUIRES 6.5)
+qt_standard_project_setup(REQUIRES 6.8)
 
 qt_add_executable(appGestionAbsences
     absencedatabasemanager.cpp manageslectedsectionmodule.cpp main.cpp
+    #resources.qrc
 )
+
 
 qt_add_qml_module(appGestionAbsences
     URI GestionAbsences
@@ -32,8 +34,7 @@ qt_add_qml_module(appGestionAbsences
     QML_FILES GestionEtudiants.qml
     SOURCES etudiantsmodel.h etudiantsmodel.cpp
     QML_FILES PopupDate.qml
-    QML_FILES Espacement.qml
-    SOURCES
+    QML_FILES Espacement.qml    
     SOURCES planifierseance.h planifierseance.cpp
     SOURCES typecoursmodel.h typecoursmodel.cpp
     SOURCES seancemodel.h seancemodel.cpp
@@ -42,6 +43,10 @@ qt_add_qml_module(appGestionAbsences
     SOURCES printermanage.h printermanage.cpp
     QML_FILES Synthese.qml
     SOURCES synthesetablemodel.h synthesetablemodel.cpp
+    QML_FILES PageDrawer.qml
+    QML_FILES DrawerItem.qml
+    RESOURCES resources.qrc
+
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -58,7 +63,7 @@ set_target_properties(appGestionAbsences PROPERTIES
 target_link_libraries(appGestionAbsences
     PRIVATE Qt6::Quick Qt6::Sql Qt6::QuickControls2
 )
-target_link_libraries(appGestionAbsences PRIVATE Qt6::Core Qt6::QuickControls2 Qt6::PrintSupport)
+target_link_libraries(appGestionAbsences PRIVATE Qt6::Core Qt6::QuickControls2 Qt6::PrintSupport Qt6::Svg)
 
 
 include(GNUInstallDirs)

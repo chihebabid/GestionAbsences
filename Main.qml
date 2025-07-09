@@ -16,8 +16,91 @@ ApplicationWindow {
     property bool isDatabaseReady: false
     property int currentTab: 0
 
+
+
+
     ColumnLayout {
         anchors.fill: parent
+
+        PageDrawer {
+            id: mainDrawer
+
+            //
+            // Icon properties
+            //
+            iconTitle: "Gestion des absences"
+            iconSource: "qrc:/icons/enhance.png"
+            iconSubtitle: qsTr ("Version 1.0 Beta")
+
+            //
+            // Define the actions to take for each drawer item
+            // Drawers 5 and 6 are ignored, because they are used for
+            // displaying a spacer and a separator
+            //
+            actions: {
+                0: function() { console.log ("Item 1 clicked!") },
+                1: function() { console.log ("Item 2 clicked!") },
+                2: function() { console.log ("Item 3 clicked!") },
+                3: function() { console.log ("Item 3 clicked!") },
+                4: function() { Qt.quit() }
+
+            }
+
+            //
+            // Define the drawer items
+            //
+            items: ListModel {
+                id: pagesModel
+
+
+
+                ListElement {
+                    pageTitle: qsTr ("Item 4")
+                    pageIcon: ":/icons/no2.png"
+                }
+
+                ListElement {
+                    pageTitle: qsTr ("À propos")
+                    pageIcon: "qrc:/icons/help-about.svg"
+                }
+
+                ListElement {
+                    spacer: true
+                }
+
+                ListElement {
+                    separator: true
+                }
+
+                 ListElement {
+                    pageTitle: qsTr ("Quitter")
+                    pageIcon: "qrc:/icons/application-exit.svg"
+                }
+            }
+        }
+
+        ToolBar {
+                   Layout.fillWidth: true
+                   Rectangle {
+                       anchors.fill: parent
+                       gradient: Gradient {
+                           GradientStop { position: 0.0; color: "#0aabff" }
+                           GradientStop { position: 1.0; color: "#FFFBFE" }
+                       }
+                   }
+                   RowLayout {
+                       spacing: 10
+
+                       Button {
+                           text: "\u2630"  // icône hamburger unicode
+                           font.pixelSize: 16
+                           onClicked: mainDrawer.open()
+                       }
+
+
+                   }
+               }
+
         TabBar {
             id: tabBar
             Layout.fillWidth: true
@@ -83,4 +166,6 @@ ApplicationWindow {
                console.log("Base de données prête !");
         }
     }
+
+
 }
