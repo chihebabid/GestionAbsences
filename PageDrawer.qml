@@ -173,7 +173,7 @@ Drawer {
                     if (typeof actions[index] === "function") {
                                             actions[index]()
                                         }
-                                        drawer.close()
+                    drawer.close()
                 }
             }
 

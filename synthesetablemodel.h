@@ -1,6 +1,7 @@
 #ifndef SYNTHESETABLEMODEL_H
 #define SYNTHESETABLEMODEL_H
-
+#include "seancemodel.h"
+#include "misc.h"
 #include <QAbstractTableModel>
 #include <QObject>
 #include <QProperty>
@@ -30,10 +31,12 @@ public:
     int nbSeances() const;
     void setNbTotalSeances(const int);
     int nbTotalSeances() const;
+    am::Info_t getCurrentInfo() const;
 signals:
     void nbSeancesChanged();
 private:
     QList<EtudiantAbsence> m_data;
+    am::Info_t m_info;
     Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(SyntheseTableModel,int,m_nb_seances,0,&SyntheseTableModel::nbSeancesChanged)
     Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(SyntheseTableModel,int,m_nb_total_seances,0,&SyntheseTableModel::nbSeancesChanged)
 

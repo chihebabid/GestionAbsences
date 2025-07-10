@@ -20,5 +20,11 @@ namespace am {
 
     QString calculateEndTime(const QString &start, const int minutes);
 
+    struct Info_t {
+        QString section;
+        QString module;
+        int semestre;
+    };
+
 }
 #endif // MISC_H

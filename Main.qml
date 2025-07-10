@@ -16,14 +16,9 @@ ApplicationWindow {
     property bool isDatabaseReady: false
     property int currentTab: 0
 
-    Loader {
-            id: aboutDialogLoader
-            active: false
-            source: "AboutDialog.qml"
-            onLoaded: {
-                console.log("AboutDialog loaded")
-                item.open()
-            }
+    AboutDialog {
+            id: aboutDialog
+
         }
 
     ColumnLayout {
@@ -47,7 +42,7 @@ ApplicationWindow {
                 },
                 "2": function () {
                     mainDrawer.close()
-                    aboutDialogLoader.active=true
+                    aboutDialog.open()
                 },
                 "3": function () {
                     mainDrawer.close()

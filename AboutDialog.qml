@@ -10,19 +10,7 @@ Dialog {
     anchors.centerIn: parent
     width: 400
     height: 300
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    // Reset state to allow reopening
-        onClosed: {
-            visible = false
-            focus = false
-            parent = Overlay.overlay
-            console.log("AboutDialog closed, state reset")
-        }
-        onOpened: {
-            console.log("AboutDialog opened")
-            forceActiveFocus()
-        }
 
 
 
@@ -93,7 +81,7 @@ Dialog {
                 text: qsTr("OK")
                 DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
                 onClicked: {
-                    //aboutDialog.close()
+                    aboutDialog.close()
                                     aboutDialogLoader.active = false
                 }
             }

@@ -134,6 +134,26 @@ where  ab.etudiant_id=? and (presence.nom!="Présent" and presence.nom!="Retard"
 
         m_data.push_back(e);
     }
+
+    // Charger les informations utiles : nom de la section, module, etc.
+    query.clear();
+    query.prepare(R"(
+select sm.semestre,se.nom,mo.nom from section_module sm
+join section se on sm.module_id=se.id
+join module mo on sm.module_id=mo.id
+where sm.module_id=? )");
+    query.addBindValue(idModule);
+    if (!query.exec()) {
+        qWarning() << "Erreur chargement infos :" << query.lastError();
+        endResetModel();
+        return;
+    }
+    if (query.next()) {
+        m_info.semestre = query.value(0).toInt();
+        m_info.section = query.value(1).toString();
+        m_info.module = query.value(2).toString();
+
+    }
     endResetModel();
 
 }
@@ -151,3 +171,9 @@ void SyntheseTableModel::setNbTotalSeances(const int nb) {
 int SyntheseTableModel::nbTotalSeances() const {
     return m_nb_total_seances;
 }
+
+am::Info_t SyntheseTableModel::getCurrentInfo() const {
+    return m_info;
+}
+
+

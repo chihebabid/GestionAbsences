@@ -1,4 +1,5 @@
 #include "presencemodel.h"
+#include "synthesetablemodel.h"
 #include "printermanage.h"
 #include <QPrintDialog>
 #include <QFileDialog>
@@ -192,5 +193,12 @@ void PrinterManage::startPrinting(const QString &s) {
 }
 
 void PrinterManage::imprimerSynthese() {
+    SyntheseTableModel * model = qobject_cast<SyntheseTableModel*>(m_model);
+    if (!model) {
+        qDebug() << "Erreur de conversion dynamique...";
+        return;
+    }
+    const am::Info_t _info {model->getCurrentInfo()};
+    qDebug()<<_info.section<<" "<<_info.module;
 
 }

@@ -331,10 +331,9 @@ Rectangle {
                     id: btnImprimerSynthese
                     text: "Imprimer"
                     Layout.alignment: Qt.AlignTop
-                    enabled: false
+                    enabled: true
                     onClicked: {
-
-                        // printerManage.startPrinting("absence")
+                        printerManage.startPrinting("synthese")
                     }
                 }
                 Rectangle {

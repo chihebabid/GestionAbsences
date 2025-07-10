@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     AbsenceModel absenceModel{nullptr,&seanceModel};
     PresenceModel presenceModel;
     PrinterManage printerManage;
-    SyntheseTableModel syntheseTableModel;
+    SyntheseTableModel syntheseTableModel{};
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
     engine.rootContext()->setContextProperty("sectionModel", &sectionModel);
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
     });
 
     // Imprimer la synthèse pour les absences
-    QObject::connect(&printerManage,&PrinterManage::s_printAbsence, [&syntheseTableModel,&printerManage]() {
+    QObject::connect(&printerManage,&PrinterManage::s_printSynthese, [&syntheseTableModel,&printerManage]() {
         printerManage.setModel(&syntheseTableModel);
         printerManage.imprimerSynthese();
     });

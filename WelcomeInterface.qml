@@ -385,7 +385,7 @@ Rectangle {
                     height: 200
                     z: 2
                     ScrollBar.vertical: ScrollBar {
-                        policy: ScrollBar.AlwaysOn
+                        policy: ScrollBar.AsNeeded
                     }
                     columnWidthProvider: function (col) {
                         return groupListe.columnWidths[col]

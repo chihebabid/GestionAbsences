@@ -125,7 +125,6 @@ const QList<Etudiant> &AbsenceModel::getListeEtudiants() const {
 }
 
 SeanceModel *AbsenceModel::getSeance()   const {
-
     return m_seance;
 }
 
