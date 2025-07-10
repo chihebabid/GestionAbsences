@@ -170,10 +170,10 @@ Drawer {
                 pageSelector: listView
 
                 onClicked: {
-                    if (listView.currentIndex !== index)
-                        listView.currentIndex = index
-
-                    drawer.close()
+                    if (typeof actions[index] === "function") {
+                                            actions[index]()
+                                        }
+                                        drawer.close()
                 }
             }
 

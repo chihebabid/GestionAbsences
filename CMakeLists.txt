@@ -46,6 +46,7 @@ qt_add_qml_module(appGestionAbsences
     QML_FILES PageDrawer.qml
     QML_FILES DrawerItem.qml
     RESOURCES resources.qrc
+    QML_FILES AboutDialog.qml
 
 )
 

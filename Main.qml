@@ -16,6 +16,16 @@ ApplicationWindow {
     property bool isDatabaseReady: false
     property int currentTab: 0
 
+    Loader {
+            id: aboutDialogLoader
+            active: false
+            source: "AboutDialog.qml"
+            onLoaded: {
+                console.log("AboutDialog loaded")
+                item.open()
+            }
+        }
+
     ColumnLayout {
         anchors.fill: parent
 
@@ -24,7 +34,7 @@ ApplicationWindow {
             // Icon properties
             iconTitle: "Gestion des absences"
             iconSource: "qrc:/icons/enhance.png"
-            iconSubtitle: qsTr("Version 1.0 Alpha")
+            iconSubtitle: qsTr("Version 1.0.0 Alpha")
             // Define the actions to take for each drawer item
             // Drawers 5 and 6 are ignored, because they are used for
             // displaying a spacer and a separator
@@ -36,10 +46,12 @@ ApplicationWindow {
                     console.log("Item 2 clicked!")
                 },
                 "2": function () {
-                    console.log("Item 3 clicked!")
+                    mainDrawer.close()
+                    aboutDialogLoader.active=true
                 },
                 "3": function () {
-                    console.log("Item 3 clicked!")
+                    mainDrawer.close()
+                    Qt.quit()
                 },
                 "4": function () {
                     Qt.quit()
@@ -96,10 +108,25 @@ ApplicationWindow {
             RowLayout {
                 spacing: 10
 
-                Button {
-                    text: "\u2630" // icône hamburger unicode
-                    font.pixelSize: 16
-                    onClicked: mainDrawer.open()
+                Rectangle {
+                    width: 40  // Adjust size as needed
+                    height: 40
+                    color: mouseArea.containsPress ? Qt.darker(palette.highlight, 1.2) :
+                           mouseArea.containsMouse ? palette.highlight : "transparent"
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: "\u2630" // Hamburger icon unicode
+                        font.pixelSize: 16
+                        color: palette.buttonText // Use system text color for contrast
+                    }
+
+                    MouseArea {
+                        id: mouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: mainDrawer.open()
+                    }
                 }
             }
         }
