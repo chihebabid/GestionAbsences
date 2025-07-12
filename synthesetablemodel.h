@@ -5,18 +5,19 @@
 #include <QAbstractTableModel>
 #include <QObject>
 #include <QProperty>
+struct EtudiantAbsence {
+    int id;
+    QString inscri;
+    QString nom;
+    QString prenom;
+    int nbAbsences;
+};
 class SyntheseTableModel : public QAbstractTableModel
 {
     Q_OBJECT
     enum Roles { InscriRole = Qt::UserRole + 1,NomRole, PrenomRole,NbAbsenceRole,PourcentageRole };
     static constexpr int c_columncount {5};
-    struct EtudiantAbsence {
-        int id;
-        QString inscri;
-        QString nom;
-        QString prenom;
-        int nbAbsences;
-    };
+
     Q_PROPERTY(int nbSeances READ nbSeances WRITE setNbSeances NOTIFY nbSeancesChanged)
     Q_PROPERTY(int nbTotalSeances READ nbTotalSeances WRITE setNbTotalSeances NOTIFY nbSeancesChanged)
 public:
@@ -32,11 +33,14 @@ public:
     void setNbTotalSeances(const int);
     int nbTotalSeances() const;
     am::Info_t getCurrentInfo() const;
+    const QList<EtudiantAbsence> &getListeEtudiants() const;
+    const QString getListeTypesModule() const;
 signals:
     void nbSeancesChanged();
 private:
     QList<EtudiantAbsence> m_data;
     am::Info_t m_info;
+    QString m_types_module;
     Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(SyntheseTableModel,int,m_nb_seances,0,&SyntheseTableModel::nbSeancesChanged)
     Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(SyntheseTableModel,int,m_nb_total_seances,0,&SyntheseTableModel::nbSeancesChanged)
 

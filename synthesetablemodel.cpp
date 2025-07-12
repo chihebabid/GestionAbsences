@@ -49,9 +49,14 @@ QHash<int, QByteArray> SyntheseTableModel::roleNames() const {
 void SyntheseTableModel::loadAbsencesListForModule(const int idModule,const QVariantList &typeIds) {
     QString subRequest;
 
-
+    beginResetModel();
+    m_data.clear();
+    m_types_module.clear();
     if (typeIds.isEmpty()) {
-        subRequest = ";";
+        setNbSeances(0);
+        setNbTotalSeances(0);
+        endResetModel();
+        return ;
     } else {
         subRequest = " and (";
         for (int i {}; i < typeIds.size(); ++i) {
@@ -61,9 +66,32 @@ void SyntheseTableModel::loadAbsencesListForModule(const int idModule,const QVar
         }
         subRequest += ");";
     }
+    {
+        // Remplir ml_types_module
+        QString _request;
+        for (int i {}; i < typeIds.size(); ++i) {
+            _request += QString("id=%1 ").arg(typeIds[i].toInt());
+            if (i < typeIds.size() - 1)
+                _request += " or ";
+        }
+        QSqlQuery query {R"(select libelle from type_cours where )"+_request};
+        if (!query.exec()) {
+            qWarning() << "Erreur requête type cours :" << query.lastError();
+            return;
+        }
 
-    beginResetModel();
-    m_data.clear();
+        QStringList libelles;
+        while (query.next()) {
+            libelles << query.value(0).toString();
+        }
+
+        // Joindre les libellés avec une virgule et un espace
+        m_types_module = libelles.join(", ");
+
+
+
+    }
+
     QSqlQuery query (R"(
     SELECT COUNT(*) FROM seance
 WHERE module_id = ? AND date <= DATE('now')
@@ -174,6 +202,14 @@ int SyntheseTableModel::nbTotalSeances() const {
 
 am::Info_t SyntheseTableModel::getCurrentInfo() const {
     return m_info;
+}
+
+const QList<EtudiantAbsence> &SyntheseTableModel::getListeEtudiants() const {
+    return m_data;
+}
+
+const QString SyntheseTableModel::getListeTypesModule() const {
+    return m_types_module;
 }
 
 

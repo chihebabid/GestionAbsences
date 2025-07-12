@@ -20,6 +20,8 @@ signals:
     void s_printAbsence();
     void s_printSynthese();
 private:
+    template<typename... Args>
+    void drawFormattedText(int x, int y, const QString& format, const Args&... args);
     bool preprint(const QString &);
     QPrinter m_printer;
     QPainter m_painter;
