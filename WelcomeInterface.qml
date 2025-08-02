@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-
+import GestionAbsences
 Rectangle {
     id: welcomeInterface
     color: "transparent"
@@ -90,6 +90,12 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 20
         title: qsTr("Planifier une séance")
+
+
+        ModuleModel {
+            id: moduleModel
+        }
+
         Column {
             spacing: 20
 
@@ -239,8 +245,11 @@ Rectangle {
             Item {
                 width: parent.width
                 height: 40
+                PlanifierSeance {
+                    id: planifierSeance
+                }
 
-                Button {
+                Button {                    
                     id: btnPlanifier
                     text: "Planifier"
                     width: root.width * 0.1

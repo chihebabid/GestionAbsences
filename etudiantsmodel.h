@@ -3,6 +3,7 @@
 
 #include <QAbstractTableModel>
 #include <QObject>
+#include <QQmlEngine>
 
 struct Etudiant {
     int id;
@@ -14,6 +15,7 @@ struct Etudiant {
 class EtudiantsModel : public QAbstractTableModel
 {
     Q_OBJECT
+    QML_ELEMENT
     enum Roles { InscriRole = Qt::UserRole + 1,NomRole, PrenomRole,MailRole };
     static constexpr int c_columncount {4};
 public:

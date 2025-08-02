@@ -4,6 +4,10 @@
 #include <QAbstractListModel>
 #include <QSqlDatabase>
 #include <QList>
+#include <QQmlEngine>
+
+
+
 
 struct Section {
     int id;
@@ -13,7 +17,7 @@ struct Section {
 
 class SectionModel : public QAbstractListModel {
     Q_OBJECT
-
+    QML_ELEMENT
 public:
     enum Roles {
         ValeurRole = Qt::UserRole + 1,

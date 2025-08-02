@@ -36,33 +36,34 @@ QString init() {
 
 int main(int argc, char *argv[])
 {
+    /*if (qEnvironmentVariableIsEmpty("QT_QUICK_CONTROLS_STYLE")) {
+        QQuickStyle::setStyle(QStringLiteral("org.kde.desktop"));
+    }
+    // if using org.kde.desktop, ensure we use kde style if possible
+    if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORMTHEME")) {
+        qputenv("QT_QPA_PLATFORMTHEME", "kde");
+    }*/
     QApplication app(argc, argv);
     QQuickStyle::setStyle("Fusion");
     QQmlApplicationEngine engine;
 
-    AbsenceDatabaseManager dbManager;
-    ManageSlectedSectionModule sectionManager;
+    AbsenceDatabaseManager dbManager;    
     SectionModel sectionModel;
-    ModuleModel moduleModel,moduleModelSynthese;
-    SectionModel wSectionModel;
-    EtudiantsModel etudiantsModel;
+    ModuleModel moduleModelSynthese;
+    SectionModel wSectionModel;    
     TypeCoursModel typeCoursModel;
-    PlanifierSeance planifierSeance;
     SeanceModel seanceModel;
     AbsenceModel absenceModel{nullptr,&seanceModel};
     PresenceModel presenceModel;
     PrinterManage printerManage;
     SyntheseTableModel syntheseTableModel{};
+
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
     engine.rootContext()->setContextProperty("sectionModel", &sectionModel);
-    engine.rootContext()->setContextProperty("yearMonthString", init());
-    engine.rootContext()->setContextProperty("manageSection", &sectionManager);
-    engine.rootContext()->setContextProperty("moduleModel", &moduleModel);
+    engine.rootContext()->setContextProperty("yearMonthString", init());        
     engine.rootContext()->setContextProperty("moduleModelSynthese", &moduleModelSynthese);
-    engine.rootContext()->setContextProperty("etudiantsModel", &etudiantsModel);
     engine.rootContext()->setContextProperty("typeCoursModel", &typeCoursModel);
-    engine.rootContext()->setContextProperty("planifierSeance", &planifierSeance);
     engine.rootContext()->setContextProperty("seanceModel", &seanceModel);
     engine.rootContext()->setContextProperty("absenceModel", &absenceModel);
     engine.rootContext()->setContextProperty("presenceModel", &presenceModel);

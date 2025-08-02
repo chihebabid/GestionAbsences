@@ -19,7 +19,7 @@ ApplicationWindow {
     AboutDialog {
             id: aboutDialog
 
-        }
+    }
 
     ColumnLayout {
         anchors.fill: parent

@@ -17,6 +17,7 @@ qt_add_executable(appGestionAbsences
 )
 
 
+
 qt_add_qml_module(appGestionAbsences
     URI GestionAbsences
     VERSION 1.0

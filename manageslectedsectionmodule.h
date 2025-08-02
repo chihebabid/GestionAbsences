@@ -4,10 +4,12 @@
 #include <QSqlQuery>
 #include <QObject>
 #include <QStringListModel>
+#include <QQmlEngine>
 
 class ManageSlectedSectionModule : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(QStringList sectionsModel READ sectionsModel NOTIFY sectionsModelChanged)
 public:
     explicit ManageSlectedSectionModule(QObject *parent = nullptr);
@@ -18,7 +20,7 @@ public slots:
 signals:
     void sectionsModelChanged();
 private:
-     QStringListModel *m_sectionsModel;
+     QStringListModel *m_sectionsModel;    
 };
 
 #endif // MANAGESLECTEDSECTIONMODULE_H

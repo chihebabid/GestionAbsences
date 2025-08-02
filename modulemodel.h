@@ -4,6 +4,7 @@
 #include <QAbstractListModel>
 #include <QSqlDatabase>
 #include <QObject>
+#include <QQmlEngine>
 
 struct Module {
     int id;
@@ -14,6 +15,7 @@ struct Module {
 class ModuleModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
 public:
     enum Roles {
         ValeurRole = Qt::UserRole + 1,

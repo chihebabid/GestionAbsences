@@ -2,13 +2,16 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
-
+import GestionAbsences
 Rectangle {
     id: gestionEtudiants
     color: "transparent"
     property real tableWidth: root.width * .8
     property var columnWidths: [tableWidth * .2, tableWidth * .3, tableWidth
         * .3, tableWidth * .2] // Largeurs synchronisées
+
+
+
     Column {
         id: myColumn
         spacing: 20
@@ -70,6 +73,11 @@ Rectangle {
             }
         }
     }
+
+    EtudiantsModel {
+        id: etudiantsModel
+    }
+
     TableView {
         id: tableEtudiants
         interactive: true
