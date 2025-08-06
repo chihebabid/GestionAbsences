@@ -2,10 +2,11 @@
 #define ABSENCEDATABASEMANAGER_H
 
 #include <QObject>
+#include <QQmlEngine>
 
 class AbsenceDatabaseManager : public QObject
 {
-    Q_OBJECT
+    Q_OBJECT    
 public:
     explicit AbsenceDatabaseManager(QObject *parent = nullptr);
     Q_INVOKABLE void createDatabase();

@@ -16,6 +16,10 @@ ApplicationWindow {
     property bool isDatabaseReady: false
     property int currentTab: 0
 
+
+
+
+
     AboutDialog {
             id: aboutDialog
 
@@ -178,6 +182,8 @@ ApplicationWindow {
             Loader {
                 source: isDatabaseReady ? "GestionEtudiants.qml" : ""
             }
+
+
         }
     }
 
@@ -195,7 +201,7 @@ ApplicationWindow {
             confirmDialog.open()
         }
 
-        function onDatabaseReady() {
+        function onDatabaseReady() {            
             root.isDatabaseReady = true
             console.log("Base de données prête !")
         }

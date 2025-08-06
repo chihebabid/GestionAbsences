@@ -5,5 +5,7 @@
         <file>icons/help-about.svg</file>
         <file>icons/enhance.png</file>
         <file>icons/blue-fileopen.svg</file>
+        <file>qml/MyButton.qml</file>
+        <file>qml/MyGroupBox.qml</file>
     </qresource>
 </RCC>

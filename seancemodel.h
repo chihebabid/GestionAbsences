@@ -3,6 +3,7 @@
 #include <QAbstractListModel>
 #include <QObject>
 #include <QList>
+#include <QQmlEngine>
 
 struct Seance {
     int id;
@@ -16,6 +17,7 @@ struct Seance {
 
 class SeanceModel : public QAbstractListModel {
     Q_OBJECT
+    QML_ELEMENT
     enum Roles {
         ValeurRole = Qt::UserRole + 1
     };    

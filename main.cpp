@@ -49,7 +49,6 @@ int main(int argc, char *argv[])
 
     AbsenceDatabaseManager dbManager;    
     SectionModel sectionModel;
-    ModuleModel moduleModelSynthese;
     SectionModel wSectionModel;    
     TypeCoursModel typeCoursModel;
     SeanceModel seanceModel;
@@ -61,8 +60,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
     engine.rootContext()->setContextProperty("sectionModel", &sectionModel);
-    engine.rootContext()->setContextProperty("yearMonthString", init());        
-    engine.rootContext()->setContextProperty("moduleModelSynthese", &moduleModelSynthese);
+    engine.rootContext()->setContextProperty("yearMonthString", init());            
     engine.rootContext()->setContextProperty("typeCoursModel", &typeCoursModel);
     engine.rootContext()->setContextProperty("seanceModel", &seanceModel);
     engine.rootContext()->setContextProperty("absenceModel", &absenceModel);

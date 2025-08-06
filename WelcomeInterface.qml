@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import GestionAbsences
+import "qrc:/qml/."
 Rectangle {
     id: welcomeInterface
     color: "transparent"
@@ -18,7 +19,7 @@ Rectangle {
     }
 
     // Section + Semestre
-    GroupBox {
+    MyGroupBox {
         id: groupSemestre
         width: groupSeance.width
         anchors.top: parent.top
@@ -83,7 +84,7 @@ Rectangle {
 
         }
     }
-    GroupBox {
+    MyGroupBox {
         id: groupSeance
         anchors.top: groupSemestre.bottom
         anchors.topMargin: 30
@@ -96,8 +97,10 @@ Rectangle {
             id: moduleModel
         }
 
+
         Column {
             spacing: 20
+
 
             Row {
                 spacing: 10
@@ -249,7 +252,7 @@ Rectangle {
                     id: planifierSeance
                 }
 
-                Button {                    
+                MyButton {
                     id: btnPlanifier
                     text: "Planifier"
                     width: root.width * 0.1
@@ -281,7 +284,7 @@ Rectangle {
             }
         }
     }
-    GroupBox {
+    MyGroupBox {
         id: groupListe
         property var tableWidth: width * .8
         property var columnWidths: [tableWidth * .2, tableWidth * .3, tableWidth
@@ -296,6 +299,7 @@ Rectangle {
         function columnWidth(col) {
             return columnWidths[col]
         }
+
         RowLayout {
             //anchors.fill: parent
             //anchors.margins: 10

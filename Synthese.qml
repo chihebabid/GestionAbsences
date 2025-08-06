@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "qrc:/qml/."
 
 Rectangle {
     id: welcomeInterface
@@ -17,7 +18,7 @@ Rectangle {
     }
 
     // Section + Semestre
-    GroupBox {
+    MyGroupBox {
         id: groupSemestreSynthese
         width: root.width * .8
         anchors.top: parent.top
@@ -68,6 +69,9 @@ Rectangle {
 
         Column {
             spacing: 10
+            ModuleModel {
+                id: moduleModelSynthese
+            }
 
             Row {
                 spacing: 10
@@ -135,7 +139,7 @@ Rectangle {
         }
     }
 
-    GroupBox {
+    MyGroupBox {
         id: groupTypesSeances
         width: root.width * .8
         anchors.top: groupSemestreSynthese.bottom
@@ -143,6 +147,17 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 20
         title: qsTr("Types de séances")
+        TypeCoursModel {
+            id: typeCoursModel
+        }
+
+        Connections {
+               target: databaseManager
+               function onDatabaseReady() {
+                    console.log("Load seances from DB... console log ")
+                    typeCoursModel.load()
+               }
+        }
         ScrollView {
             anchors.fill: parent
             contentWidth: parent.width
@@ -173,7 +188,7 @@ Rectangle {
         }
     }
 
-    GroupBox {
+    MyGroupBox {
         id: groupSynthese
         width: root.width * .8
         anchors.top: groupTypesSeances.bottom

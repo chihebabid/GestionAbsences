@@ -3,6 +3,7 @@
 
 #include <QAbstractListModel>
 #include <QObject>
+#include <QQmlEngine>
 
 struct TypeCours {
     int id;
@@ -13,6 +14,7 @@ struct TypeCours {
 class TypeCoursModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
 public:
     explicit TypeCoursModel(QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

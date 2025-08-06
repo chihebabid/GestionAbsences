@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-
+import "qrc:/qml/."
 Rectangle {
     id: moduleInterface
     color: "transparent"
@@ -71,7 +71,7 @@ Rectangle {
                 width: 200
             }
 
-            Button {
+            MyButton {
                 text: "Ajouter un module"
                 onClicked: {
                     if (newModule.text !== "") {
@@ -141,7 +141,7 @@ Rectangle {
             }
             Column {
                 spacing: 5
-                Button {
+                MyButton {
                     text: "Supprimer"
                     anchors.right: parent.right
                     onClicked: {
