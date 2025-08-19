@@ -10,5 +10,6 @@
         <file>qml/MyComboBox.qml</file>
         <file>qml/MyTextField.qml</file>
         <file>qml/MyText.qml</file>
+        <file>qml/MySpinBox.qml</file>
     </qresource>
 </RCC>

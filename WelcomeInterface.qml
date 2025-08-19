@@ -8,10 +8,9 @@ Rectangle {
     color: "transparent"
 
 
-    Text {
+    MyText {
         text: "Année universitaire : " + yearMonthString
-        font.pixelSize: 18
-        color: "black"
+        font.pixelSize: 18        
         anchors.right: parent.right
         anchors.rightMargin: 20
         anchors.top: parent.top
@@ -157,12 +156,11 @@ Rectangle {
                     id: calendarPopup
                 }
                 Espacement {}
-                Text {
-                    text: "Heure début :"
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
+                MyText {
+                   text: "Heure début :"
+
                 }
-                SpinBox {
+                MySpinBox {
                     id: timeSpin
                     from: 8 * 60 // 08:00 en minutes
                     to: 18 * 60 // 18:00 en minutes
@@ -202,13 +200,11 @@ Rectangle {
                             value = rounded
                     }
                 }
-                Text {
-                    text: "Durée :"
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
+                MyText {
+                    text: "Durée :"                    
                 }
 
-                SpinBox {
+                MySpinBox {
                     id: dureeSpin
                     from: 0 // 08:00 en minutes
                     to: 3 * 60 // 18:00 en minutes
