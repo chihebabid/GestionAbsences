@@ -1,12 +1,13 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Material
 
 Button {
     font.pixelSize: 14
     leftPadding: 12 // Padding légèrement augmenté pour équilibrer
     rightPadding: 12
-    topPadding: 10
-    bottomPadding: 10
+    topPadding: 14
+    bottomPadding: 14
     background: Rectangle {
         id: buttonBackground
         color: parent.hovered && parent.enabled ? "#0078d4" : "#ffffff"

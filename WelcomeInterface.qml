@@ -29,13 +29,11 @@ Rectangle {
         title: qsTr("Sélectionner la section")
         Row {
             spacing: 10
-            Text {
+            MyText {
                 text: "Semestre :"
-                font.pixelSize: 16
-                verticalAlignment: Text.AlignVCenter
             }
 
-            ComboBox {
+            MyComboBox {
                 id: wSemestreCombo
                 width: groupSemestre.width * 0.18
                 model: [1, 2]
@@ -55,15 +53,13 @@ Rectangle {
                 width: groupSemestre.width * 0.15
             }
 
-            Text {
+            MyText {
                 text: "Section :"
-                font.pixelSize: 16
-                verticalAlignment: Text.AlignVCenter
             }
 
 
 
-            ComboBox {
+            MyComboBox {
                 id: wLSections
                 textRole: "name"
                 width: groupSemestre.width * 0.5
@@ -104,13 +100,11 @@ Rectangle {
 
             Row {
                 spacing: 10
-                Text {
-                    text: "Module :"
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
+                MyText {
+                    text: "Module :"                  
                 }
 
-                ComboBox {
+                MyComboBox {
                     id: wModules
                     textRole: "name"
                     width: root.width * 0.4
@@ -123,13 +117,11 @@ Rectangle {
                     }
                 }
                 Espacement {}
-                Text {
-                    text: "Type :"
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
+                MyText {
+                    text: "Type :"                   
                 }
 
-                ComboBox {
+                MyComboBox {
                     id: typeCoursCombo
                     textRole: "nom"
                     width: root.width * 0.1
@@ -145,13 +137,11 @@ Rectangle {
             Row {
                 property date selectedDate: new Date()
                 spacing: 10
-                Text {
-                    text: "Date :"
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
+                MyText {
+                    text: "Date :"                  
                 }
 
-                TextField {
+                MyTextField {
                     id: dateField
                     text: Qt.formatDate(parent.selectedDate, "dd/MM/yyyy")
 
@@ -312,13 +302,11 @@ Rectangle {
                 RowLayout {
                     id: selectionSeance
                     spacing: 10
-                    Text {
-                        text: "Séance :"
-                        font.pixelSize: 16
-                        verticalAlignment: Text.AlignVCenter
+                    MyText {
+                        text: "Séance :"                      
                     }
 
-                    ComboBox {
+                    MyComboBox {
                         id: listeSeances
                         //Layout.fillWidth: true
                         Layout.preferredWidth: root.width * .4
@@ -335,7 +323,7 @@ Rectangle {
                                                    currentIndex)) : -1
                         }
                     }
-                    Button {
+                    MyButton {
                         id: btnSupprimer
                         text: "Supprimer"
                         enabled: false                        
@@ -465,7 +453,7 @@ Rectangle {
             }
             ColumnLayout {
                 spacing: 15
-                Button {
+                MyButton {
                     id: btnImprimer
                     text: "Imprimer"                    
                     Layout.alignment: Qt.AlignRight
