@@ -5,6 +5,10 @@ import QtQuick.Controls.Material
 TextField {
     placeholderTextColor: "#888"
     font.pixelSize: 14
+    leftPadding: 12
+    rightPadding: 12
+    topPadding: 14
+    bottomPadding: 14
     background: Rectangle {
         color: "#ffffff"
         radius: 5

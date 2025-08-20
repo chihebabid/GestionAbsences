@@ -7,10 +7,9 @@ Rectangle {
     id: welcomeInterface
     color: "transparent"
 
-    Text {
+    MyText {
         text: "Année universitaire : " + yearMonthString
         font.pixelSize: 18
-        color: "black"
         anchors.right: parent.right
         anchors.rightMargin: 20
         anchors.top: parent.top
@@ -75,13 +74,11 @@ Rectangle {
 
             Row {
                 spacing: 10
-                Text {
-                    text: "Semestre :"
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
+                MyText {
+                    text: "Semestre :"                                        
                 }
 
-                ComboBox {
+                MyComboBox {
                     id: semestreComboSynthese
                     width: groupSemestreSynthese.width * 0.18
                     model: [1, 2]
@@ -95,13 +92,11 @@ Rectangle {
                     width: groupSemestreSynthese.width * 0.15
                 }
 
-                Text {
-                    text: "Section :"
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
+                MyText {
+                    text: "Section :"                   
                 }
 
-                ComboBox {
+                MyComboBox {
                     id: lSectionsSynthese
                     textRole: "name"
                     width: groupSemestreSynthese.width * 0.5
@@ -120,13 +115,11 @@ Rectangle {
 
             Row {
                 spacing: 10
-                Text {
-                    text: "Module :"
-                    font.pixelSize: 16
-                    verticalAlignment: Text.AlignVCenter
+                MyText {
+                    text: "Module :"                  
                 }
 
-                ComboBox {
+                MyComboBox {
                     id: lModulesSynthese
                     textRole: "name"
                     width: root.width * 0.4
@@ -342,10 +335,9 @@ Rectangle {
                     height: 60
                 }
 
-                Button {
+                MyButton {
                     id: btnImprimerSynthese
-                    text: "Imprimer"
-                    Layout.alignment: Qt.AlignTop
+                    text: "Imprimer"                  
                     enabled: true
                     onClicked: {
                         printerManage.startPrinting("synthese")

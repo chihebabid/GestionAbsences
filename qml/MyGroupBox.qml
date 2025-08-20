@@ -17,4 +17,3 @@ GroupBox {
         color: "transparent"
     }
 }
-

@@ -4,7 +4,7 @@ import QtQuick.Controls.Material
 
 Button {
     font.pixelSize: 14
-    leftPadding: 12 // Padding légèrement augmenté pour équilibrer
+    leftPadding: 12
     rightPadding: 12
     topPadding: 14
     bottomPadding: 14

@@ -11,5 +11,6 @@
         <file>qml/MyTextField.qml</file>
         <file>qml/MyText.qml</file>
         <file>qml/MySpinBox.qml</file>
+        <file>qml/MyTableView.qml</file>
     </qresource>
 </RCC>
