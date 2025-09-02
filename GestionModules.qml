@@ -9,8 +9,12 @@ Rectangle {
         id: moduleModel
     }
     MyGroupBox {
-        width: parent.width
-        height: parent.height - 20
+        width: parent.width * .8
+        anchors.top: parent.top
+        anchors.topMargin: 80
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+
         title: qsTr("Gérer les modules")
         Column {
             spacing: 20
