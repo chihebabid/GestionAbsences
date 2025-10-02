@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls.Material
 import "qrc:/qml/."
 
@@ -19,12 +20,12 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 20
 
-            Row {
+            RowLayout {
                 spacing: 10
-
+                Layout.alignment: Qt.AlignVCenter
                 MyTextField {
                     id: newSection
-                    width: 200
+                    implicitWidth: 200
                     placeholderText: "Section"
                 }
 
@@ -51,7 +52,7 @@ Rectangle {
                     }
                     delegate: Rectangle {
                         width: root.width * 0.6
-                        height: 30
+                        height: 40
                         border.color: "gray"
                         color: model.selected ? "#87CEFA" : "white" // Fond bleu si sélectionné
                         TextField {

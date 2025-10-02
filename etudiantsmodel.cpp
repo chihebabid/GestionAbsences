@@ -85,8 +85,7 @@ void EtudiantsModel::loadEtudiantsForSection(const int sectionId) {
         e.nom = query.value(2).toString();
         e.prenom = query.value(3).toString();
         e.mail = query.value(4).toString();
-        m_data.push_back(e);
-        qDebug()<<"Itération";
+        m_data.push_back(e);        
     }
     endResetModel();    
 }

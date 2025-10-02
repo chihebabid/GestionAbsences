@@ -6,9 +6,12 @@ Button {
     font.pixelSize: 14
     leftPadding: 12
     rightPadding: 12
-    topPadding: 14
-    bottomPadding: 14
+    topPadding: 9
+    bottomPadding: 9
+    implicitHeight: 46
+
     background: Rectangle {
+
         id: buttonBackground
         color: parent.hovered && parent.enabled ? "#0078d4" : "#ffffff"
 

@@ -7,8 +7,8 @@ ComboBox {
     font.pixelSize: 14
     leftPadding: 12
     rightPadding: 12
-    topPadding: 10
-    bottomPadding: 10
+    topPadding: 9
+    bottomPadding: 9
 
     // Fond du ComboBox
     background: Rectangle {

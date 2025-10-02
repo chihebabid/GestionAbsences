@@ -4,51 +4,43 @@ project(GestionAbsences VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Quick Sql QuickControls2 PrintSupport Svg)
+find_package(Qt6 REQUIRED COMPONENTS Core Qml Quick Sql QuickControls2 PrintSupport Svg)
 
 
 set(CMAKE_AUTORCC ON)
 
-qt_standard_project_setup(REQUIRES 6.8)
+qt_standard_project_setup(REQUIRES 6.9)
 
 qt_add_executable(appGestionAbsences
-    absencedatabasemanager.cpp manageslectedsectionmodule.cpp main.cpp
+    main.cpp
     #resources.qrc
 )
 
-
-
 qt_add_qml_module(appGestionAbsences
-    URI GestionAbsences
+    URI com.enhancetech.absences
     VERSION 1.0
+    RESOURCES resources.qrc
     QML_FILES
-        Main.qml
+        Main.qml GestionSections.qml WelcomeInterface.qml GestionModules.qml AboutDialog.qml DrawerItem.qml Espacement.qml  PopupDate.qml
+        PageDrawer.qml GestionEtudiants.qml Synthese.qml
     SOURCES absencedatabasemanager.h absencedatabasemanager.cpp
-    SOURCES manageslectedsectionmodule.h manageslectedsectionmodule.cpp
-    QML_FILES GestionSections.qml
+    SOURCES manageslectedsectionmodule.h manageslectedsectionmodule.cpp    
     SOURCES misc.h
     SOURCES misc.cpp
     SOURCES sectionmodel.h sectionmodel.cpp
-    QML_FILES WelcomeInterface.qml
-    QML_FILES GestionModules.qml
-    SOURCES modulemodel.h modulemodel.cpp
-    QML_FILES GestionEtudiants.qml
+    SOURCES modulemodel.h modulemodel.cpp    
     SOURCES etudiantsmodel.h etudiantsmodel.cpp
-    QML_FILES PopupDate.qml
-    QML_FILES Espacement.qml    
     SOURCES planifierseance.h planifierseance.cpp
     SOURCES typecoursmodel.h typecoursmodel.cpp
     SOURCES seancemodel.h seancemodel.cpp
     SOURCES absencemodel.h absencemodel.cpp
     SOURCES presencemodel.h presencemodel.cpp
-    SOURCES printermanage.h printermanage.cpp
-    QML_FILES Synthese.qml
+    SOURCES printermanage.h printermanage.cpp    
     SOURCES synthesetablemodel.h synthesetablemodel.cpp
-    QML_FILES PageDrawer.qml
-    QML_FILES DrawerItem.qml
-    RESOURCES resources.qrc
-    QML_FILES AboutDialog.qml
-
+    SOURCES misc/basemodel.h misc/basemodel.cpp
+    SOURCES misc/basemanager.h misc/basemanager.cpp
+    SOURCES misc/globals.h
+    SOURCES misc/studentmodel.h misc/studentmodel.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -60,6 +52,10 @@ set_target_properties(appGestionAbsences PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
+)
+
+target_include_directories(appGestionAbsences PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/misc
 )
 
 target_link_libraries(appGestionAbsences
