@@ -41,6 +41,7 @@ qt_add_qml_module(appGestionAbsences
     SOURCES misc/basemanager.h misc/basemanager.cpp
     SOURCES misc/globals.h
     SOURCES misc/studentmodel.h misc/studentmodel.cpp
+    SOURCES misc/studentmanager.h misc/studentmanager.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

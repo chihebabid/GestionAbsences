@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import GestionAbsences
+import com.enhancetech.absences
 import "qrc:/qml/."
 Rectangle {
     id: welcomeInterface
