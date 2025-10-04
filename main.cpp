@@ -1,4 +1,6 @@
+
 #include "misc.h"
+#include "studentmanager.h"
 #include "planifierseance.h"
 #include "absencedatabasemanager.h"
 #include "manageslectedsectionmodule.h"
@@ -11,6 +13,7 @@
 #include "presencemodel.h"
 #include "printermanage.h"
 #include "synthesetablemodel.h"
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -56,6 +59,7 @@ int main(int argc, char *argv[])
     PresenceModel presenceModel;
     PrinterManage printerManage;
     SyntheseTableModel syntheseTableModel{};
+    auto studentManager {new StudentManager{}};
 
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
@@ -67,6 +71,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("presenceModel", &presenceModel);
     engine.rootContext()->setContextProperty("printerManage", &printerManage);
     engine.rootContext()->setContextProperty("syntheseTableModel", &syntheseTableModel);
+
+    engine.rootContext()->setContextProperty("studentManager", studentManager);
 
     QObject::connect(
         &engine,

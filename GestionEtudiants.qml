@@ -45,10 +45,10 @@ Rectangle {
                             if (sectionCombo.currentIndex >= 0) {
                                 bImporter.enabled = true
                                 let sectionIndex = sectionCombo.currentIndex
-                                let sectionId = sectionModel.getSectionId(
+                                let sectionId = studentManager.fetchForSection(
                                         sectionIndex)
-                                tableEtudiants.model.loadEtudiantsForSection(
-                                            sectionId)
+                                /*tableEtudiants.model.loadEtudiantsForSection(
+                                            sectionId)*/
                             }
                         }
                     }
@@ -97,7 +97,7 @@ Rectangle {
                     width: myColumnEtudiants.width
                     height: 300
                     property bool toRevert: false
-                    model: etudiantsModel
+                    model: studentManager.mModel
 
                     delegate: Rectangle {
                         implicitHeight: 40

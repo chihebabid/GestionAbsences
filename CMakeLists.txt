@@ -12,8 +12,7 @@ set(CMAKE_AUTORCC ON)
 qt_standard_project_setup(REQUIRES 6.9)
 
 qt_add_executable(appGestionAbsences
-    main.cpp
-    #resources.qrc
+    main.cpp    
 )
 
 qt_add_qml_module(appGestionAbsences

@@ -1,9 +1,9 @@
 #ifndef BASEMODEL_H
 #define BASEMODEL_H
+#include "globals.h"
 #include <QObject>
 #include <QQmlEngine>
 #include <QAbstractTableModel>
-#include "globals.h"
 
 class BaseModel : public QAbstractTableModel {
     Q_OBJECT

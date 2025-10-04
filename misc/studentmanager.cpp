@@ -39,7 +39,11 @@ void StudentManager::fetchForSection(const int id_section) {
         e.firstName = query.value(3).toString();
         e.mail = query.value(4).toString();
         e.sectionId=id_section;
-        students.emplace_back(e);
+        students.emplace_back(std::make_shared<student_t>(e));
     }
     m_model->set(students);
+}
+
+void StudentManager::fetch() {
+
 }

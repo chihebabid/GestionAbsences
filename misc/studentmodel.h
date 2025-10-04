@@ -1,8 +1,7 @@
 #ifndef STUDENTMODEL_H
 #define STUDENTMODEL_H
-#include "basemodel.h"
 #include "globals.h"
-
+#include "basemodel.h"
 
 struct student_t : public base_struct_t {
     int id;
