@@ -14,6 +14,7 @@ public:
     StudentModel* mModel() const {
         return static_cast<StudentModel*>(m_model);
     }
+    Q_INVOKABLE void importCSV(const QUrl &,const int sectionId);
 };
 
 #endif // STUDENTMANAGER_H

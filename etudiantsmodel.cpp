@@ -28,12 +28,14 @@ QVariant EtudiantsModel::data(const QModelIndex &index, int role) const {
     case NomRole: return etud.nom;
     case PrenomRole: return etud.prenom;
     case MailRole: return etud.mail;
+    case SelectedRole: return etud.selected;
     case Qt::DisplayRole:
         switch (index.column()) {
         case 0: return etud.inscri;
         case 1: return etud.nom;
         case 2: return etud.prenom;
         case 3: return etud.mail;
+        case 4: return etud.selected;
         }
     }
     return {};
@@ -54,7 +56,7 @@ QHash<int, QByteArray> EtudiantsModel::roleNames() const {
     return {
         {InscriRole, "inscri"},{NomRole, "nom"},
         {PrenomRole, "prenom"},
-        {MailRole, "mail"}
+        {MailRole, "mail"},{SelectedRole, "selected"},
     };
 }
 
@@ -101,7 +103,10 @@ bool EtudiantsModel::setData(const QModelIndex &index, const QVariant &value, in
         e.nom = value.toString();
         emit dataChanged(index, index, {role});
         return true;
-
+    case SelectedRole:
+        e.selected=value.toBool();
+        emit dataChanged(index, index, {role});
+        return true;
     default:
         return false;
     }
@@ -155,4 +160,9 @@ void EtudiantsModel::importCSV(const QUrl &url,const int sectionId) {
 
     fichier.close();
     loadEtudiantsForSection(sectionId);
+}
+
+
+Qt::ItemFlags EtudiantsModel::flags(const QModelIndex &) const {
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;
 }

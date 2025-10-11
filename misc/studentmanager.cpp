@@ -2,6 +2,8 @@
 #include "studentmodel.h"
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QFile>
+#include <QUrl>
 
 StudentManager::StudentManager(QObject *parent)
     : BaseManager{new StudentModel{parent},parent}
@@ -46,4 +48,54 @@ void StudentManager::fetchForSection(const int id_section) {
 
 void StudentManager::fetch() {
 
+}
+
+void StudentManager::importCSV(const QUrl &url,const int sectionId) {
+    QString cheminFichier {QUrl(url).toLocalFile()};
+    QFile fichier(cheminFichier);
+
+    if (!fichier.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Impossible d’ouvrir le fichier :" << cheminFichier;
+        return ;
+    }
+    QTextStream flux(&fichier);
+    bool premiereLigne = true;
+
+    while (!flux.atEnd()) {
+        QString ligne = flux.readLine().trimmed();
+        if (ligne.isEmpty())
+            continue;
+
+        if (premiereLigne) {
+            premiereLigne = false; // ignorer l'entête
+            continue;
+        }
+
+        QStringList champs = ligne.split(',', Qt::SkipEmptyParts);
+        qDebug()<<"Nombre de champs:"<<champs.size();
+        if (champs.size() < 4)
+            continue;
+
+        student_t e;
+        e.inscri = champs[0].trimmed();
+        e.name = champs[1].trimmed();
+        e.firstName = champs[2].trimmed();
+        e.mail = champs[3].trimmed();
+        // Exécution requête SQL
+        QSqlQuery query;
+        query.prepare("INSERT INTO etudiant (inscri,nom,prenom,mail,section_id) VALUES (?,?,?,?,?)");
+        query.addBindValue(e.inscri);
+        query.addBindValue(e.name);
+        query.addBindValue(e.firstName);
+        query.addBindValue(e.mail);
+        query.addBindValue(sectionId);
+        if (!query.exec()) {
+            qWarning() << "Erreur insert from CSV:" << query.lastError();
+            return;
+        }
+
+    }
+
+    fichier.close();
+    fetchForSection(sectionId);
 }
