@@ -146,7 +146,6 @@ void SectionModel::deleteSelected() {
     }
 }
 void SectionModel::clearSelection() {
-
     for(size_t i{};i<m_sections.size();++i) {
         m_sections[i].selected=false;
          emit dataChanged(index(i), index(i), {SelectedRole});

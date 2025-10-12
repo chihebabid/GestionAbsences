@@ -126,9 +126,52 @@ Rectangle {
                                 border.width: 1
                                 border.color: "#d0d0d0"
                                 color: "transparent"
+                                TextField {
+                                    id: sectionField
+                                    background: null
+                                    anchors.fill: parent
+                                    //z: 0
+                                    anchors.margins: 2
+                                    text: {
+                                        switch (column) {
+                                        case 0:
+                                            return model.inscri
+                                        case 1:
+                                            return model.nom
+                                        case 2:
+                                            return model.prenom
+                                        case 3:
+                                            return model.mail
+                                        default:
+                                            return ""
+                                        }
+                                    }
+                                    selectByMouse: true
+                                    focus: false
+                                    onFocusChanged: {
+                                        if (focus) {
+                                                       mouseArea.enabled = false
+                                                   } else {
+                                                       mouseArea.enabled = true
+                                                   }
+                                        }
+                                    Keys.onEscapePressed: {
+                                                    focus = false
+                                                    mouseSection.enabled = true
+                                                }
+                                    onEditingFinished: {
+                                        //sectionModel.updateSection(index, text)
+                                        //sectionField.z = 0
+                                        //mouseSection.z = 1
+                                        sectionField.deselect()
+                                        sectionField.focus = false
+                                        mouseSection.focus = true
+                                        mouseSection.enabled = true
+                                    }
+                                }
                             }
 
-                            Item {
+                            /*Item {
                                 anchors.fill: parent
                                 Loader {
                                     anchors.fill: parent
@@ -163,24 +206,25 @@ Rectangle {
                                         }
                                     }
                                 }
-                            }
+                            }*/
 
                             MouseArea {
                                 id: mouseSection
                                 anchors.fill: parent
                                 z: 1
                                 propagateComposedEvents: true
-                                onClicked: function (mouse) {
+                                onClicked: (mouse) => {
                                     if (mouse.modifiers & Qt.ControlModifier) {
                                         model.selected = !model.selected
-                                    } /*else {
-                                                                        sectionModel.clearSelection()
-                                                                                                            sectionField.forceActiveFocus()
-                                                                                                                                                // sectionField.selectAll()
-                                                                                                                                                                                    mouseSection.focus = false
-                                                                                                                                                                                                                        sectionField.z = 1
-                                                                                                                                                                                                                                                            mouseSection.z = 0
-                                                                                                                                                                                                                                                                                            }*/
+                                    } else {
+                                        //studentManager.mModel.clearSelection()
+                                        studentManager.mModel.clearSelection()
+                                        mouseSection.enabled = false
+                                        sectionField.focus = true
+                                        sectionField.selectAll()
+                                        sectionField.forceActiveFocus()
+
+                                    }
                                 }
                             }
                         }

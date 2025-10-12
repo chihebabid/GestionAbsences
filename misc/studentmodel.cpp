@@ -44,9 +44,9 @@ bool StudentModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (!index.isValid() || index.row() >= m_data.size())
         return false;
 
-    const auto &student = std::dynamic_pointer_cast<student_t>(m_data[index.row()]);
-    const auto topLeft = index.sibling(index.row(), 0);
-    const auto bottomRight = index.sibling(index.row(), columnCount(index) - 1);
+    const auto &student {std::dynamic_pointer_cast<student_t>(m_data[index.row()])};
+    const auto topLeft {index.sibling(index.row(), 0)};
+    const auto bottomRight {index.sibling(index.row(), columnCount(index) - 1)};
     switch (role) {
     case NomRole:
         student->name = value.toString();
@@ -59,5 +59,18 @@ bool StudentModel::setData(const QModelIndex &index, const QVariant &value, int 
         return true;
     default:
         return false;
+    }
+}
+
+
+void StudentModel::clearSelection() {
+    for(size_t i{}; i < m_data.size(); ++i) {
+        auto student {std::dynamic_pointer_cast<student_t>(m_data[i])};
+        if (student) {
+            student->selected = false;
+            const auto topLeft {index(static_cast<int>(i), 0)};
+            const auto bottomRight {index(static_cast<int>(i), columnCount() - 1)};
+            emit dataChanged(topLeft, bottomRight, {SelectRole});
+        }
     }
 }
