@@ -99,3 +99,48 @@ void StudentManager::importCSV(const QUrl &url,const int sectionId) {
     fichier.close();
     fetchForSection(sectionId);
 }
+
+void StudentManager::deleteSelected() {
+
+}
+
+void StudentManager::updateStudent(int studentId, int column, const QVariant& value) {
+    QString fieldName;
+    StudentModel::Roles role;
+    switch (column) {
+    case 0 :
+        fieldName = "inscri";
+        role=StudentModel::InscriRole;
+        break;
+    case 1 :
+        fieldName = "nom";
+        role=StudentModel::NomRole;
+        break;
+    case 2:
+        fieldName = "prenom";
+        role=StudentModel::PrenomRole;
+        break;
+    case 3:
+        fieldName = "mail";
+        role=StudentModel::MailRole;
+        break;
+    default:
+        qWarning() << "Rôle non supporté pour update DB:" << role;
+        return;
+    }
+    QString valueStr = value.toString();
+    QSqlQuery query;
+    query.prepare(QString("UPDATE etudiant SET %1 = ? WHERE id = ?").arg(fieldName));
+    query.addBindValue(valueStr);
+    query.addBindValue(studentId);
+
+    if (!query.exec()) {
+        qWarning() << "Erreur update étudiant ID" << studentId << "champ" << fieldName << ":" << query.lastError();
+        emit sError(query.lastError().text());
+        return;
+    }
+    StudentModel* model = mModel();
+    if (!model->updateStudentData(studentId, role, value)) {
+        qWarning() << "Étudiant non trouvé dans le modèle pour mise à jour:" << studentId;
+    }
+}

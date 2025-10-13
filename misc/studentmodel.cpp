@@ -74,3 +74,50 @@ void StudentModel::clearSelection() {
         }
     }
 }
+
+
+bool StudentModel::removeRow(int row) {
+    if (row < 0 || static_cast<size_t>(row) >= m_data.size()) {
+        return false;
+    }
+    beginRemoveRows(QModelIndex(), row, row);
+    m_data.erase(m_data.begin() + row);
+    endRemoveRows();
+    return true;
+}
+
+bool StudentModel::updateStudentData(int studentId, int role, const QVariant& value) {
+    for (int i {}; i < rowCount(); ++i) {
+        auto student {std::dynamic_pointer_cast<student_t>(m_data[i])};
+        if (student && student->id == studentId) {
+            // Mettre à jour la propriété correspondante
+            switch (role) {
+            case InscriRole:
+                student->inscri = value.toString();
+                break;
+            case NomRole:
+                student->name = value.toString();
+                break;
+            case PrenomRole:
+                student->firstName = value.toString();
+                break;
+            case MailRole:
+                student->mail = value.toString();
+                break;
+            default:
+                return false;
+            }
+
+            // Émettre le signal dataChanged
+            QModelIndex changedIndex = index(i, 0);
+            emit dataChanged(changedIndex, changedIndex, {role});
+            return true;
+        }
+    }
+    return false;
+}
+
+int StudentModel::getStudentId(int row) const {
+    auto student {std::dynamic_pointer_cast<student_t>(m_data[row])};
+    return student->id;
+}

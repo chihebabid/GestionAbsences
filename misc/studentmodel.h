@@ -24,6 +24,9 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     Q_INVOKABLE void clearSelection();
+    bool removeRow(int row);
+    bool updateStudentData(int studentId, int role, const QVariant& value);
+    Q_INVOKABLE int getStudentId(int row) const;
 };
 
 #endif // STUDENTMODEL_H
