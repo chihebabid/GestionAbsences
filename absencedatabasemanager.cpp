@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+#include <QFileDialog>
 #include "misc.h"
 
 AbsenceDatabaseManager::AbsenceDatabaseManager(QObject *parent)
@@ -22,8 +23,20 @@ bool AbsenceDatabaseManager::databaseExists() const {
     return false;
 }
 
-void AbsenceDatabaseManager::initialize() {
-    qDebug()<<__PRETTY_FUNCTION__;
+void AbsenceDatabaseManager::openDatabase() {
+    QString filePath = QFileDialog::getOpenFileName(nullptr, "Ouvrir une BD","", "Fichiers DB (abs_????_????.db)");
+    if (filePath.isNull()) {
+        return;
+    }
+    am::dbInfo.dbName=filePath;
+    QStringList list {filePath.split("_")};
+    m_educationYear={list[1].toInt(),list[2].toInt()};
+    if (databaseExists()) {
+        emit databaseReady();
+    }
+}
+
+void AbsenceDatabaseManager::initialize() {    
     if (!databaseExists()) {
         qDebug()<<"DB doesn't exist";
         emit askUserToCreateDatabase();
@@ -165,6 +178,11 @@ void AbsenceDatabaseManager::createSchema() {
             qWarning() << "Erreur SQL : " << query.lastError().text();
         }
     }
+}
+
+
+QPair<int,int> AbsenceDatabaseManager::getEducationYear() const {
+    return m_educationYear;
 }
 
 

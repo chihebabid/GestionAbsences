@@ -5,8 +5,9 @@ import com.enhancetech.absences
 import "qrc:/qml/."
 Rectangle {
     id: welcomeInterface
+    width: parent.width
+    height: parent.height
     color: "transparent"
-
 
     MyText {
         text: "Année universitaire : " + yearMonthString
@@ -20,7 +21,7 @@ Rectangle {
     // Section + Semestre
     MyGroupBox {
         id: groupSemestre
-        width: groupSeance.width
+        width: parent.width * .9
         anchors.top: parent.top
         anchors.topMargin: 80
         anchors.left: parent.left
@@ -34,7 +35,7 @@ Rectangle {
 
             MyComboBox {
                 id: wSemestreCombo
-                width: groupSemestre.width * 0.18
+                width:parent.width * 0.18
                 model: [1, 2]
                 onCurrentIndexChanged: {
                     if (wSemestreCombo.currentIndex >= 0) {
@@ -49,7 +50,7 @@ Rectangle {
             }
 
             Espacement {
-                width: groupSemestre.width * 0.15
+                width: 20
             }
 
             MyText {
@@ -61,7 +62,7 @@ Rectangle {
             MyComboBox {
                 id: wLSections
                 textRole: "name"
-                width: groupSemestre.width * 0.5
+                width: parent.parent.width * 0.4
                 model: sectionModel
                 onCurrentIndexChanged: {
 
@@ -125,8 +126,7 @@ Rectangle {
                     textRole: "nom"
                     width: root.width * 0.1
                     model: typeCoursModel
-                    currentIndex: 0 // Valeur par défaut
-
+                    currentIndex: 0
                     onCurrentIndexChanged: {
                         console.log("Type de cours sélectionné :",
                                     typeCoursCombo.currentText)
@@ -143,7 +143,6 @@ Rectangle {
                 MyTextField {
                     id: dateField
                     text: Qt.formatDate(parent.selectedDate, "dd/MM/yyyy")
-
                     MouseArea {
                         anchors.fill: dateField
                         //cursorShape: Qt.PointingHandCursor

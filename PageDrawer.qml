@@ -162,7 +162,6 @@ Drawer {
             currentIndex: -1
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Component.onCompleted: currentIndex = 0
 
             delegate: DrawerItem {
                 model: items

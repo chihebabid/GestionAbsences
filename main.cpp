@@ -87,13 +87,13 @@ int main(int argc, char *argv[])
     QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&presenceModel,&PresenceModel::loadFromDatabase);
     dbManager.initialize();
 
-    // Imprimer les absences pour la séance en cours
+    // Impression les absences pour une séance
     QObject::connect(&printerManage,&PrinterManage::s_printAbsence, [&absenceModel,&printerManage]() {
         printerManage.setModel(&absenceModel);
         printerManage.imprimerAbsenceSeance();
     });
 
-    // Imprimer la synthèse pour les absences
+    // Imprimer les absences pour l'ensemble des séances
     QObject::connect(&printerManage,&PrinterManage::s_printSynthese, [&syntheseTableModel,&printerManage]() {
         printerManage.setModel(&syntheseTableModel);
         printerManage.imprimerSynthese();

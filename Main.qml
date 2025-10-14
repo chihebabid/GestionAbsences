@@ -15,11 +15,6 @@ ApplicationWindow {
     title: "Gestion des absences"
     property bool isDatabaseReady: false
     property int currentTab: 0
-
-
-
-
-
     AboutDialog {
             id: aboutDialog
 
@@ -39,6 +34,7 @@ ApplicationWindow {
             // displaying a spacer and a separator
             actions: {
                 "0": function () {
+                    databaseManager.openDatabase()
                     console.log("Item 1 clicked!")
                 },
                 "1": function () {
