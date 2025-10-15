@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QProperty>
 
 class AbsenceDatabaseManager : public QObject
 {
@@ -23,6 +24,7 @@ private:
     void createSchema();
     void init();
     QPair<int,int> m_educationYear;
+    Q_OBJECT_BINDABLE_PROPERTY(AbsenceDatabaseManager,QVariantList, educationYear, &AbsenceDatabaseManager::educationYearChanged)
 };
 
 #endif // ABSENCEDATABASEMANAGER_H

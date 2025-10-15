@@ -30,8 +30,13 @@ void AbsenceDatabaseManager::openDatabase() {
         return;
     }
     am::dbInfo.dbName=filePath;
-    QStringList list {filePath.split(QRegularExpression("\\W+"), Qt::SkipEmptyParts)};
+    QFileInfo pathInfo(filePath);
+    QString fileName = pathInfo.fileName();
+    QStringList list {fileName.split("_")};
+    list[2].chop(3);
     m_educationYear={list[1].toInt(),list[2].toInt()};
+    qDebug()<<"Academic year: "<<list[1].toInt()<<" "<<list[2].toInt();
+    emit educationYearChanged();
     if (databaseExists()) {
         emit databaseReady();
     }
@@ -44,6 +49,7 @@ void AbsenceDatabaseManager::init() {
     auto month {currentDate.month()};
     int year {currentDate.year()};
     m_educationYear=month<=8 ? QPair<int,int>{year - 1,year} : QPair<int,int>{year,year+1};
+    emit educationYearChanged();
     am::dbInfo.dbName = QString("abs_%1_%2.db")
                             .arg(m_educationYear.first)
                             .arg(m_educationYear.second);
