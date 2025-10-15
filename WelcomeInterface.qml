@@ -10,7 +10,7 @@ Rectangle {
     color: "transparent"
 
     MyText {
-        text: "Année universitaire : " + yearMonthString
+        text: "Année universitaire : " + (databaseManager.educationYear)[0]+" - "+(databaseManager.educationYear)[1]
         font.pixelSize: 18        
         anchors.right: parent.right
         anchors.rightMargin: 20

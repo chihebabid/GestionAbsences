@@ -7,19 +7,21 @@
 class AbsenceDatabaseManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QPair<int,int> m_educationYear READ getEducationYear)
+    Q_PROPERTY(QVariantList educationYear READ getEducationYear NOTIFY educationYearChanged)
 public:
     explicit AbsenceDatabaseManager(QObject *parent = nullptr);
     Q_INVOKABLE void createDatabase();
     void initialize();
     Q_INVOKABLE void openDatabase();
-    QPair<int,int> getEducationYear() const;
+    QVariantList getEducationYear() const;
 signals:
     void askUserToCreateDatabase();
     void databaseReady();
+    void educationYearChanged();
 private:   
     bool databaseExists() const;
     void createSchema();
+    void init();
     QPair<int,int> m_educationYear;
 };
 

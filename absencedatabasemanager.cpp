@@ -5,6 +5,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QFileDialog>
+#include <QRegularExpression>
 #include "misc.h"
 
 AbsenceDatabaseManager::AbsenceDatabaseManager(QObject *parent)
@@ -29,14 +30,27 @@ void AbsenceDatabaseManager::openDatabase() {
         return;
     }
     am::dbInfo.dbName=filePath;
-    QStringList list {filePath.split("_")};
+    QStringList list {filePath.split(QRegularExpression("\\W+"), Qt::SkipEmptyParts)};
     m_educationYear={list[1].toInt(),list[2].toInt()};
     if (databaseExists()) {
         emit databaseReady();
     }
 }
-
-void AbsenceDatabaseManager::initialize() {    
+/*
+ * Déterminer l'année universitaire courante
+ */
+void AbsenceDatabaseManager::init() {
+    QDate currentDate = QDate::currentDate();
+    auto month {currentDate.month()};
+    int year {currentDate.year()};
+    m_educationYear=month<=8 ? QPair<int,int>{year - 1,year} : QPair<int,int>{year,year+1};
+    am::dbInfo.dbName = QString("abs_%1_%2.db")
+                            .arg(m_educationYear.first)
+                            .arg(m_educationYear.second);
+    qDebug()<<"DB Name: "<<am::dbInfo.dbName;
+}
+void AbsenceDatabaseManager::initialize() {
+    init();
     if (!databaseExists()) {
         qDebug()<<"DB doesn't exist";
         emit askUserToCreateDatabase();
@@ -181,8 +195,8 @@ void AbsenceDatabaseManager::createSchema() {
 }
 
 
-QPair<int,int> AbsenceDatabaseManager::getEducationYear() const {
-    return m_educationYear;
+QVariantList AbsenceDatabaseManager::getEducationYear() const {
+    return QVariantList{m_educationYear.first,m_educationYear.second};
 }
 
 

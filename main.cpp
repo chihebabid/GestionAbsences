@@ -25,16 +25,7 @@
 #include <QApplication>
 
 
-QString init() {
-    QDate currentDate = QDate::currentDate();
-    auto month {currentDate.month()};
-    if (month<=8) {
-        return QString::number(currentDate.year()-1)+" - "+QString::number(currentDate.year());
-    }
-    else {
-        return QString::number(currentDate.year())+" - "+QString::number(currentDate.year()+1);
-    }
-}
+
 
 
 int main(int argc, char *argv[])
@@ -63,8 +54,7 @@ int main(int argc, char *argv[])
 
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
-    engine.rootContext()->setContextProperty("sectionModel", &sectionModel);
-    engine.rootContext()->setContextProperty("yearMonthString", init());            
+    engine.rootContext()->setContextProperty("sectionModel", &sectionModel);              
     engine.rootContext()->setContextProperty("typeCoursModel", &typeCoursModel);
     engine.rootContext()->setContextProperty("seanceModel", &seanceModel);
     engine.rootContext()->setContextProperty("absenceModel", &absenceModel);
