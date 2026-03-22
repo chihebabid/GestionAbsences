@@ -88,16 +88,12 @@ Rectangle {
         anchors.leftMargin: 20
         title: qsTr("Planifier une séance")
 
-
         ModuleModel {
             id: moduleModel
         }
 
-
         Column {
             spacing: 20
-
-
             Row {
                 spacing: 10
                 MyText {

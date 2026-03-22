@@ -34,9 +34,7 @@ Rectangle {
                     Layout.fillHeight: true // Remplit la hauteur
                     anchors.margins: 0
                     spacing: 1
-                    property var columnWidths: [myColumnEtudiants.width
-                        * .2, myColumnEtudiants.width * .3, myColumnEtudiants.width
-                        * .3, myColumnEtudiants.width * .2 - 4]
+                    property var columnWidths: [myColumnEtudiants.width * .2, myColumnEtudiants.width * .3, myColumnEtudiants.width * .3, myColumnEtudiants.width * .2 - 4]
                     Row {
                         spacing: 5
                         anchors.margins: 5
@@ -51,12 +49,11 @@ Rectangle {
                             model: sectionModel
                             onActivated: {
                                 if (sectionCombo.currentIndex >= 0) {
-                                    bImporter.enabled = true
-                                    let sectionIndex = sectionCombo.currentIndex
-                                    console.log("Section id: " + sectionIndex)
-                                    let sectionId = sectionModel.getSectionId(
-                                            sectionIndex)
-                                    studentManager.fetchForSection(sectionId)
+                                    bImporter.enabled = true;
+                                    let sectionIndex = sectionCombo.currentIndex;
+                                    console.log("Section id: " + sectionIndex);
+                                    let sectionId = sectionModel.getSectionId(sectionIndex);
+                                    studentManager.fetchForSection(sectionId);
                                 }
                             }
                         }
@@ -106,62 +103,55 @@ Rectangle {
                         property bool toRevert: false
                         model: studentManager.mModel
                         leftMargin: 0
-
                         interactive: false
                         delegate: Rectangle {
                             implicitWidth: -1
                             implicitHeight: 40
                             border.color: "#d0d0d0"
-                            border.width: 0
-                            color: model.selected ? "#87CEFA" : Qt.color(
-                                                        "white")
-
+                            border.width: 1
+                            color: model.selected ? "#87CEFA" : Qt.color("white")
                             required property int row
-                            Rectangle {
-                                width: parent.width
-                                height: parent.height
-                                anchors.left: parent.left
-                                border.color: "#d0d0d0"
-                                border.width: 1
-                                color: "transparent"
-                                TextField {
-                                    id: sectionField
-                                    background: null
-                                    anchors.fill: parent
-                                    anchors.margins: 0
-                                    text: {
-                                        switch (column) {
-                                        case 0:
-                                            return model.inscri
-                                        case 1:
-                                            return model.nom
-                                        case 2:
-                                            return model.prenom
-                                        case 3:
-                                            return model.mail
-                                        default:
-                                            return ""
-                                        }
+                            TextField {
+                                id: sectionField
+                                background: null
+                                anchors.fill: parent
+                                anchors.margins: 0
+                                color: "black"
+                                z: mouseSection.enabled ? 0 : 1  // Show when editing
+                                text: {
+                                    switch (column) {
+                                    case 0:
+                                        return model.inscri;
+                                    case 1:
+                                        return model.nom;
+                                    case 2:
+                                        return model.prenom;
+                                    case 3:
+                                        return model.mail;
+                                    default:
+                                        return "";
                                     }
-                                    selectByMouse: true
-                                    focus: false
+                                }
+                                selectByMouse: true
+                                focus: false
+                                enabled: !mouseSection.enabled  // Disable when mouse is active
 
-                                    onFocusChanged: {
-                                        if (focus) {
-                                            mouseArea.enabled = false
-                                        }
-                                    }
-                                    Keys.onEscapePressed: {
-                                        focus = false
-                                        mouseSection.enabled = true
-                                    }
-                                    onEditingFinished: {
-                                        let id_student=studentManager.mModel.getStudentId(row)
-                                        studentManager.updateStudent(id_student,column, sectionField.text)
-                                        sectionField.deselect()
-                                        sectionField.focus = false
-                                        mouseSection.focus = true
-                                        mouseSection.enabled = true
+                                onEditingFinished: {
+                                    let id_student = studentManager.mModel.getStudentId(row);
+                                    studentManager.updateStudent(id_student, column, text);
+                                    sectionField.deselect();
+                                    sectionField.focus = false;
+                                    mouseSection.enabled = true;
+                                }
+
+                                Keys.onEscapePressed: {
+                                    focus = false;
+                                    mouseSection.enabled = true;
+                                }
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        mouseSection.enabled = false;
                                     }
                                 }
                             }
@@ -169,20 +159,21 @@ Rectangle {
                             MouseArea {
                                 id: mouseSection
                                 anchors.fill: parent
+                                z: enabled ? 1 : 0  // On top when enabled
                                 propagateComposedEvents: true
-                                hoverEnabled: false
+                                enabled: true  // Start enabled
+
                                 onClicked: mouse => {
-                                               if (mouse.modifiers & Qt.ControlModifier) {
-                                                   model.selected = !model.selected
-                                               } else {
-                                                   //studentManager.mModel.clearSelection()
-                                                   studentManager.mModel.clearSelection()
-                                                   mouseSection.enabled = false
-                                                   sectionField.focus = true
-                                                   sectionField.selectAll()
-                                                   sectionField.forceActiveFocus()
-                                               }
-                                           }
+                                    if (mouse.modifiers & Qt.ControlModifier) {
+                                        model.selected = !model.selected;
+                                    } else {
+                                        studentManager.mModel.clearSelection();
+                                        // Disable self, enable text field
+                                        mouseSection.enabled = false;
+                                        sectionField.forceActiveFocus();
+                                        sectionField.selectAll();
+                                    }
+                                }
                             }
                         }
                     }
@@ -209,7 +200,7 @@ Rectangle {
                         text: "Importer"
                         enabled: false
                         onClicked: {
-                            fileDialog.open()
+                            fileDialog.open();
                         }
                     }
                 }
@@ -219,13 +210,13 @@ Rectangle {
                 title: "Choisir un fichier"
                 nameFilters: ["Fichiers csv (*.csv)", "Tous les fichiers (*)"]
                 onAccepted: {
-                    console.log("Fichier sélectionné :", selectedFile)
-                    let sectionIndex = sectionCombo.currentIndex
-                    let sectionId = sectionModel.getSectionId(sectionIndex)
-                    studentManager.importCSV(selectedFile, sectionId)
+                    console.log("Fichier sélectionné :", selectedFile);
+                    let sectionIndex = sectionCombo.currentIndex;
+                    let sectionId = sectionModel.getSectionId(sectionIndex);
+                    studentManager.importCSV(selectedFile, sectionId);
                 }
                 onRejected: {
-                    console.log("Sélection annulée")
+                    console.log("Sélection annulée");
                 }
             }
         }
