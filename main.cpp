@@ -61,7 +61,6 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("presenceModel", &presenceModel);
     engine.rootContext()->setContextProperty("printerManage", &printerManage);
     engine.rootContext()->setContextProperty("syntheseTableModel", &syntheseTableModel);
-
     engine.rootContext()->setContextProperty("studentManager", studentManager);
 
     QObject::connect(

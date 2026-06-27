@@ -10,10 +10,6 @@ Dialog {
     anchors.centerIn: parent
     width: 400
     height: 300
-
-
-
-
     ColumnLayout {
         anchors.fill: parent
         spacing: 10
@@ -81,8 +77,8 @@ Dialog {
                 text: qsTr("OK")
                 DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
                 onClicked: {
+                    //aboutDialogLoader.active = false
                     aboutDialog.close()
-                                    aboutDialogLoader.active = false
                 }
             }
         }

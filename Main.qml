@@ -35,7 +35,7 @@ ApplicationWindow {
             actions: {
                 "0": function () {
                     databaseManager.openDatabase()
-                    console.log("Item 1 clicked!")
+                    //console.log("Item 1 clicked!")
                 },
                 "1": function () {
                     console.log("Item 2 clicked!")
@@ -104,7 +104,7 @@ ApplicationWindow {
                 spacing: 10
 
                 Rectangle {
-                    width: 40  // Adjust size as needed
+                    width: 40
                     height: 40
                     color: mouseArea.containsPress ? Qt.darker(palette.highlight, 1.2) :
                            mouseArea.containsMouse ? palette.highlight : "transparent"
@@ -113,7 +113,7 @@ ApplicationWindow {
                         anchors.centerIn: parent
                         text: "\u2630" // Hamburger icon unicode
                         font.pixelSize: 16
-                        color: palette.buttonText // Use system text color for contrast
+                        color: palette.buttonText
                     }
 
                     MouseArea {
