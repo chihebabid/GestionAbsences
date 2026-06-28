@@ -1,19 +1,19 @@
 
 #include "misc.h"
 #include "studentmanager.h"
-#include "planifierseance.h"
+#include "sessionplanner.h"
 #include "absencedatabasemanager.h"
-#include "manageslectedsectionmodule.h"
+#include "manageselectedsectionmodule.h"
 #include "sectionmodel.h"
 #include "modulemodel.h"
-#include "etudiantsmodel.h"
-#include "typecoursmodel.h"
-#include "seancemodel.h"
-#include "absencemodel.h"
-#include "presencemodel.h"
-#include "printermanage.h"
-#include "synthesetablemodel.h"
+#include "studentsmodel.h"
+#include "coursetypemodel.h"
+#include "sessionmodel.h"
 
+#include "presencemodel.h"
+#include "printermanager.h"
+
+#include "summarytablemodel.h"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -44,23 +44,23 @@ int main(int argc, char *argv[])
     AbsenceDatabaseManager dbManager;    
     SectionModel sectionModel;
     SectionModel wSectionModel;    
-    TypeCoursModel typeCoursModel;
-    SeanceModel seanceModel;
-    AbsenceModel absenceModel{nullptr,&seanceModel};
+    CourseTypeModel courseTypeModel;
+    SessionModel sessionModel;
+    AbsenceModel absenceModel{nullptr,&sessionModel};
     PresenceModel presenceModel;
-    PrinterManage printerManage;
-    SyntheseTableModel syntheseTableModel{};
+    PrinterManager printerManage;
+    SummaryTableModel summaryTableModel{};
     auto studentManager {new StudentManager{}};
 
     engine.rootContext()->setContextProperty("databaseManager", &dbManager);
     engine.rootContext()->setContextProperty("wSectionModel", &wSectionModel);
     engine.rootContext()->setContextProperty("sectionModel", &sectionModel);              
-    engine.rootContext()->setContextProperty("typeCoursModel", &typeCoursModel);
-    engine.rootContext()->setContextProperty("seanceModel", &seanceModel);
+    engine.rootContext()->setContextProperty("courseTypeModel", &courseTypeModel);
+    engine.rootContext()->setContextProperty("sessionModel", &sessionModel);
     engine.rootContext()->setContextProperty("absenceModel", &absenceModel);
     engine.rootContext()->setContextProperty("presenceModel", &presenceModel);
     engine.rootContext()->setContextProperty("printerManage", &printerManage);
-    engine.rootContext()->setContextProperty("syntheseTableModel", &syntheseTableModel);
+    engine.rootContext()->setContextProperty("summaryTableModel", &summaryTableModel);
     engine.rootContext()->setContextProperty("studentManager", studentManager);
 
     QObject::connect(
@@ -71,20 +71,20 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
     engine.loadFromModule("com.enhancetech.absences", "Main");
     QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&sectionModel,&SectionModel::loadSections);
-    QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&typeCoursModel,&TypeCoursModel::load);
-    QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&seanceModel,&SeanceModel::loadSeances);
+    QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&courseTypeModel,&CourseTypeModel::load);
+    QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&sessionModel,&SessionModel::loadSessions);
     QObject::connect(&dbManager,&AbsenceDatabaseManager::databaseReady,&presenceModel,&PresenceModel::loadFromDatabase);
     dbManager.initialize();
 
     // Impression les absences pour une séance
-    QObject::connect(&printerManage,&PrinterManage::s_printAbsence, [&absenceModel,&printerManage]() {
+    QObject::connect(&printerManage,&PrinterManager::s_printAbsence, [&absenceModel,&printerManage]() {
         printerManage.setModel(&absenceModel);
         printerManage.imprimerAbsenceSeance();
     });
 
     // Imprimer les absences pour l'ensemble des séances
-    QObject::connect(&printerManage,&PrinterManage::s_printSynthese, [&syntheseTableModel,&printerManage]() {
-        printerManage.setModel(&syntheseTableModel);
+    QObject::connect(&printerManage,&PrinterManager::s_printSynthese, [&summaryTableModel,&printerManage]() {
+        printerManage.setModel(&summaryTableModel);
         printerManage.imprimerSynthese();
     });
     return app.exec();

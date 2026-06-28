@@ -3,7 +3,7 @@
 #include "globals.h"
 #include "basemodel.h"
 
-struct student_t : public base_struct_t {
+struct Student : public base_struct_t {
     int id;
     QString inscri;
     QString name;

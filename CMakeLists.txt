@@ -20,27 +20,27 @@ qt_add_qml_module(appGestionAbsences
     VERSION 1.0
     RESOURCES resources.qrc
     QML_FILES
-        Main.qml GestionSections.qml WelcomeInterface.qml GestionModules.qml AboutDialog.qml DrawerItem.qml Espacement.qml  PopupDate.qml
-        PageDrawer.qml GestionEtudiants.qml Synthese.qml
+        Main.qml ui/pages/GestionSections.qml ui/pages/WelcomeInterface.qml ui/pages/GestionModules.qml ui/dialogs/AboutDialog.qml ui/components/DrawerItem.qml ui/components/Espacement.qml ui/dialogs/PopupDate.qml
+        ui/components/PageDrawer.qml ui/pages/GestionEtudiants.qml ui/pages/Synthese.qml
     SOURCES absencedatabasemanager.h absencedatabasemanager.cpp
-    SOURCES manageslectedsectionmodule.h manageslectedsectionmodule.cpp    
+    SOURCES manageselectedsectionmodule.cpp
     SOURCES misc.h
     SOURCES misc.cpp
     SOURCES sectionmodel.h sectionmodel.cpp
-    SOURCES modulemodel.h modulemodel.cpp    
-    SOURCES etudiantsmodel.h etudiantsmodel.cpp
-    SOURCES planifierseance.h planifierseance.cpp
+    SOURCES modulemodel.h modulemodel.cpp
+    SOURCES sessionplanner.cpp
     SOURCES typecoursmodel.h typecoursmodel.cpp
-    SOURCES seancemodel.h seancemodel.cpp
     SOURCES absencemodel.h absencemodel.cpp
     SOURCES presencemodel.h presencemodel.cpp
-    SOURCES printermanage.h printermanage.cpp    
-    SOURCES synthesetablemodel.h synthesetablemodel.cpp
+    SOURCES printermanager.cpp
+    SOURCES summarytablemodel.cpp
     SOURCES misc/basemodel.h misc/basemodel.cpp
     SOURCES misc/basemanager.h misc/basemanager.cpp
     SOURCES misc/globals.h
     SOURCES misc/studentmodel.h misc/studentmodel.cpp
     SOURCES misc/studentmanager.h misc/studentmanager.cpp
+    SOURCES coursetypemodel.cpp
+    SOURCES sessionmodel.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -1,6 +1,6 @@
 #ifndef PRESENCEMODEL_H
 #define PRESENCEMODEL_H
-#include "seancemodel.h"
+//#include "seancemodel.h"
 #include <QAbstractListModel>
 #include <QObject>
 

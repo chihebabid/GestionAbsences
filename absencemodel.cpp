@@ -2,7 +2,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 using am::Etudiant;
-AbsenceModel::AbsenceModel(QObject *parent,SeanceModel *s)
+AbsenceModel::AbsenceModel(QObject *parent,SessionModel *s)
     : QAbstractTableModel{parent},m_seance{s}
 {
 
@@ -124,7 +124,8 @@ const QList<Etudiant> &AbsenceModel::getListeEtudiants() const {
     return m_data;
 }
 
-SeanceModel *AbsenceModel::getSeance()   const {
+SessionModel *AbsenceModel::getSeance()   const {
+
     return m_seance;
 }
 

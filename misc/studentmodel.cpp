@@ -9,7 +9,7 @@ QVariant StudentModel::data(const QModelIndex &index, int role) const {
         qDebug() << __PRETTY_FUNCTION__<<" - Invalid index: " << index.row();
         return {};
     }
-    const auto &student = std::dynamic_pointer_cast<student_t>(m_data[index.row()]);
+    const auto &student = std::dynamic_pointer_cast<Student>(m_data[index.row()]);
     switch (role) {
         case InscriRole: return student->inscri;
         case NomRole: return student->name;
@@ -44,7 +44,7 @@ bool StudentModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (!index.isValid() || index.row() >= m_data.size())
         return false;
 
-    const auto &student {std::dynamic_pointer_cast<student_t>(m_data[index.row()])};
+    const auto &student {std::dynamic_pointer_cast<Student>(m_data[index.row()])};
     const auto topLeft {index.sibling(index.row(), 0)};
     const auto bottomRight {index.sibling(index.row(), columnCount(index) - 1)};
     switch (role) {
@@ -65,7 +65,7 @@ bool StudentModel::setData(const QModelIndex &index, const QVariant &value, int 
 
 void StudentModel::clearSelection() {
     for(size_t i{}; i < m_data.size(); ++i) {
-        auto student {std::dynamic_pointer_cast<student_t>(m_data[i])};
+        auto student {std::dynamic_pointer_cast<Student>(m_data[i])};
         if (student) {
             student->selected = false;
             const auto topLeft {index(static_cast<int>(i), 0)};
@@ -88,7 +88,7 @@ bool StudentModel::removeRow(int row) {
 
 bool StudentModel::updateStudentData(int studentId, int role, const QVariant& value) {
     for (int i {}; i < rowCount(); ++i) {
-        auto student {std::dynamic_pointer_cast<student_t>(m_data[i])};
+        auto student {std::dynamic_pointer_cast<Student>(m_data[i])};
         if (student && student->id == studentId) {
             // Mettre à jour la propriété correspondante
             switch (role) {
@@ -118,6 +118,6 @@ bool StudentModel::updateStudentData(int studentId, int role, const QVariant& va
 }
 
 int StudentModel::getStudentId(int row) const {
-    auto student {std::dynamic_pointer_cast<student_t>(m_data[row])};
+    auto student {std::dynamic_pointer_cast<Student>(m_data[row])};
     return student->id;
 }

@@ -34,14 +34,14 @@ void StudentManager::fetchForSection(const int id_section) {
     }
 
     while (query.next()) {
-        student_t e;
+        Student e;
         e.id = query.value(0).toInt();
         e.inscri = query.value(1).toString();
         e.name = query.value(2).toString();
         e.firstName = query.value(3).toString();
         e.mail = query.value(4).toString();
         e.sectionId=id_section;
-        students.emplace_back(std::make_shared<student_t>(e));
+        students.emplace_back(std::make_shared<Student>(e));
     }
     m_model->set(students);
 }
@@ -76,7 +76,7 @@ void StudentManager::importCSV(const QUrl &url,const int sectionId) {
         if (champs.size() < 4)
             continue;
 
-        student_t e;
+        Student e;
         e.inscri = champs[0].trimmed();
         e.name = champs[1].trimmed();
         e.firstName = champs[2].trimmed();

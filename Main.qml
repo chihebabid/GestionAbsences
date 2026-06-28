@@ -5,6 +5,8 @@ import QtQuick.Dialogs
 import QtQuick.Controls.Material
 
 import "."
+import "ui/dialogs"
+import "ui/components"
 
 ApplicationWindow {
     id: root
@@ -157,26 +159,26 @@ ApplicationWindow {
 
             // Onglet 0
             Loader {
-                source: isDatabaseReady ? "WelcomeInterface.qml" : ""
+                source: isDatabaseReady ? "ui/pages/WelcomeInterface.qml" : ""
             }
 
             Loader {
-                source: isDatabaseReady ? "Synthese.qml" : ""
+                source: isDatabaseReady ? "ui/pages/Synthese.qml" : ""
             }
 
             // Onglet 1
             Loader {
-                source: isDatabaseReady ? "GestionSections.qml" : ""
+                source: isDatabaseReady ? "ui/pages/GestionSections.qml" : ""
             }
 
             // Onglet 2
             Loader {
-                source: isDatabaseReady ? "GestionModules.qml" : ""
+                source: isDatabaseReady ? "ui/pages/GestionModules.qml" : ""
             }
 
             // Onglet 2
             Loader {
-                source: isDatabaseReady ? "GestionEtudiants.qml" : ""
+                source: isDatabaseReady ? "ui/pages/GestionEtudiants.qml" : ""
             }
 
 

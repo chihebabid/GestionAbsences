@@ -1,16 +1,16 @@
 #include "presencemodel.h"
-#include "synthesetablemodel.h"
-#include "printermanage.h"
+#include "summarytablemodel.h"
+#include "printermanager.h"
 #include <QPrintDialog>
 #include <QFileDialog>
 #include <QPainter>
 #include <QRegularExpression>
 
-PrinterManage::PrinterManage() {}
+PrinterManager::PrinterManager() {}
 
 
 
-void PrinterManage::imprimerAbsenceSeance() {
+void PrinterManager::imprimerAbsenceSeance() {
     AbsenceModel* model = qobject_cast<AbsenceModel*>(m_model);
     if (!model) {
         qDebug() << "Erreur de conversion dynamique...";
@@ -157,7 +157,7 @@ void PrinterManage::imprimerAbsenceSeance() {
 
 
 
-bool PrinterManage::preprint(const QString &file_name) {
+bool PrinterManager::preprint(const QString &file_name) {
     QString filePath = QFileDialog::getSaveFileName(nullptr, "Exporter en PDF",file_name, "Fichiers PDF (*.pdf)");
     if (filePath.isEmpty())
         return false;
@@ -180,20 +180,20 @@ bool PrinterManage::preprint(const QString &file_name) {
 
 }
 
-void PrinterManage::setModel(QObject *m) {
+void PrinterManager::setModel(QObject *m) {
     m_model=m;
 }
 
 
 
-void PrinterManage::startPrinting(const QString &s) {
+void PrinterManager::startPrinting(const QString &s) {
     if (s=="absence")
         emit s_printAbsence();
     else if (s=="synthese")
         emit s_printSynthese();
 }
 
-void PrinterManage::imprimerSynthese() {
+void PrinterManager::imprimerSynthese() {
     SyntheseTableModel * model = qobject_cast<SyntheseTableModel*>(m_model);
     if (!model) {
         qDebug() << "Erreur de conversion dynamique...";
@@ -338,7 +338,7 @@ void PrinterManage::imprimerSynthese() {
 }
 
 template<typename... Args>
-void PrinterManage::drawFormattedText(int x, int y, const QString& format, const Args&... args) {
+void PrinterManager::drawFormattedText(int x, int y, const QString& format, const Args&... args) {
     QStringList argStrings = { QString("%1").arg(args)... };
 
     QFont normalFont = m_painter.font();
@@ -348,7 +348,6 @@ void PrinterManage::drawFormattedText(int x, int y, const QString& format, const
     QFontMetrics normalMetrics(normalFont);
     QFontMetrics boldMetrics(boldFont);
 
-
     QStringList segments = format.split(QRegularExpression("%[BN]"), Qt::KeepEmptyParts);
     QStringList placeholders;
     QRegularExpression placeholderRegex("%[BN]");
@@ -356,7 +355,6 @@ void PrinterManage::drawFormattedText(int x, int y, const QString& format, const
     while (it.hasNext()) {
         placeholders << it.next().captured(0);
     }
-
 
     if (placeholders.size() != argStrings.size()) {
         qWarning() << "drawFormattedText: Mismatch between placeholders (" << placeholders.size()
@@ -366,7 +364,6 @@ void PrinterManage::drawFormattedText(int x, int y, const QString& format, const
 
     // Draw each segment
     int currentX = x;
-
     int argIndex = 0;
 
     for (const QString segment : segments) {
