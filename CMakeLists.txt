@@ -22,25 +22,28 @@ qt_add_qml_module(appGestionAbsences
     QML_FILES
         Main.qml ui/pages/GestionSections.qml ui/pages/WelcomeInterface.qml ui/pages/GestionModules.qml ui/dialogs/AboutDialog.qml ui/components/DrawerItem.qml ui/components/Espacement.qml ui/dialogs/PopupDate.qml
         ui/components/PageDrawer.qml ui/pages/GestionEtudiants.qml ui/pages/Synthese.qml
-    SOURCES absencedatabasemanager.h absencedatabasemanager.cpp
-    SOURCES manageselectedsectionmodule.cpp
-    SOURCES misc.h
-    SOURCES misc.cpp
-    SOURCES sectionmodel.h sectionmodel.cpp
-    SOURCES modulemodel.h modulemodel.cpp
-    SOURCES sessionplanner.cpp
-    SOURCES typecoursmodel.h typecoursmodel.cpp
-    SOURCES absencemodel.h absencemodel.cpp
-    SOURCES presencemodel.h presencemodel.cpp
-    SOURCES printermanager.cpp
-    SOURCES summarytablemodel.cpp
+    # Moved sources organized in folders
+    SOURCES managers/absencedatabasemanager.h managers/absencedatabasemanager.cpp
+    SOURCES modules/manageselectedsectionmodule.h modules/manageselectedsectionmodule.cpp
+    SOURCES misc/misc.h misc/misc.cpp
+    SOURCES models/sectionmodel.h models/sectionmodel.cpp
+    SOURCES models/modulemodel.h models/modulemodel.cpp
+    SOURCES planner/sessionplanner.h planner/sessionplanner.cpp
+    SOURCES models/typecoursmodel.h models/typecoursmodel.cpp
+    SOURCES models/absencemodel.h models/absencemodel.cpp
+    SOURCES models/presencemodel.h models/presencemodel.cpp
+    SOURCES managers/printermanager.h managers/printermanager.cpp
+    SOURCES models/summarytablemodel.h models/summarytablemodel.cpp
     SOURCES misc/basemodel.h misc/basemodel.cpp
     SOURCES misc/basemanager.h misc/basemanager.cpp
     SOURCES misc/globals.h
     SOURCES misc/studentmodel.h misc/studentmodel.cpp
     SOURCES misc/studentmanager.h misc/studentmanager.cpp
-    SOURCES coursetypemodel.cpp
-    SOURCES sessionmodel.cpp
+    SOURCES models/coursetypemodel.h models/coursetypemodel.cpp
+    SOURCES models/sessionmodel.h models/sessionmodel.cpp
+    SOURCES models/studentsmodel.h models/studentsmodel.cpp
+    SOURCES db/dbsessionplanner.h db/dbsessionplanner.cpp
+    SOURCES db/dbclient.h db/dbclient.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -56,6 +59,10 @@ set_target_properties(appGestionAbsences PROPERTIES
 
 target_include_directories(appGestionAbsences PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/misc
+    ${CMAKE_CURRENT_SOURCE_DIR}/models
+    ${CMAKE_CURRENT_SOURCE_DIR}/managers
+    ${CMAKE_CURRENT_SOURCE_DIR}/modules
+    ${CMAKE_CURRENT_SOURCE_DIR}/planner
 )
 
 target_link_libraries(appGestionAbsences
