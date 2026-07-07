@@ -257,7 +257,7 @@ Rectangle {
                     boundsBehavior: Flickable.StopAtBounds
                     flickableDirection: Flickable.AutoFlickIfNeeded
                     pressDelay: 999999
-                    leftMargin: 20
+                    leftMargin: 0
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     columnSpacing: 2
@@ -275,14 +275,14 @@ Rectangle {
                     }
 
                     delegate: Rectangle {
-                        implicitWidth: 150
+                        implicitWidth: -1
                         implicitHeight: 30
-                        border.color: "#ccc"
+                        border.color: "#d0d0d0"
                         border.width: 1
                         required property int row
                         property int presenceId: model.presence
                         color: {
-                            let p = Number(model.pourcentage)
+                            let p = Number(model.percentage)
                             if (p <= 15)
                                 return "#d0f5d0" // Vert clair
                             else if (p <= 30)
@@ -326,15 +326,11 @@ Rectangle {
                         }
                     }
                 }
-                Rectangle {
-                    height: 20
-                    color: "transparent"
-                }
             }
+            // Colonne de droite pour le bouton "Imprimer"
             ColumnLayout {
                 spacing: 10
                 Item {
-
                     height: 60
                 }
 
