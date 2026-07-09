@@ -112,8 +112,7 @@ Rectangle {
                     model: studentManager.mModel
                     leftMargin: 0
                     interactive: false
-                    delegate: Rectangle {
-                        implicitWidth: -1
+                    delegate: Rectangle {                        
                         implicitHeight: 40
                         border.color: "#d0d0d0"
                         border.width: 1

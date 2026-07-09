@@ -8,10 +8,12 @@ PresenceModel::PresenceModel(QObject *parent): QAbstractListModel{parent} {
 }
 
 void PresenceModel::loadFromDatabase() {
+    beginResetModel();
     QSqlQuery query("SELECT id, nom FROM presence");
     while (query.next()) {
         m_data.append({query.value(0).toInt(), query.value(1).toString()});
     }
+    endResetModel();
 }
 
 int PresenceModel::rowCount(const QModelIndex&) const {
@@ -22,13 +24,17 @@ QVariant PresenceModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || index.row() >= m_data.size())
         return {};
     const auto& p = m_data[index.row()];
-    if (role == Qt::DisplayRole || role==LabelRole) return p.label;
-    if (role==IdRole) return p.id;
+    if (role == Qt::DisplayRole or role==LabelRole) {
+        return p.label;
+    }
+    if (role==IdRole) {
+        return p.id;
+    }
     return {};
 }
 
 QHash<int, QByteArray> PresenceModel::roleNames() const {
-    return {{Qt::DisplayRole, "label"},{IdRole,"id"}};
+    return {{LabelRole, "label"}, {IdRole, "id"}};
 }
 
 int PresenceModel::getId(int index) const {
@@ -40,7 +46,7 @@ QString PresenceModel::getLabel(int index) const {
 }
 
 int PresenceModel::indexOfLabel(const QString& label) const {
-    for (int i = 0; i < m_data.size(); ++i)
+    for (int i{}; i < m_data.size(); ++i)
         if (m_data[i].label == label)
             return i;
     return -1;

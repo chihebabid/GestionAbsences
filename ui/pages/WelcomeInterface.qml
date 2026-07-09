@@ -125,14 +125,14 @@ Rectangle {
                 }
 
                 MyComboBox {
-                    id: typeCoursCombo
+                    id: courseTypeCombo
                     textRole: "name"
                     width: root.width * 0.1
                     model: courseTypeModel
                     currentIndex: 0
                     onCurrentIndexChanged: {
                         console.log("Type de cours sélectionné :",
-                                    typeCoursCombo.currentText)
+                                    courseTypeCombo.currentText)
                     }
                 }
             }
@@ -286,7 +286,6 @@ Rectangle {
         anchors.rightMargin: 20
         title: qsTr("Marquer les absences")
 
-
         RowLayout {
             anchors.fill: parent
             implicitWidth: parent.width
@@ -298,24 +297,25 @@ Rectangle {
                 Layout.preferredWidth: parent.width * 0.85 // 85% pour la colonne gauche
                 Layout.fillHeight: true // Remplit la hauteur
                 anchors.margins: 0
-                spacing: 1
+                spacing: 5
                 property var columnWidths: [myColumnAbsences.width * .2, myColumnAbsences.width * .3, myColumnAbsences.width*.3, myColumnAbsences.width * .2-4]
-                function columnWidth(col) {
-                    return columnWidths[col]
-                }
+
                 Row {
                     id: selectionSeance
                     spacing: 5
                     anchors.margins: 5
+
+                    Layout.alignment: Qt.AlignVCenter
                     MyText {
                         text: "Séance :"
+
                     }
 
                     MyComboBox {
                         id: listeSeances
-                        width: root.width * 0.3
+                        width: root.width * 0.5
                         model: sessionModel
-
+                        
                         onCurrentIndexChanged: {
                             btnSupprimer.enabled = currentIndex === -1 ? false : true
                             btnImprimer.enabled = btnSupprimer.enabled
@@ -331,26 +331,27 @@ Rectangle {
                         id: btnSupprimer
                         text: "Supprimer"
                         enabled: false
+                        height: listeSeances.height
+                        topInset: 0
+                        bottomInset: 0
                         Layout.alignment: Qt.AlignRight
                         onClicked: {
 
                         }
                     }
-                    Rectangle {
-                        width: 19
-                        height: 60
-                        color: "transparent"
-                    }
                 }
+
+                // Tableau des absences
                 Row {
                     id: header
                     Layout.fillWidth: true
                     height: 40
+                    width: myColumnAbsences.width
                     spacing: 1
                     Repeater {
                         model: ["N˚ inscription", "Nom", "Prénom", "Présence"]
                         Rectangle {
-                            width: myColumnAbsences.columnWidth(index)
+                            width: myColumnAbsences.columnWidths[index]
                             height: parent.height
                             color: "#0078d4"
                             border.color: "#d0d0d0"
@@ -366,41 +367,26 @@ Rectangle {
                     }
                 }
 
-                TableView {
+                MyTableView {
                     id: tableAbsences
-                    interactive: true
-                    boundsBehavior: Flickable.StopAtBounds
-                    flickableDirection: Flickable.AutoFlickIfNeeded
-                    pressDelay: 999999
-                    leftMargin: 20
-                    rightMargin: 0
-
+                    leftMargin: 0
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-
-                    columnSpacing: 1
+                    width: myColumnAbsences.width
+                    columnSpacing: 2
                     rowSpacing: 1
-                    clip: true
                     model: absenceModel
                     height: 200
-                    z: 2
-                    ScrollBar.vertical: ScrollBar {
-                        policy: ScrollBar.AsNeeded
-                    }
-                    columnWidthProvider: function (col) {
-                        return lSessions.columnWidths[col]
-                    }
 
                     delegate: Rectangle {
-                        implicitWidth: 150
                         implicitHeight: 30
-                        border.color: "#ccc"
+                        implicitWidth: -1
+                        border.color: "#d0d0d0"
                         border.width: 1
                         required property int row
                         property int presenceId: model.presence
                         Item {
                             anchors.fill: parent
-
                             Loader {
                                 anchors.fill: parent
                                 sourceComponent: column === 3 ? componentPresence : textItem
@@ -428,19 +414,23 @@ Rectangle {
 
                             Component {
                                 id: componentPresence
-                                                MyComboBox {
-                                                    id: courseTypeCombo
+                                MyComboBox {
+                                    id: presenceCombo
                                     anchors.fill: parent
+                                    textRole: "label"
                                     model: presenceModel
-                                                    //model: courseTypeModel
+                                    //model: sectionModel
 
                                     // index de l'élément actuel dans presenceModel (à partir de model.presenceId)
-                                    currentIndex: presenceModel ? presenceModel.getIndexById(
-                                                                      presenceId) : -1
+                                    currentIndex: {
+                                        console.log("Current presenceId:", presenceId);
+                                        console.log("Current index for presenceId:", presenceModel.getIndexById(presenceId));
+                                        return presenceModel ? presenceModel.getIndexById(presenceId) : -1;
+                                    }
                                     onCurrentIndexChanged: {
                                         if (presenceModel) {
                                             const newId = presenceModel.getId(
-                                                            currentIndex)
+                                                        currentIndex)
                                             absenceModel.setPresence(row, newId)
                                         }
                                     }

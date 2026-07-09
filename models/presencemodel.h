@@ -3,9 +3,11 @@
 //#include "seancemodel.h"
 #include <QAbstractListModel>
 #include <QObject>
+#include <QQmlEngine>
 
 class PresenceModel : public QAbstractListModel {
     Q_OBJECT
+    QML_ELEMENT
 public:
     struct Presence {
         int id;
@@ -19,7 +21,7 @@ public:
 
     explicit PresenceModel(QObject* parent = nullptr);
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex& index, int role = LabelRole) const override;
 
     QHash<int, QByteArray> roleNames() const override;
 

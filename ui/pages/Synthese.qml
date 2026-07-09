@@ -274,8 +274,7 @@ Rectangle {
                         return myColumnSynthese.columnWidth(col);
                     }
 
-                    delegate: Rectangle {
-                        implicitWidth: -1
+                    delegate: Rectangle {                        
                         implicitHeight: 30
                         border.color: "#d0d0d0"
                         border.width: 1
