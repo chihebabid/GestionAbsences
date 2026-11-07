@@ -308,7 +308,6 @@ Rectangle {
                     Layout.alignment: Qt.AlignVCenter
                     MyText {
                         text: "Séance :"
-
                     }
 
                     MyComboBox {
@@ -423,8 +422,8 @@ Rectangle {
 
                                     // index de l'élément actuel dans presenceModel (à partir de model.presenceId)
                                     currentIndex: {
-                                        console.log("Current presenceId:", presenceId);
-                                        console.log("Current index for presenceId:", presenceModel.getIndexById(presenceId));
+                                        // console.log("Current presenceId:", presenceId);
+                                        // console.log("Current index for presenceId:", presenceModel.getIndexById(presenceId));
                                         return presenceModel ? presenceModel.getIndexById(presenceId) : -1;
                                     }
                                     onCurrentIndexChanged: {
@@ -461,4 +460,3 @@ Rectangle {
         }
     }
 }
-

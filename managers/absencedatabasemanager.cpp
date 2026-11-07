@@ -13,11 +13,14 @@ AbsenceDatabaseManager::AbsenceDatabaseManager(QObject *parent)
 
 bool AbsenceDatabaseManager::databaseExists() const {
     if (QFile::exists(am::dbInfo.dbName)) {
+        if (QSqlDatabase::contains("qt_sql_default_connection")) {
+            QSqlDatabase::removeDatabase("qt_sql_default_connection");
+        }
         am::dbInfo.db = QSqlDatabase::addDatabase("QSQLITE");
         am::dbInfo.db.setDatabaseName(am::dbInfo.dbName);
         if (!am::dbInfo.db.open()) {
             qWarning() << "Erreur d'ouverture de la base :" << am::dbInfo.db.lastError().text();
-            return true;
+            return false;
         }
         return true;
     }
@@ -33,6 +36,10 @@ void AbsenceDatabaseManager::openDatabase() {
     QFileInfo pathInfo(filePath);
     QString fileName = pathInfo.fileName();
     QStringList list {fileName.split("_")};
+    if (list.size() < 3) {
+        qWarning() << "Nom de fichier de base de données invalide :" << fileName;
+        return;
+    }
     list[2].chop(3);
     m_educationYear={list[1].toInt(),list[2].toInt()};
     qDebug()<<"Academic year: "<<list[1].toInt()<<" "<<list[2].toInt();
@@ -67,6 +74,9 @@ void AbsenceDatabaseManager::initialize() {
 }
 
 void AbsenceDatabaseManager::createDatabase() {
+    if (QSqlDatabase::contains("qt_sql_default_connection")) {
+        QSqlDatabase::removeDatabase("qt_sql_default_connection");
+    }
     am::dbInfo.db = QSqlDatabase::addDatabase("QSQLITE");
     am::dbInfo.db.setDatabaseName(am::dbInfo.dbName);
     if (!am::dbInfo.db.open()) {
