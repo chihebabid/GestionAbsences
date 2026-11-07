@@ -78,10 +78,16 @@ void SessionModel::loadSessions() {
 }
 
 int SessionModel::getId(const int index) const {
+    if (index < 0 || index >= m_data.size())
+        return -1;
     return m_data[index].id;
 }
 
 const Session& SessionModel::getSelectedSession() const {
+    // Séance vide renvoyée si aucune séance n'est sélectionnée
+    static const Session emptySession {-1};
+    if (m_current_index < 0 || m_current_index >= m_data.size())
+        return emptySession;
     return m_data[m_current_index];
 }
 

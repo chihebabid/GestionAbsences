@@ -8,61 +8,84 @@ Rectangle {
     id: gestionSections
     visible: true
     color: "transparent"
-    MyText {
-        text: "Année universitaire : " + (databaseManager.educationYear)[0]+" - "+(databaseManager.educationYear)[1]
-        font.pixelSize: 18
-        anchors.right: parent.right
-        anchors.rightMargin: 20
-        anchors.top: parent.top
-        anchors.topMargin: 20
-    }
-    MyGroupBox {
-        anchors.top: parent.top
-        anchors.topMargin: 80
-        anchors.left: parent.left
-        anchors.leftMargin: 20
-        anchors.right: parent.right
-        anchors.rightMargin: 20
-        title: qsTr("Gérer les sections")
-        Column {
-            spacing: 20
-            anchors.top: parent.top
-            anchors.topMargin: 80
-            anchors.left: parent.left
-            anchors.leftMargin: 20
 
-            RowLayout {
-                spacing: 10
-                Layout.alignment: Qt.AlignVCenter
-                MyTextField {
-                    id: newSection
-                    implicitWidth: 200
-                    placeholderText: "Section"
-                }
+    ColumnLayout {
+        id: pageLayout
+        anchors.fill: parent
+        anchors.margins: 20
+        spacing: 10
 
-                MyButton {
-                    text: "Ajouter une section"
-                    onClicked: {
-                        if (newSection.text !== "") {
-                            sectionModel.insertSection(newSection.text)
-                            newSection.text = ""
+        // En-tête : année universitaire
+        MyText {
+            Layout.alignment: Qt.AlignRight
+            text: "Année universitaire : " + (databaseManager.educationYear)[0]+" - "+(databaseManager.educationYear)[1]
+            font.pixelSize: 18
+        }
+
+        MyGroupBox {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            title: qsTr("Gérer les sections")
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 8
+
+                // Ajout et suppression
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    MyTextField {
+                        id: newSection
+                        Layout.preferredWidth: 250
+                        placeholderText: "Section"
+                        onAccepted: btnAjouterSection.clicked()
+                    }
+
+                    MyButton {
+                        id: btnAjouterSection
+                        text: "Ajouter une section"
+                        onClicked: {
+                            if (newSection.text !== "") {
+                                sectionModel.insertSection(newSection.text)
+                                newSection.text = ""
+                            }
+                        }
+                    }
+
+                    // Pousse le bouton Supprimer vers la droite
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    MyButton {
+                        text: "Supprimer"
+                        onClicked: {
+                            sectionModel.deleteSelected()
                         }
                     }
                 }
-            }
-            Row {
-                //width: root* .90
-                spacing: 10
+
+                // Aide à l'utilisation de la liste
+                Text {
+                    text: "Clic : modifier le nom · Ctrl + clic : sélectionner pour suppression"
+                    font.pixelSize: 12
+                    color: "#555555"
+                }
+
+                // Liste des sections
                 ListView {
-                    width: root.width * 0.6
-                    height: 300
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    clip: true
                     interactive: false
                     model: sectionModel
                     ScrollBar.vertical: ScrollBar {
                         policy: ScrollBar.AsNeeded
                     }
                     delegate: Rectangle {
-                        width: root.width * 0.6
+                        width: ListView.view.width
                         height: 40
                         border.color: "gray"
                         color: model.selected ? "#87CEFA" : "white" // Fond bleu si sélectionné
@@ -101,16 +124,6 @@ Rectangle {
                                     mouseSection.z = 0
                                 }
                             }
-                        }
-                    }
-                }
-                Column {
-                    spacing: 5
-                    MyButton {
-                        text: "Supprimer"
-                        anchors.right: parent.right
-                        onClicked: {
-                            sectionModel.deleteSelected()
                         }
                     }
                 }

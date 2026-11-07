@@ -7,59 +7,41 @@ import "../components"
 Rectangle {
     id: moduleInterface
     color: "transparent"
-    MyText {
-        text: "Année universitaire : " + (databaseManager.educationYear)[0]+" - "+(databaseManager.educationYear)[1]
-        font.pixelSize: 18
-        anchors.right: parent.right
-        anchors.rightMargin: 20
-        anchors.top: parent.top
-        anchors.topMargin: 20
-    }
+
     ModuleModel {
         id: moduleModel
     }
-    MyGroupBox {
-        anchors.top: parent.top
-        anchors.topMargin: 80
-        anchors.left: parent.left
-        anchors.leftMargin: 20
-        anchors.right: parent.right
-        anchors.rightMargin: 20
 
-        title: qsTr("Gérer les modules")
-        Column {
-            spacing: 20
-            anchors.top: parent.top
-            anchors.topMargin: 80
-            anchors.left: parent.left
-            anchors.leftMargin: 20
-            Row {
-                spacing: 10
-                MyText {
-                    text: "Section :"
-                }
+    // Recharger les modules selon la section et le semestre sélectionnés
+    function updateListeModules() {
+        if (sectionCombo.currentIndex >= 0 && semestreCombo.currentIndex >= 0) {
+            let sectionId = sectionModel.getSectionId(sectionCombo.currentIndex)
+            let semestre = semestreCombo.model[semestreCombo.currentIndex]
+            moduleModel.loadModulesForSection(sectionId, semestre)
+        }
+    }
 
-                MyComboBox {
-                    id: sectionCombo
-                    textRole: "name"
-                    width: root.width * 0.3
-                    model: sectionModel
-                    onCurrentIndexChanged: {
-                        if (sectionCombo.currentIndex >= 0) {
-                            let sectionIndex = sectionCombo.currentIndex
-                            let sectionId = sectionModel.getSectionId(
-                                    sectionIndex)
-                            let semestre = semestreCombo.model[semestreCombo.currentIndex]
-                            moduleModel.loadModulesForSection(sectionId,
-                                                              semestre)
-                        }
-                    }
-                }
+    ColumnLayout {
+        id: pageLayout
+        anchors.fill: parent
+        anchors.margins: 20
+        spacing: 10
 
-                Item {
-                    width: 40
-                    height: 1
-                }
+        // En-tête : année universitaire
+        MyText {
+            Layout.alignment: Qt.AlignRight
+            text: "Année universitaire : " + (databaseManager.educationYear)[0]+" - "+(databaseManager.educationYear)[1]
+            font.pixelSize: 18
+        }
+
+        // Sélection du semestre et de la section
+        MyGroupBox {
+            Layout.fillWidth: true
+            title: qsTr("Sélectionner la section")
+
+            RowLayout {
+                width: parent.width
+                spacing: 8
 
                 MyText {
                     text: "Semestre :"
@@ -67,58 +49,97 @@ Rectangle {
 
                 MyComboBox {
                     id: semestreCombo
+                    Layout.preferredWidth: 100
                     model: [1, 2]
-                    onCurrentIndexChanged: {
-                        if (currentIndex >= 0) {
-                            let sectionIndex = sectionCombo.currentIndex
-                            let sectionId = sectionModel.getSectionId(
-                                    sectionIndex)
-                            let semestre = semestreCombo.model[semestreCombo.currentIndex]
-                            moduleModel.loadModulesForSection(sectionId,
-                                                              semestre)
+                    onCurrentIndexChanged: moduleInterface.updateListeModules()
+                }
+
+                Espacement {}
+
+                MyText {
+                    text: "Section :"
+                }
+
+                MyComboBox {
+                    id: sectionCombo
+                    Layout.fillWidth: true
+                    textRole: "name"
+                    model: sectionModel
+                    onCurrentIndexChanged: moduleInterface.updateListeModules()
+                }
+            }
+        }
+
+        MyGroupBox {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            title: qsTr("Gérer les modules")
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 8
+
+                // Ajout et suppression
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    MyTextField {
+                        id: newModule
+                        Layout.preferredWidth: 250
+                        placeholderText: "Module"
+                        onAccepted: btnAjouterModule.clicked()
+                    }
+
+                    MyButton {
+                        id: btnAjouterModule
+                        text: "Ajouter un module"
+                        // Un module doit être rattaché à une section
+                        enabled: sectionCombo.currentIndex >= 0
+                        onClicked: {
+                            if (newModule.text !== "") {
+                                let index = sectionCombo.currentIndex
+                                let sectionId = sectionModel.getSectionId(index)
+                                moduleModel.addModuleForSection(
+                                            newModule.text, sectionId,
+                                            semestreCombo.currentValue)
+                                newModule.text = ""
+                            }
+                        }
+                    }
+
+                    // Pousse le bouton Supprimer vers la droite
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    MyButton {
+                        text: "Supprimer"
+                        onClicked: {
+                            moduleModel.deleteSelected()
                         }
                     }
                 }
-            }
 
-            RowLayout {
-                spacing: 10
-                Layout.alignment: Qt.AlignVCenter
-                MyTextField {
-                    id: newModule
-                    placeholderText: "Module"
-                    implicitWidth: 250
+                // Aide à l'utilisation de la liste
+                Text {
+                    text: "Clic : modifier le nom · Ctrl + clic : sélectionner pour suppression"
+                    font.pixelSize: 12
+                    color: "#555555"
                 }
 
-                MyButton {
-                    text: "Ajouter un module"
-                    onClicked: {
-                        if (newModule.text !== "") {
-                            let index = sectionCombo.currentIndex
-                            let sectionId = sectionModel.getSectionId(index)
-                            moduleModel.addModuleForSection(
-                                        newModule.text, sectionId,
-                                        semestreCombo.currentValue)
-                            newModule.text = ""
-                        }
-                    }
-                }
-            }
-
-            // Liste affichant la liste des modules
-            Row {
-                //width: root* .90
-                spacing: 10
+                // Liste affichant la liste des modules
                 ListView {
-                    width: root.width * 0.6
-                    height: 300
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    clip: true
                     interactive: false
                     model: moduleModel
                     ScrollBar.vertical: ScrollBar {
                         policy: ScrollBar.AsNeeded
                     }
                     delegate: Rectangle {
-                        width: root.width * 0.6
+                        width: ListView.view.width
                         height: 40
                         border.color: "gray"
                         color: model.selected ? "#87CEFA" : "white" // Fond bleu si sélectionné
@@ -156,16 +177,6 @@ Rectangle {
                                     mouseSection.z = 0
                                 }
                             }
-                        }
-                    }
-                }
-                Column {
-                    spacing: 5
-                    MyButton {
-                        text: "Supprimer"
-                        anchors.right: parent.right
-                        onClicked: {
-                            moduleModel.deleteSelected()
                         }
                     }
                 }

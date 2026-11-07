@@ -11,449 +11,432 @@ Rectangle {
     height: parent.height
     color: "transparent"
 
-    MyText {
-        text: "Année universitaire : " + (databaseManager.educationYear)[0]+" - "+(databaseManager.educationYear)[1]
-        font.pixelSize: 18
-        anchors.right: parent.right
-        anchors.rightMargin: 20
-        anchors.top: parent.top
-        anchors.topMargin: 20
+    // Modèles et services non visuels
+    ModuleModel {
+        id: moduleModel
     }
 
-    // Sélection du semestre et de la section
-    MyGroupBox {
-        id: groupSemestre
-        width: parent.width
-        anchors.top: parent.top
-        anchors.topMargin: 80
-        anchors.left: parent.left
-        anchors.leftMargin: 20
-        anchors.right: parent.right
-        anchors.rightMargin: 20
-        title: qsTr("Sélectionner la section")
-        Row {
-            spacing: 10
-            MyText {
-                text: "Semestre :"
-            }
+    SessionPlanner {
+        id: sessionPlanner
+    }
 
-            MyComboBox {
-                id: wSemestreCombo
-                width:parent.width * 0.18
-                model: [1, 2]
-                onCurrentIndexChanged: {
-                    if (wSemestreCombo.currentIndex >= 0) {
-                        let sectionIndex = wLSections.currentIndex
-                        let sectionId = wLSections.model.getSectionId(
-                                sectionIndex)
-                        let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
-                        wModules.model.loadModulesForSection(sectionId,
-                                                             semestre)
-                    }
-                }
-            }
+    PopupDate {
+        id: calendarPopup
+    }
 
-            Espacement {
-                width: 20
-            }
-
-            MyText {
-                text: "Section :"
-            }
-
-
-
-            MyComboBox {
-                id: wLSections
-                textRole: "name"
-                width: parent.parent.width * 0.4
-                model: sectionModel
-                onCurrentIndexChanged: {
-
-                    if (wLSections.currentIndex >= 0) {
-                        let sectionIndex = wLSections.currentIndex
-                        let sectionId = wLSections.model.getSectionId(
-                                sectionIndex)
-                        let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
-                        wModules.model.loadModulesForSection(sectionId,
-                                                             semestre)
-                    }
-                }
-            }
-
-
+    // Recharger les modules selon le semestre et la section sélectionnés
+    function updateListeModules() {
+        if (wSemestreCombo.currentIndex >= 0 && wLSections.currentIndex >= 0) {
+            let sectionId = wLSections.model.getSectionId(
+                    wLSections.currentIndex)
+            let semestre = wSemestreCombo.model[wSemestreCombo.currentIndex]
+            wModules.model.loadModulesForSection(sectionId, semestre)
         }
     }
-    // Planification d'une séance
-    MyGroupBox {
-        id: groupSeance
-        anchors.top: groupSemestre.bottom
-        anchors.topMargin: 30
-        anchors.left: parent.left
-        anchors.leftMargin: 20
-        anchors.right: parent.right
-        anchors.rightMargin: 20
-        title: qsTr("Planifier une séance")
 
-        ModuleModel {
-            id: moduleModel
+    ColumnLayout {
+        id: pageLayout
+        anchors.fill: parent
+        anchors.margins: 20
+        spacing: 10
+
+        // En-tête : année universitaire
+        MyText {
+            Layout.alignment: Qt.AlignRight
+            text: "Année universitaire : " + (databaseManager.educationYear)[0]+" - "+(databaseManager.educationYear)[1]
+            font.pixelSize: 18
         }
 
-        Column {
-            spacing: 20
-            Row {
-                spacing: 10
-                MyText {
-                    text: "Module :"
-                }
+        // Sélection du semestre et de la section
+        MyGroupBox {
+            id: groupSemestre
+            Layout.fillWidth: true
+            title: qsTr("Sélectionner la section")
 
-                MyComboBox {
-                    id: wModules
-                    textRole: "name"
-                    width: root.width * 0.4
-                    model: moduleModel
-                    onCurrentIndexChanged: {
-                        if (currentIndex !== -1)
-                            btnPlanifier.enabled = true
-                        else
-                            btnPlanifier.enabled = false
-                    }
-                }
-                Espacement {}
-                MyText {
-                    text: "Type :"
-                }
-
-                MyComboBox {
-                    id: courseTypeCombo
-                    textRole: "name"
-                    width: root.width * 0.1
-                    model: courseTypeModel
-                    currentIndex: 0
-                    onCurrentIndexChanged: {
-                        console.log("Type de cours sélectionné :",
-                                    courseTypeCombo.currentText)
-                    }
-                }
-            }
-            Row {
-                property date selectedDate: new Date()
-                spacing: 10
-                MyText {
-                    text: "Date :"
-                }
-
-                MyTextField {
-                    id: dateField
-                    text: Qt.formatDate(parent.selectedDate, "dd/MM/yyyy")
-                    MouseArea {
-                        anchors.fill: dateField
-                        //cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            calendarPopup.open()
-                        }
-                    }
-                }
-                PopupDate {
-                    id: calendarPopup
-                }
-                Espacement {}
-                MyText {
-                   text: "Heure début :"
-
-                }
-                MySpinBox {
-                    id: timeSpin
-                    from: 8 * 60 // 08:00 en minutes
-                    to: 18 * 60 // 18:00 en minutes
-                    stepSize: 15 // Pas de 15 minutes
-                    value: from // Initialiser à 08:00
-                    // Affichage formaté
-                    textFromValue: function (value, locale) {
-                        let h = Math.floor(value / 60)
-                        let m = value % 60
-                        return Qt.formatTime(new Date(0, 0, 0, h, m), "hh:mm")
-                    }
-
-                    valueFromText: function (text, locale) {
-                        let parts = text.split(":")
-                        return parseInt(parts[0]) * 60 + parseInt(parts[1])
-                    }
-
-                    onValueChanged: {
-                        console.log("Heure sélectionnée :",
-                                    textFromValue(value))
-                    }
-                    Component.onCompleted: {
-                        // Heure courante
-                        let now = new Date()
-                        let currentMinutes = now.getHours(
-                                ) * 60 + now.getMinutes()
-
-                        // Arrondi au multiple de 15 le plus proche
-                        let rounded = Math.round(currentMinutes / 15) * 15
-
-                        // Limiter dans l’intervalle autorisé
-                        if (rounded < from)
-                            value = from
-                        else if (rounded > to)
-                            value = to
-                        else
-                            value = rounded
-                    }
-                }
-                MyText {
-                    text: "Durée :"
-                }
-
-                MySpinBox {
-                    id: dureeSpin
-                    from: 0 // 08:00 en minutes
-                    to: 3 * 60 // 18:00 en minutes
-                    stepSize: 15 // Pas de 15 minutes
-                    value: from // Initialiser à 08:00
-                    // Affichage formaté
-                    textFromValue: function (value, locale) {
-                        let h = Math.floor(value / 60)
-                        let m = value % 60
-                        return Qt.formatTime(new Date(0, 0, 0, h, m), "hh:mm")
-                    }
-
-                    valueFromText: function (text, locale) {
-                        let parts = text.split(":")
-                        return parseInt(parts[0]) * 60 + parseInt(parts[1])
-                    }
-
-                    onValueChanged: {
-                        console.log("Heure sélectionnée :",
-                                    textFromValue(value))
-                    }
-                    Component.onCompleted: {
-                        value = 90
-                    }
-                }
-            }
-            Item {
+            RowLayout {
                 width: parent.width
-                height: 40
-                SessionPlanner {
-                    id: sessionPlanner
+                spacing: 8
+
+                MyText {
+                    text: "Semestre :"
                 }
 
-                MyButton {
-                    id: btnPlanifier
-                    text: "Planifier"
-                    width: root.width * 0.1
-                    anchors.right: parent.right
-                    enabled: false
-                    onClicked: {
-                        if (wModules.currentIndex !== -1) {
-                            let idModule = wModules.model.getId(
-                                    wModules.currentIndex)
-                            let idCourseType = courseTypeCombo.model.getId(
-                                    courseTypeCombo.currentIndex)
+                MyComboBox {
+                    id: wSemestreCombo
+                    Layout.preferredWidth: 100
+                    model: [1, 2]
+                    onCurrentIndexChanged: welcomeInterface.updateListeModules()
+                }
 
-                            let date = dateField.text // format: "dd/MM/yyyy"
+                Espacement {}
 
-                            let h = Math.floor(timeSpin.value / 60)
-                            let m = timeSpin.value % 60
-                            let heureDebut = Qt.formatTime(new Date(0, 0, 0, h,
-                                                                    m), "hh:mm")
+                MyText {
+                    text: "Section :"
+                }
 
-                            let duree = dureeSpin.value
-                            sessionPlanner.addSession(idModule,
-                                                      idCourseType, date,
-                                                      heureDebut, duree)
-                            listeSeances.model.loadSessions()
-                            console.log("Planification réussie...")
+                MyComboBox {
+                    id: wLSections
+                    Layout.fillWidth: true
+                    textRole: "name"
+                    model: sectionModel
+                    onCurrentIndexChanged: welcomeInterface.updateListeModules()
+                }
+            }
+        }
+
+        // Planification d'une séance
+        MyGroupBox {
+            id: groupSeance
+            Layout.fillWidth: true
+            title: qsTr("Planifier une séance")
+
+            ColumnLayout {
+                width: parent.width
+                spacing: 8
+
+                // Module et type de cours
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    MyText {
+                        text: "Module :"
+                    }
+
+                    MyComboBox {
+                        id: wModules
+                        Layout.fillWidth: true
+                        textRole: "name"
+                        model: moduleModel
+                        onCurrentIndexChanged: {
+                            btnPlanifier.enabled = currentIndex !== -1
+                        }
+                    }
+
+                    MyText {
+                        text: "Type :"
+                    }
+
+                    MyComboBox {
+                        id: courseTypeCombo
+                        Layout.preferredWidth: 120
+                        textRole: "name"
+                        model: courseTypeModel
+                        currentIndex: 0
+                        onCurrentIndexChanged: {
+                            console.log("Type de cours sélectionné :",
+                                        courseTypeCombo.currentText)
+                        }
+                    }
+                }
+
+                // Date, horaire et validation
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    MyText {
+                        text: "Date :"
+                    }
+
+                    MyTextField {
+                        id: dateField
+                        Layout.preferredWidth: 120
+                        text: Qt.formatDate(new Date(), "dd/MM/yyyy")
+                        MouseArea {
+                            anchors.fill: dateField
+                            //cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                calendarPopup.open()
+                            }
+                        }
+                    }
+
+                    MyText {
+                        text: "Heure début :"
+                    }
+
+                    MySpinBox {
+                        id: timeSpin
+                        Layout.preferredWidth: 120
+                        from: 8 * 60 // 08:00 en minutes
+                        to: 18 * 60 // 18:00 en minutes
+                        stepSize: 15 // Pas de 15 minutes
+                        value: from // Initialiser à 08:00
+                        // Affichage formaté
+                        textFromValue: function (value, locale) {
+                            let h = Math.floor(value / 60)
+                            let m = value % 60
+                            return Qt.formatTime(new Date(0, 0, 0, h, m), "hh:mm")
+                        }
+
+                        valueFromText: function (text, locale) {
+                            let parts = text.split(":")
+                            return parseInt(parts[0]) * 60 + parseInt(parts[1])
+                        }
+
+                        onValueChanged: {
+                            console.log("Heure sélectionnée :",
+                                        textFromValue(value))
+                        }
+                        Component.onCompleted: {
+                            // Heure courante
+                            let now = new Date()
+                            let currentMinutes = now.getHours(
+                                    ) * 60 + now.getMinutes()
+
+                            // Arrondi au multiple de 15 le plus proche
+                            let rounded = Math.round(currentMinutes / 15) * 15
+
+                            // Limiter dans l’intervalle autorisé
+                            if (rounded < from)
+                                value = from
+                            else if (rounded > to)
+                                value = to
+                            else
+                                value = rounded
+                        }
+                    }
+
+                    MyText {
+                        text: "Durée :"
+                    }
+
+                    MySpinBox {
+                        id: dureeSpin
+                        Layout.preferredWidth: 120
+                        from: 0 // 0 minute
+                        to: 3 * 60 // 3 heures en minutes
+                        stepSize: 15 // Pas de 15 minutes
+                        value: from
+                        // Affichage formaté
+                        textFromValue: function (value, locale) {
+                            let h = Math.floor(value / 60)
+                            let m = value % 60
+                            return Qt.formatTime(new Date(0, 0, 0, h, m), "hh:mm")
+                        }
+
+                        valueFromText: function (text, locale) {
+                            let parts = text.split(":")
+                            return parseInt(parts[0]) * 60 + parseInt(parts[1])
+                        }
+
+                        onValueChanged: {
+                            console.log("Durée sélectionnée :",
+                                        textFromValue(value))
+                        }
+                        Component.onCompleted: {
+                            value = 90
+                        }
+                    }
+
+                    // Pousse le bouton vers la droite
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    MyButton {
+                        id: btnPlanifier
+                        text: "Planifier"
+                        enabled: false
+                        onClicked: {
+                            if (wModules.currentIndex !== -1) {
+                                let idModule = wModules.model.getId(
+                                        wModules.currentIndex)
+                                let idCourseType = courseTypeCombo.model.getId(
+                                        courseTypeCombo.currentIndex)
+
+                                let date = dateField.text // format: "dd/MM/yyyy"
+
+                                let h = Math.floor(timeSpin.value / 60)
+                                let m = timeSpin.value % 60
+                                let heureDebut = Qt.formatTime(new Date(0, 0, 0, h,
+                                                                        m), "hh:mm")
+
+                                let duree = dureeSpin.value
+                                sessionPlanner.addSession(idModule,
+                                                          idCourseType, date,
+                                                          heureDebut, duree)
+                                listeSeances.model.loadSessions()
+                                console.log("Planification réussie...")
+                            }
                         }
                     }
                 }
             }
         }
-    }
-    // Liste des séances et marquage des absences
-    MyGroupBox {
-        id: lSessions
-        property var tableWidth: width * .85
 
+        // Liste des séances et marquage des absences
+        MyGroupBox {
+            id: lSessions
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.minimumHeight: 220
+            title: qsTr("Marquer les absences")
 
-        anchors.top: groupSeance.bottom
-        anchors.topMargin: 30
-        anchors.left: parent.left
-        anchors.leftMargin: 20
-        anchors.right: parent.right
-        anchors.rightMargin: 20
-        title: qsTr("Marquer les absences")
-
-        RowLayout {
-            anchors.fill: parent
-            implicitWidth: parent.width
-            anchors.margins: 0
-            spacing: 6
             ColumnLayout {
-                id: myColumnAbsences
-                Layout.fillWidth: true
-                Layout.preferredWidth: parent.width * 0.85 // 85% pour la colonne gauche
-                Layout.fillHeight: true // Remplit la hauteur
-                anchors.margins: 0
-                spacing: 5
-                property var columnWidths: [myColumnAbsences.width * .2, myColumnAbsences.width * .3, myColumnAbsences.width*.3, myColumnAbsences.width * .2-4]
+                anchors.fill: parent
+                spacing: 8
 
-                Row {
+                // Sélection de la séance et actions
+                RowLayout {
                     id: selectionSeance
-                    spacing: 5
-                    anchors.margins: 5
+                    Layout.fillWidth: true
+                    spacing: 8
 
-                    Layout.alignment: Qt.AlignVCenter
                     MyText {
                         text: "Séance :"
                     }
 
                     MyComboBox {
                         id: listeSeances
-                        width: root.width * 0.5
+                        Layout.fillWidth: true
                         model: sessionModel
-                        
+
                         onCurrentIndexChanged: {
-                            btnSupprimer.enabled = currentIndex === -1 ? false : true
+                            btnSupprimer.enabled = currentIndex !== -1
                             btnImprimer.enabled = btnSupprimer.enabled
                             if (model) {
                                 model.setSelectedIndex(currentIndex)
                             }
-                            absenceModel ? absenceModel.loadEtudiantsForSeance(
-                                               sessionModel.getId(
-                                                    currentIndex)) : -1
+                            // Aucune séance sélectionnée (ex. après rechargement du modèle) : on vide la liste
+                            if (absenceModel) {
+                                absenceModel.loadEtudiantsForSeance(
+                                            currentIndex !== -1 ? sessionModel.getId(
+                                                                      currentIndex) : -1)
+                            }
                         }
                     }
+
                     MyButton {
                         id: btnSupprimer
                         text: "Supprimer"
                         enabled: false
-                        height: listeSeances.height
+                        Layout.preferredHeight: listeSeances.height
                         topInset: 0
                         bottomInset: 0
-                        Layout.alignment: Qt.AlignRight
                         onClicked: {
 
                         }
                     }
-                }
 
-                // Tableau des absences
-                Row {
-                    id: header
-                    Layout.fillWidth: true
-                    height: 40
-                    width: myColumnAbsences.width
-                    spacing: 1
-                    Repeater {
-                        model: ["N˚ inscription", "Nom", "Prénom", "Présence"]
-                        Rectangle {
-                            width: myColumnAbsences.columnWidths[index]
-                            height: parent.height
-                            color: "#0078d4"
-                            border.color: "#d0d0d0"
-                            border.width: 1
-                            Text {
-                                anchors.centerIn: parent
-                                text: modelData
-                                font.pixelSize: 14
-                                font.bold: true
-                                color: "#ffffff"
-                            }
+                    MyButton {
+                        id: btnImprimer
+                        text: "Imprimer"
+                        enabled: false
+                        Layout.preferredHeight: listeSeances.height
+                        topInset: 0
+                        bottomInset: 0
+                        onClicked: {
+                            printerManage.startPrinting("absence")
                         }
                     }
                 }
 
-                MyTableView {
-                    id: tableAbsences
-                    leftMargin: 0
+                // Tableau des absences (en-tête + lignes)
+                ColumnLayout {
+                    id: myColumnAbsences
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    width: myColumnAbsences.width
-                    columnSpacing: 2
-                    rowSpacing: 1
-                    model: absenceModel
-                    height: 200
+                    spacing: 1
+                    // Largeurs des colonnes, espacement entre colonnes déduit
+                    readonly property int columnSpacing: 2
+                    property var columnWidths: {
+                        let w = myColumnAbsences.width - 3 * columnSpacing
+                        return [w * .2, w * .3, w * .3, w * .2]
+                    }
 
-                    delegate: Rectangle {
-                        implicitHeight: 30
-                        implicitWidth: -1
-                        border.color: "#d0d0d0"
-                        border.width: 1
-                        required property int row
-                        property int presenceId: model.presence
-                        Item {
-                            anchors.fill: parent
-                            Loader {
-                                anchors.fill: parent
-                                sourceComponent: column === 3 ? componentPresence : textItem
-                            }
-
-                            Component {
-                                id: textItem
+                    Row {
+                        id: header
+                        Layout.fillWidth: true
+                        height: 36
+                        spacing: myColumnAbsences.columnSpacing
+                        Repeater {
+                            model: ["N˚ inscription", "Nom", "Prénom", "Présence"]
+                            Rectangle {
+                                width: myColumnAbsences.columnWidths[index]
+                                height: parent.height
+                                color: "#0078d4"
+                                border.color: "#d0d0d0"
+                                border.width: 1
                                 Text {
                                     anchors.centerIn: parent
+                                    text: modelData
                                     font.pixelSize: 14
-                                    text: {
-                                        switch (column) {
-                                        case 0:
-                                            return model.inscri
-                                        case 1:
-                                            return model.nom
-                                        case 2:
-                                            return model.prenom
-                                        default:
-                                            return ""
+                                    font.bold: true
+                                    color: "#ffffff"
+                                }
+                            }
+                        }
+                    }
+
+                    MyTableView {
+                        id: tableAbsences
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        leftMargin: 0
+                        rightMargin: 0
+                        columnSpacing: myColumnAbsences.columnSpacing
+                        rowSpacing: 1
+                        model: absenceModel
+
+                        delegate: Rectangle {
+                            implicitHeight: 30
+                            implicitWidth: -1
+                            border.color: "#d0d0d0"
+                            border.width: 1
+                            required property int row
+                            property int presenceId: model.presence
+                            Item {
+                                anchors.fill: parent
+                                Loader {
+                                    anchors.fill: parent
+                                    sourceComponent: column === 3 ? componentPresence : textItem
+                                }
+
+                                Component {
+                                    id: textItem
+                                    Text {
+                                        anchors.centerIn: parent
+                                        font.pixelSize: 14
+                                        text: {
+                                            switch (column) {
+                                            case 0:
+                                                return model.inscri
+                                            case 1:
+                                                return model.nom
+                                            case 2:
+                                                return model.prenom
+                                            default:
+                                                return ""
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            Component {
-                                id: componentPresence
-                                MyComboBox {
-                                    id: presenceCombo
-                                    anchors.fill: parent
-                                    textRole: "label"
-                                    model: presenceModel
-                                    //model: sectionModel
+                                Component {
+                                    id: componentPresence
+                                    MyComboBox {
+                                        id: presenceCombo
+                                        anchors.fill: parent
+                                        textRole: "label"
+                                        model: presenceModel
 
-                                    // index de l'élément actuel dans presenceModel (à partir de model.presenceId)
-                                    currentIndex: {
-                                        // console.log("Current presenceId:", presenceId);
-                                        // console.log("Current index for presenceId:", presenceModel.getIndexById(presenceId));
-                                        return presenceModel ? presenceModel.getIndexById(presenceId) : -1;
-                                    }
-                                    onCurrentIndexChanged: {
-                                        if (presenceModel) {
-                                            const newId = presenceModel.getId(
-                                                        currentIndex)
-                                            absenceModel.setPresence(row, newId)
+                                        // index de l'élément actuel dans presenceModel (à partir de model.presenceId)
+                                        currentIndex: {
+                                            return presenceModel ? presenceModel.getIndexById(presenceId) : -1;
+                                        }
+                                        onCurrentIndexChanged: {
+                                            if (presenceModel) {
+                                                const newId = presenceModel.getId(
+                                                            currentIndex)
+                                                absenceModel.setPresence(row, newId)
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                }
-            }
-            Column {
-                spacing: 4
-                Layout.fillWidth: true // Prend le reste de la largeur (15%)
-                Layout.fillHeight: true // Remplit la hauteur pour éviter le centrage
-                Item {
-                    height: 96
-                    width: 1
-                }
-                MyButton {
-                    id: btnImprimer
-                    text: "Imprimer"
-                    Layout.alignment: Qt.AlignRight
-                    enabled: false
-                    onClicked: {
-                        printerManage.startPrinting("absence")
                     }
                 }
             }
