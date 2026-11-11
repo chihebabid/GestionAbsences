@@ -428,8 +428,7 @@ Rectangle {
                                         }
                                         onCurrentIndexChanged: {
                                             if (presenceModel) {
-                                                const newId = presenceModel.getId(
-                                                            currentIndex)
+                                                const newId = presenceModel.getId(currentIndex)
                                                 absenceModel.setPresence(row, newId)
                                             }
                                         }
